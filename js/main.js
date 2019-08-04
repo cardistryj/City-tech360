@@ -14,7 +14,7 @@ var vm=new Vue({
       ifshowaidesign:false,
       ifshowdesign:false,
       ifinvalid:false,
-      examples:[
+      solutions:[
             {
               name:'123',
               img:'1.png',
@@ -29,43 +29,43 @@ var vm=new Vue({
               function:'345'
             },
             {
-                name:'2',
-                img:'2.png',
-                detail:'2',
-                size:'2',
-                shape:'2',
-                type:'2',
-                designage:'2',
-                outdoor:'2',
-                district:'2',
-                region:'2',
-                function:'2'
+              name:'2',
+              img:'2.png',
+              detail:'2',
+              size:'2',
+              shape:'2',
+              type:'2',
+              designage:'2',
+              outdoor:'2',
+              district:'2',
+              region:'2',
+              function:'2'
             },
             {
-                name:'3',
-                img:'3.png',
-                detail:'3',
-                size:'3',
-                shape:'3',
-                type:'3',
-                designage:'3',
-                outdoor:'3',
-                district:'3',
-                region:'3',
-                function:'3'
+              name:'3',
+              img:'3.png',
+              detail:'3',
+              size:'3',
+              shape:'3',
+              type:'3',
+              designage:'3',
+              outdoor:'3',
+              district:'3',
+              region:'3',
+              function:'3'
             },
             {
-                name:'4',
-                img:'4.png',
-                detail:'4',
-                size:'4',
-                shape:'4',
-                type:'4',
-                designage:'4',
-                outdoor:'4',
-                district:'4',
-                region:'4',
-                function:'4'
+              name:'4',
+              img:'4.png',
+              detail:'4',
+              size:'4',
+              shape:'4',
+              type:'4',
+              designage:'4',
+              outdoor:'4',
+              district:'4',
+              region:'4',
+              function:'4'
             }
       ],
       c1:'0',
@@ -90,7 +90,7 @@ var vm=new Vue({
         present: function (event) {
           var order=event.currentTarget.getAttributeNode('id');
           order=parseInt(order.value.substring(order.value.length-1))-1;
-          this.examples.splice(0,1,...this.examples.splice(order, 1 , this.examples[0]));
+          this.solutions.splice(0,1,...this.solutions.splice(order, 1 , this.solutions[0]));
           window.location.href="#designModal";
         },
         gencode:function(){
@@ -124,17 +124,17 @@ var vm=new Vue({
             .then(function(response){
                 jsonData = JSON.parse(response);
                 for(var i=0;i<4;i++){
-                    this.examples[i].name = jsonData[i].name;
-                    this.examples[i].img = jsonData[i].img;
-                    this.examples[i].detail = jsonData[i].detail;
-                    this.examples[i].size = jsonData[i].size;
-                    this.examples[i].shape = jsonData[i].shape;
-                    this.examples[i].type = jsonData[i].type;
-                    this.examples[i].designage = jsonData[i].designage;
-                    this.examples[i].outdoor = jsonData[i].outdoor;
-                    this.examples[i].district = jsonData[i].district;
-                    this.examples[i].region = jsonData[i].region;
-                    this.examples[i].function = jsonData[i].function;
+                    this.solutions[i].name = jsonData[i].name;
+                    this.solutions[i].img = jsonData[i].img;
+                    this.solutions[i].detail = jsonData[i].detail;
+                    this.solutions[i].size = jsonData[i].size;
+                    this.solutions[i].shape = jsonData[i].shape;
+                    this.solutions[i].type = jsonData[i].type;
+                    this.solutions[i].designage = jsonData[i].designage;
+                    this.solutions[i].outdoor = jsonData[i].outdoor;
+                    this.solutions[i].district = jsonData[i].district;
+                    this.solutions[i].region = jsonData[i].region;
+                    this.solutions[i].function = jsonData[i].function;
                 }
             })
             .catch(function (error) { // 请求失败处理
@@ -142,6 +142,29 @@ var vm=new Vue({
             });
         }
       }
+  })
+
+  var vm_=new Vue({
+    el:'#masonry',
+    data:{
+      examples:[
+        {
+          img:'img/20-400x293.jpg',
+          name:'同济新村院落空间',
+          detail:'同济新村老旧院落型住宅改造'
+        },
+        {
+          img:'img/13.jpg',
+          name:'四平体育弄',
+          detail:'社区公共空间改造设计'
+        },
+        {
+          img:'img/9.jpg',
+          name:'创智农园',
+          detail:'将建筑废料堆放处改造成社区花园'
+        }
+      ]
+    }
   })
 
 $('.carousel.carousel-slider').carousel({full_width: true});

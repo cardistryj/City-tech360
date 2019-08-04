@@ -1,0 +1,387 @@
+/*-----------------------------------------------------------------------------------
+
+ Theme Name: jetrip
+ Description: The Multi-Purpose Travel Template
+ Version: 1.0
+ Main Color   : #21ab64
+ main Font    : 'Roboto', sans-serif
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+
+ == Table Of Content
+
+    01 Basics
+        - Typography
+        - Sticky-header
+        - Preloader
+        - Button-bottom-to-top
+        - Search-icon
+        - Datepicker
+        - Video-box
+	02 Navbar
+    03 Main hero slide
+        - Index-one-main
+        - Index-two-main
+        - Index-three-main
+    04 About Us
+    05 Service
+        - Service-one
+        - Service-two
+	06 Package-section
+    07 offer-area
+    08 Desination-Section
+	09 Counter-Section
+    10 Testimonial-slider
+        - Testimonial-slider-one
+        - Testimonial-slider-two
+	11 Blog-section
+    12 Footer-section
+    13 Extra-css
+		- Banner-css
+		- Booking-tour
+        - Accordian
+        - Comment-form
+        - Blockqouts      
+        - Pagination
+	
+
+---------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800|Roboto:400,500&display=swap');
+
+/* ----------------------------------------------------------------
+     [ 01 Start Basics ]
+-----------------------------------------------------------------*/
+
+/*----------- Typography -------------*/
+
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	outline: none;
+	list-style: none;
+	word-wrap: break-word;
+}
+html,
+body {
+	color: #585858;
+	line-height: 1.5;
+	font-weight: 400;
+	font-size: 16px;
+	font-family: 'Roboto', sans-serif;
+}
+#boota:focus {
+	text-decoration: none;
+	outline: 0;
+}
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 700;
+	color: #212121;
+}
+h1 {
+	font-size: 55px;
+	line-height: 65px;
+	margin-bottom: 0px;
+}
+h2 {
+	font-size: 40px;
+	line-height: 48px;
+	margin-bottom: 0px;
+}
+h3 {
+	font-size: 20px;
+	line-height: 1.4;
+	margin-bottom: 0px;
+}
+h4 {
+	font-size: 18px;
+	line-height: 1.4;
+	margin-bottom: 0px;
+}
+h5 {
+	font-size: 16px;
+	line-height: 1.4;
+	margin-bottom: 0px;
+}
+.bg-gray {
+	background-color: #f7f8f9;
+}
+span {
+	font-family: 'Roboto', sans-serif;
+}
+select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background: url('../images/down.png');
+	background-repeat: no-repeat;
+	background-position: 96%;
+	background-size: 25px;
+}
+.text-theme {
+	color: #21ab64;
+}
+.bor-none {
+	border: none !important;
+}
+.center-title {
+	text-align: center;
+	padding-bottom: 60px;
+}
+.center-title .title {
+	text-transform: capitalize;
+	padding-bottom: 30px;
+}
+.center-title .sub-title {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 28px;
+	max-width: 750px;
+	margin: 0 auto;
+}
+/*-------------- title-spacing -------------*/
+
+.same-section-spacing {
+	padding: 100px 0;
+}
+.ws-section-spacing {
+	padding: 100px 0 70px;
+}
+.title-bottom-spacing {
+	margin-bottom: 60px;
+}
+
+/*----------------- Preloader -----------------*/
+
+#preloader {
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 9999999;
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+	background: rgb(6, 39, 52) url("../images/loader.gif") no-repeat center center;
+}
+/*----------- Button-bottom-to-top -------------*/
+
+#btn-to-top {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	font-size: 12px;
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	opacity: 0;
+	visibility: hidden;
+	z-index: 999;
+	border-bottom: 60px solid #21ab64;
+	border-left: 35px solid transparent;
+	border-right: 35px solid transparent;
+	color: #fff;
+}
+#btn-to-top::after {
+	content: "\f30c";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	font-size: 2em;
+	line-height: 70px;
+	position: relative;
+	color: #ffffff;
+	right: 5px;
+}
+#btn-to-top:hover {
+	cursor: pointer;
+}
+#btn-to-top.show {
+	opacity: 1;
+	visibility: visible;
+}
+
+/* ----------------------------------------------------------------
+     [ 06  Package-section ]
+-----------------------------------------------------------------*/
+
+.package-one {
+	margin-bottom: 30px;
+	overflow: hidden;
+	position: relative;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+}
+.package-one:hover {
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.package-one .img-wapper {
+	overflow: hidden;
+}
+.package-one .img-wapper img {
+	display: block;
+	width: 100%;
+	transform: scale(1.1);
+	transition: all 0.3s ease-in-out;
+}
+.package-one:hover .img-wapper img {
+	transform: scale(1);
+}
+.package-one .package-content {
+	padding: 25px 20px 30px;
+	background: #fff;
+}
+.package-one .package-content h3 {
+	margin-bottom: 10px;
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+}
+.package-one .package-content p>span,
+.package-one:hover .package-content h3 {
+	color: #21ab64;
+}
+.package-one .package-content p {
+	font-size: 15px;
+	font-weight: 500;
+	margin-bottom: 20px;
+}
+.package-one .package-content .ct-action li {
+	display: inline-block;
+}
+.package-one .package-content .ct-action li .booking-btn {
+	border: 1px solid #e2e2e2;
+	padding: 8px 20px;
+	display: block;
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+	border-radius: 30px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	-ms-border-radius: 30px;
+	-o-border-radius: 30px;
+}
+.package-one .ct-action{
+	margin: 0;
+}
+.package-one:hover .ct-action li .booking-btn {
+	border-color: #21ab64;
+	background-color: #21ab64;
+	color: #fff;
+}
+.package-one .package-content .ct-action li:last-child {
+	float: right;
+	margin-top: 7px;
+}
+.package-one .package-content .ct-action li>i {
+	color: #21ab64;
+}
+/* ----------------------------------------------------------------
+     [ 08  Desination-Section ]
+-----------------------------------------------------------------*/
+
+.destination-slide .slick-slide>div {
+	padding: 0 15px;
+}
+.testi-slide-one .slick-prev,
+.testi-slide-one .slick-next,
+.destination-slide .slick-prev,
+.destination-slide .slick-next {
+	display: none !important;
+}
+.place-box .desi-inner {
+	padding: 20px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	position: relative;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+}
+.place-box .desi-inner h4 {
+	margin-bottom: 5px;
+	text-transform: capitalize;
+	letter-spacing: 0.5px;
+}
+.place-box .desi-inner p {
+	display: inline-block;
+	margin-bottom: 0;
+}
+.place-box .wapper-img {
+	position: relative;
+}
+.place-box .wapper-img::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 0;
+	background: #000;
+	opacity: 0;
+	visibility: hidden;
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+}
+.place-box .wapper-img .pop-btn {
+	color: #fff;
+	border: 2px solid #fff;
+	padding: 10px 30px;
+	width: fit-content;
+	border-radius: 30px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transition: all ease-in-out 0.5s;
+	-webkit-transition: all ease-in-out 0.5s;
+	-moz-transition: all ease-in-out 0.5s;
+	-ms-transition: all ease-in-out 0.5s;
+	-o-transition: all ease-in-out 0.5s;
+	opacity: 0;
+	visibility: hidden;
+}
+.place-box:hover .wapper-img::before {
+	opacity: 0.7;
+	visibility: visible;
+	height: 100%;
+}
+.place-box:hover .wapper-img .pop-btn {
+	opacity: 1;
+	visibility: visible;
+}
+.place-box .wapper-img .pop-btn:hover {
+	background: #21ab64;
+	border-color: #21ab64;
+}

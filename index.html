@@ -12,6 +12,11 @@
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
   <link rel="stylesheet" href="css/main.css">
+    <!--bootstrap.min.css-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Custom.css -->
+    <link rel="stylesheet" href="css/style_example.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
@@ -420,26 +425,26 @@
         <div class="row">
             <div class="col s12 ">
                 <h2 style="color: gainsboro;">生成的设计方案</h2>
-                <h4 id="ai_name">{{examples[0].name}}</h4>
+                <h4 id="ai_name">{{solutions[0].name}}</h4>
             </div>
         </div>
         <div class="row"><div class="col s12"><div class="divider"></div></div></div>
         <div class="row">
             <div class="col s12">
-                <p id="ai_detail">{{examples[0].detail}}</p>
+                <p id="ai_detail">{{solutions[0].detail}}</p>
             </div>
             <div class="col s12">
-                <img id="ai_img" v-bind:src="'img/'+examples[0].img" alt="" style="width: 100%;">
+                <img id="ai_img" v-bind:src="'img/'+solutions[0].img" alt="" style="width: 100%;">
             </div>
             <div class="col s12">
-                <label for="" id="ai_label">{{'大小:'+examples[0].size
-                  +';形态:'+examples[0].shape
-                  +';属性:'+examples[0].type
-                  +';年限:'+examples[0].designage
-                  +';场所:'+examples[0].outdoor
-                  +';位置:'+examples[0].district
-                  +';环境:'+examples[0].region
-                  +';功能:'+examples[0].function}}</label>
+                <label for="" id="ai_label">{{'大小:'+solutions[0].size
+                  +';形态:'+solutions[0].shape
+                  +';属性:'+solutions[0].type
+                  +';年限:'+solutions[0].designage
+                  +';场所:'+solutions[0].outdoor
+                  +';位置:'+solutions[0].district
+                  +';环境:'+solutions[0].region
+                  +';功能:'+solutions[0].function}}</label>
             </div>
             <div class="col s12">
                 <a href="#designModal" class="btn purple lighten-4 right" style="margin-right: 15px;" onclick="publish()">采用该方案并发布</a>
@@ -453,12 +458,12 @@
                     <div class="row" style="display: flex;justify-content: center;">
                         <div class="card z-depth-0 col s12 m4">
                             <div class="card-image">
-                                    <img id="ai_img2" v-bind:src="'img/'+examples[1].img">
+                                    <img id="ai_img2" v-bind:src="'img/'+solutions[1].img">
                                     <span class="card-title"></span>
                                 </div>
                                 <div class="card-content">
-                                    <h5 class="card-title" id="ai_name2" style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{examples[1].name}}</h5>
-                                    <p id="ai_p2" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{examples[1].detail}}</p>
+                                    <h5 class="card-title" id="ai_name2" style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{solutions[1].name}}</h5>
+                                    <p id="ai_p2" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{solutions[1].detail}}</p>
                                 </div>
                                 <div class="card-action">
                                     <a href="#!" id="ai_btn2" @click="present($event)">详情</a>
@@ -466,12 +471,12 @@
                         </div>
                         <div class="card z-depth-0 col s12 m4">
                             <div class="card-image">
-                                    <img id="ai_img3" v-bind:src="'img/'+examples[2].img">
+                                    <img id="ai_img3" v-bind:src="'img/'+solutions[2].img">
                                     <span class="card-title"></span>
                                 </div>
                                 <div class="card-content">
-                                    <h5 class="card-title" id="ai_name3"  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{examples[2].name}}</h5>
-                                    <p id="ai_p3" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{examples[2].detail}}</p>
+                                    <h5 class="card-title" id="ai_name3"  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{solutions[2].name}}</h5>
+                                    <p id="ai_p3" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{solutions[2].detail}}</p>
                                 </div>
                                 <div class="card-action">
                                     <a href="#!" id="ai_btn3" @click="present($event)">详情</a>
@@ -479,12 +484,12 @@
                         </div>
                         <div class="card z-depth-0 col s12 m4">
                             <div class="card-image">
-                                    <img id="ai_img4" v-bind:src="'img/'+examples[3].img">
+                                    <img id="ai_img4" v-bind:src="'img/'+solutions[3].img">
                                     <span class="card-title"></span>
                                 </div>
                                 <div class="card-content">
-                                    <h5 class="card-title" id="ai_name4"  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{examples[3].name}}</h5>
-                                    <p id="ai_p4" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{examples[3].detail}}</p>
+                                    <h5 class="card-title" id="ai_name4"  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">{{solutions[3].name}}</h5>
+                                    <p id="ai_p4" style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">{{solutions[3].detail}}</p>
                                 </div>
                                 <div class="card-action">
                                     <a href="#!" id="ai_btn4" @click="present($event)">详情</a>
@@ -845,7 +850,7 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" id="masonry">
     <div class="section">
       <div class="row">
         <div class="col s12 center">
@@ -857,70 +862,31 @@
         </div>
       </div>
       <div class="row"><div class="col s12"><div class="divider"></div></div></div>
-      <div class="row">
-
-        <div class="col s12 m4">
-          <div class="card hoverable">
-            <div class="card-image">
-              <img src="img/20-400x293.jpg">
-              <span class="card-title"></span>
+      <div class="row masonry-item">
+        <div class="col-lg-4 col-md-6 col-sm-12 masonry" style="position:relative;" v-for="example of examples">
+          <div class="package-one">
+            <div class="img-wapper">
+              <img :src="example.img" alt="package-img" style="max-height: 250px;min-height: 250px;">
             </div>
-            <div class="card-content">
-              <span class="card-title">同济新村院落空间</span>
-              <p>同济新村老旧院落型住宅改造</p>
-            </div>
-            <div class="card-action">
-              <a href="">详情</a>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col s12 m4">
-          <div class="card hoverable">
-            <div class="card-image">
-              <img src="img/19.jpg">
-              <span class="card-title"></span>
-            </div>
-            <div class="card-content">
-              <span class="card-title">四平体育弄</span>
-              <p>社区公共空间改造设计，重新激发社区活力</p>
-            </div>
-            <div class="card-action">
-              <a href="">详情</a>
+            <div class="package-content" align="center">
+              <h3>{{example.name}}</h3>
+              <p>{{example.detail}}</p>
+              <ul class="ct-action">
+                <li><a id="" href="childpage/examples.html" class="booking-btn">详情</a></li>
+                <li></li>
+              </ul>
             </div>
           </div>
         </div>
-
-
-        <div class="col s12 m4">
-          <div class="card hoverable">
-            <div class="card-image">
-              <img src="img/13.jpg">
-              <span class="card-title"></span>
-            </div>
-            <div class="card-content">
-              <span class="card-title">创智农园</span>
-              <p>将建筑废料堆放处改造成社区花园</p>
-            </div>
-            <div class="card-action">
-              <a href="">详情</a>
-            </div>
-          </div>
-        </div>
-
-
       </div>
+
+    </div>
       <div class="row">
         <div class="col s12 center">
           <a href="childpage/examples.html" class="btn center purple lighten-4">查看云端案例库</a>
         </div>
       </div>
-
-
     </div>
-  </div>
-
 
   <div class="parallax-container valign-wrapper">
     <div class="section no-pad-bot">
@@ -988,9 +954,6 @@
     </div>
   </div>
 
-
-
-
   <footer class="page-footer purple lighten-4">
     <div class="container">
       <div class="row">
@@ -1031,6 +994,23 @@
   <script src="js/main.js"></script>
   <script src="js/data-ajax.js"></script>
   <script src="js/user.js"></script>
+  <script src="js/isotope.pkgd.min.js"></script>
+  <script src="js/imagesloaded.js"></script>
+  <script>(function ($) {
+    "use strict";
+    /*====================================
+        masonry-item
+    ======================================*/
+    $('.masonry-item').imagesLoaded(function () {
+        $('.masonry-item').isotope({
+            itemSelector: '.masonry',
+            percentPosition: true,
+            masonry: {
+                columnWidth: '.masonry'
+            }
+        });
+    });
+})(jQuery);
+</script>
 </body>
-
 </html>
