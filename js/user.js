@@ -28,6 +28,10 @@ function newuser(){
         $("#password-re").addClass("invalid");
         return
     }
+    if( $("#mailaddr").hasClass("invalid")){
+        alert("输入邮箱格式不合法")
+        return;
+    }
 
 
     var job;
@@ -47,6 +51,33 @@ function newuser(){
         if(!jobdetail){
             alert("请填写政府机构");
             $("#govname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupCmt]").hasClass("active")){
+        job = 3;
+        jobdetail = $("#cmtname")[0].value;
+        if(!jobdetail){
+            alert("请填写居委会名称");
+            $("#cmtname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupCtz]").hasClass("active")){
+        job = 4;
+        jobdetail = $("#ctzname")[0].value;
+        if(!jobdetail){
+            alert("请填写居住地址");
+            $("#ctzname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupWrk]").hasClass("active")){
+        job = 5;
+        jobdetail = $("#wrkname")[0].value;
+        if(!jobdetail){
+            alert("请填写施工单位名称");
+            $("#wrkname").addClass("invalid");
             return;
         }
     }
