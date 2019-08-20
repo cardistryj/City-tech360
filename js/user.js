@@ -1,6 +1,6 @@
 //用户操作
-var userSigninURL = "/php/usersignin.php";
-var userSignupURL = "/php/usersignup.php";
+var userSigninURL = "./php/usersignin.php";
+var userSignupURL = "./php/usersignup.php";
 
 function newuser(){
     var username = $("#username")[0].value;
@@ -110,6 +110,7 @@ function newuser(){
             "avatar":avatar
         },
         success: function(result){
+            console.log(result);
             if(result=="上传成功"){
                 $("#username")[0].value = "";
                 $("#mailaddr")[0].value = "";
