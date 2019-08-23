@@ -14,6 +14,8 @@ function setUser(username,email,avatar,job,jobdetail,tel){
 
     $("#btnSignup")[0].style.display = "none";
     $("#btnSignin")[0].style.display = "none";
+    $("#btnSignupSide")[0].style.display = "none";
+    $("#btnSigninSide")[0].style.display = "none";
     if(avatar == "default"){
         $("#imgAvatar")[0].src = "default.jpg";
         $("#imgAvatarSide")[0].src = "default.jpg";
@@ -25,10 +27,15 @@ function setUser(username,email,avatar,job,jobdetail,tel){
     $("#liAvatar")[0].style.display = "";
     $("#pUsername")[0].innerHTML = username;
     $("#pUsername")[0].style.display = "";
-    $("#btnNewproject")[0].style.display = "";
+    $("#btnMyproject")[0].style.display = "";
+    $("#btnMydesign")[0].style.display = "";
 
-    $("#logo-container")[0].style.display = "none";
+    // $("#logo-container")[0].style.display = "none";
     $("#liAvatarSide")[0].style.display = "";
+    $("#pUsernameSide")[0].innerHTML = username;
+    $("#pUsernameSide")[0].style.display = "";
+    $("#btnMyprojectSide")[0].style.display = "";
+    $("#btnMydesignSide")[0].style.display = "";
     
 }
 
@@ -37,6 +44,8 @@ function setUserFromSesssion(){
     if(isLogin()){
         $("#btnSignup")[0].style.display = "none";
         $("#btnSignin")[0].style.display = "none";
+        $("#btnSignupSide")[0].style.display = "none";
+        $("#btnSigninSide")[0].style.display = "none";
         if(avatar == "default"){
             $("#imgAvatar")[0].src = "default.jpg";
             $("#imgAvatarSide")[0].src = "default.jpg";
@@ -48,10 +57,15 @@ function setUserFromSesssion(){
         $("#liAvatar")[0].style.display = "";
         $("#pUsername")[0].innerHTML = sessionStorage.getItem('username');
         $("#pUsername")[0].style.display = "";
-        $("#btnNewproject")[0].style.display = "";
+        $("#btnMyproject")[0].style.display = "";
+        $("#btnMydesign")[0].style.display = "";
 
-        $("#logo-container")[0].style.display = "none";
+        //$("#logo-container")[0].style.display = "none";
         $("#liAvatarSide")[0].style.display = "";
+        $("#pUsernameSide")[0].innerHTML = sessionStorage.getItem('username');
+        $("#pUsernameSide")[0].style.display = "";
+        $("#btnMyprojectSide")[0].style.display = "";
+        $("#btnMydesignSide")[0].style.display = "";
     }
 }
 

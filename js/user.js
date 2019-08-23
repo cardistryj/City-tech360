@@ -1,6 +1,6 @@
 //用户操作
-var userSigninURL = "./php/usersignin.php";
-var userSignupURL = "./php/usersignup.php";
+var userSigninURL = "http://localhost:8888/usersignin.php";
+var userSignupURL = "http://localhost:8888/usersignup.php";
 
 function newuser(){
     var username = $("#username")[0].value;
@@ -185,7 +185,15 @@ function signout(){
     $("#imgAvatar").src = "default.jpg";
     $("#liAvatar")[0].style.display = "none";
     $("#pUsername")[0].innerHTML = "";
-    $("#btnNewproject")[0].style.display = "none";
+    $("#btnMyproject")[0].style.display = "none";
+    $("#btnMydesign")[0].style.display = "none";
+    $("#btnSignupSide")[0].style.display = "";
+    $("#btnSigninSide")[0].style.display = "";
+    $("#imgAvatarSide").src = "default.jpg";
+    $("#liAvatarSide")[0].style.display = "none";
+    $("#pUsernameSide")[0].innerHTML = "";
+    $("#btnMyprojectSide")[0].style.display = "none";
+    $("#btnMydesignSide")[0].style.display = "none";
 
     showinfo("已登出");
 }

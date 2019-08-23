@@ -18,46 +18,32 @@
 
 <body>
   <!-- Dropdown Structure -->
-  <ul id="dropdown1" class="dropdown-content">
+  <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
     <li>
-      <a href="childpage/defination.html">畸零空间定义</a>
+      <a href="childpage/defination.html" style="text-align: center;">定义</a>
     </li>
     <li>
-      <a href="childpage/whatis.html">改造流程</a>
+      <a href="childpage/whatis.html" style="text-align: center;">改造流程</a>
     </li>
-
-
     <li>
-      <a href="#321">畸零空间设计导则</a>
+      <a href="#321" style="text-align: center;">设计导则</a>
     </li>
 
     <li>
-      <a href="childpage/examples.html">已完成案例</a>
+      <a href="childpage/examples.html" style="text-align: center;">已完成案例</a>
     </li>
   </ul>
 
   <!--  -->
-  <ul id="avataractivity" class="dropdown-content dropdown-full-width">
-    <li>
-      <a id="pUsername" style="display: none;"></a>
-    </li>
+  <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
+      <label for="">角色：政府机构</label>
     <li class="divider"></li>
-    <label for="">已作为政府机构登录</label>
     <li>
-      <a href="#!">发布项目</a>
-    </li>
-    <li>
-      <a href="#!">我的项目</a>
-    </li>
-    <li>
-      <a href="#！">我的消息</a>
+      <a href="#!" style="text-align: center;">个人信息</a>
     </li>
     <li class="divider"></li>
     <li>
-      <a href="#!">修改头像</a>
-    </li>
-    <li>
-      <a href="#!" onclick="signout()">登出</a>
+      <a href="#!" style="text-align: center;color:red;font-weight: bold;" onclick="signout()">登出</a>
     </li>
   </ul>
 
@@ -74,12 +60,6 @@
           <a href=" https://www.city-tech360.com/city360_web/">首页</a>
         </li>
         <li>
-          <a href="">我是街道政府</a>
-        </li>
-        <li>
-          <a href="childpage/designer.html">我是设计师</a>
-        </li>
-        <li>
           <a href="#!" class="dropdown-button" data-activates="dropdown1">关于畸零空间</a>
         </li>
         <li class="right">
@@ -89,14 +69,18 @@
           <a id="btnSignin" href="#loginscreen" class="btn btn-flat">登录</a>
         </li>
         <li class="right" style="height: 64px;">
-          <a id="btnNewproject" href="" class="btn purple lighten-4" style="display: none;">发布项目</a>
+          <!-- TODO -->
+          <a id="btnMyproject" href="" class="btn purple lighten-4" style="display: none;">我的项目</a>
         </li>
         <li class="right" style="height: 64px;">
-          <a id="liAvatar" href="#!" style="height: 64px;display: none;" class="dropdown-button"
-            data-activates="avataractivity">
-            <i class="material-icons right" style="font-size: 10px;">arrow_drop_down</i>
+          <!-- TODO -->
+          <a id="btnMydesign" href="" class="btn purple lighten-4" style="display: none;">我的设计</a>
+        </li>
+        <li class="right" style="height: 64px;">
+          <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;display: none;" data-activates="avataractivity"> 
             <img id="imgAvatar" src="avatar/default.jpg" alt="" class="avatar"
               style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
+            <label id="pUsername" class="right" style="display: none;display:inline;text-align: center;font-weight: bold;color:black;"></label>
           </a>
         </li>
       </ul>
@@ -107,12 +91,6 @@
         <li style="height: 64px;">
           <a id="logo-container" href="#" style="width: inherit;height: inherit;">
             <img src="img/logo.png" alt="" style="height: 50px;margin: 7px;">
-          </a>
-          <a id="liAvatarSide" href="#!" style="height: 64px;display: none;" class="dropdown-button"
-            data-activates="avataractivity">
-            <i class="material-icons right" style="font-size: 10px;">arrow_drop_down</i>
-            <img id="imgAvatarSide" src="avatar/default.jpg" alt="" class="avatar"
-              style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
           </a>
         </li>
         <li class="divider"></li>
@@ -126,34 +104,35 @@
         </li>
         <li>
           <a href="http://urp360.org/wordpress/?page_id=11671">
-            <i class="material-icons">compare_arrows</i>改造流程</a>
-        </li>
-        <li>
-          <a href="http://urp360.org/wordpress/?page_id=11680">
-            <i class="material-icons">nature_people</i>街道给设计师</a>
-        </li>
-        <li>
-          <a href="http://urp360.org/wordpress/?page_id=5">
-            <i class="material-icons">format_list_bulleted</i>畸零空间的分类</a>
+            <i class="material-icons">compare_arrows</i>畸零空间改造流程</a>
         </li>
         <li>
           <a href="#guidance">
             <i class="material-icons">highlight</i>畸零空间设计导则</a>
         </li>
         <li>
-          <a href=" https://www.city-tech360.com/city360_web/childpage/designer.html">
-            <i class="material-icons">streetview</i>设计师给街道</a>
-        </li>
-        <li>
           <a href="http://urp360.org/wordpress/?page_id=11693">
             <i class="material-icons">done_all</i>已完成案例</a>
         </li>
+        <a id="liAvatarSide" href="#!" style="height: 64px;display: none;">
+          <img id="imgAvatarSide" src="avatar/default.jpg" alt="" class="avatar"
+            style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
+          <label id="pUsernameSide" style="display: none;display:inline;text-align: center;font-weight: bold;color:black;transform:translate(10px,10px)"></label>
+        </a>
+        <li>
+            <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
+          </li>
         <li>
           <a id="btnSignupSide" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
         </li>
         <li>
-          <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
+          <!-- TODO -->
+          <a id="btnMyprojectSide" href="" class="btn purple lighten-4" style="display:none;">我的项目</a>
         </li>
+        <li>
+            <!-- TODO -->
+            <a id="btnMydesignSide" href="" class="btn purple lighten-4" style="display:none;">我的设计</a>
+          </li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse">
         <i class="material-icons">menu</i>
@@ -174,7 +153,7 @@
           <a href="showall/index.html" id="showall"
             class="btn-large waves-effect waves-light purple lighten-4">查看已发布的项目</a>
           <a href="#uploadscreen" id="upload" class="btn-large waves-effect waves-light purple lighten-1"
-            style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid">政府发布新的项目</a>
+            style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid">发布新的项目</a>
         </div>
         <br>
         <br>
