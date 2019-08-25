@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- TODO 尝试给按钮切换添加动画 -->
+<!-- TODO 细化页面跳转逻辑 -->
+<!-- TODO 增加项目页面，与设计师添加设计方案的页面 -->
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
@@ -99,26 +103,36 @@
             <i class="material-icons">home</i>首页</a>
         </li>
         <li>
-          <a href="http://urp360.org/wordpress/">
+          <a href="http://urp360.org/wordpress/" style="color:#26a69a">
             <i class="material-icons">create</i>畸零空间定义</a>
         </li>
         <li>
-          <a href="http://urp360.org/wordpress/?page_id=11671">
+          <a href="http://urp360.org/wordpress/?page_id=11671" style="color:#26a69a">
             <i class="material-icons">compare_arrows</i>畸零空间改造流程</a>
         </li>
         <li>
-          <a href="#guidance">
+          <a href="#guidance" style="color:#26a69a">
             <i class="material-icons">highlight</i>畸零空间设计导则</a>
         </li>
         <li>
-          <a href="http://urp360.org/wordpress/?page_id=11693">
+          <a href="http://urp360.org/wordpress/?page_id=11693" style="color:#26a69a">
             <i class="material-icons">done_all</i>已完成案例</a>
         </li>
-        <a id="liAvatarSide" href="#!" style="height: 64px;display: none;">
+        <li class="divider"></li>
+        <a id="liAvatarSide" href="#!" class="dropdown-button" style="height: 64px;display: none;">
           <img id="imgAvatarSide" src="avatar/default.jpg" alt="" class="avatar"
             style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
-          <label id="pUsernameSide" style="display: none;display:inline;text-align: center;font-weight: bold;color:black;transform:translate(10px,10px)"></label>
+          <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)"></label>
+          <label for="" style="position:absolute;right:16px;transform: translateY(8px)">角色：政府机构</label>
         </a>
+        <li>
+          <a id="infoSide" href="http://urp360.org/wordpress/?page_id=11671" style="color:#26a69a;display:none">
+            <i class="material-icons">description</i>个人信息</a>
+        </li>
+          <li>
+            <a id="signoutSide" href="http://urp360.org/wordpress/?page_id=11671" style="color:red;display:none" onclick="signout()">
+              <i class="material-icons">highlight_off</i>登出</a>
+          </li>
         <li>
             <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
           </li>

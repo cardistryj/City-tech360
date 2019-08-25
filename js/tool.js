@@ -32,6 +32,8 @@ function setUser(username,email,avatar,job,jobdetail,tel){
 
     // $("#logo-container")[0].style.display = "none";
     $("#liAvatarSide")[0].style.display = "";
+    $("#infoSide")[0].style.display = "";
+    $("#signoutSide")[0].style.display = "";
     $("#pUsernameSide")[0].innerHTML = username;
     $("#pUsernameSide")[0].style.display = "";
     $("#btnMyprojectSide")[0].style.display = "";
@@ -62,6 +64,8 @@ function setUserFromSesssion(){
 
         //$("#logo-container")[0].style.display = "none";
         $("#liAvatarSide")[0].style.display = "";
+        $("#infoSide")[0].style.display = "";
+        $("#signoutSide")[0].style.display = "";
         $("#pUsernameSide")[0].innerHTML = sessionStorage.getItem('username');
         $("#pUsernameSide")[0].style.display = "";
         $("#btnMyprojectSide")[0].style.display = "";

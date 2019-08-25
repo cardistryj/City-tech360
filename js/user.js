@@ -191,6 +191,8 @@ function signout(){
     $("#btnSigninSide")[0].style.display = "";
     $("#imgAvatarSide").src = "default.jpg";
     $("#liAvatarSide")[0].style.display = "none";
+    $("#infoSide")[0].style.display = "none";
+    $("#signoutSide")[0].style.display = "none";
     $("#pUsernameSide")[0].innerHTML = "";
     $("#btnMyprojectSide")[0].style.display = "none";
     $("#btnMydesignSide")[0].style.display = "none";
