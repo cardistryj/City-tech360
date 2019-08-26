@@ -3495,6 +3495,7 @@ input[type=range] + .thumb {
   margin-left: auto;
   left: auto;
   right: auto;
+  margin-bottom: -10px;
 }
 
 .row .col.offset-s1 {
