@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- TODO 尝试给按钮切换添加动画 -->
 <!-- TODO 细化页面跳转逻辑 -->
 <!-- TODO 增加项目页面，与设计师添加设计方案的页面 -->
 
@@ -21,6 +20,7 @@
 </head>
 
 <body>
+  <div id="preloader"></div>
   <!-- Dropdown Structure -->
   <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
     <li>
@@ -32,7 +32,6 @@
     <li>
       <a href="#321" style="text-align: center;">设计导则</a>
     </li>
-
     <li>
       <a href="childpage/examples.html" style="text-align: center;">已完成案例</a>
     </li>
@@ -40,7 +39,7 @@
 
   <!--  -->
   <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
-      <label for="">角色：政府机构</label>
+      <label for="" id="role"></label>
     <li class="divider"></li>
     <li>
       <a href="#!" style="text-align: center;">个人信息</a>
@@ -77,10 +76,6 @@
           <a id="btnMyproject" href="" class="btn purple lighten-4" style="display: none;">我的项目</a>
         </li>
         <li class="right" style="height: 64px;">
-          <!-- TODO -->
-          <a id="btnMydesign" href="" class="btn purple lighten-4" style="display: none;">我的设计</a>
-        </li>
-        <li class="right" style="height: 64px;">
           <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;display: none;" data-activates="avataractivity"> 
             <img id="imgAvatar" src="avatar/default.jpg" alt="" class="avatar"
               style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
@@ -111,7 +106,7 @@
             <i class="material-icons">compare_arrows</i>畸零空间改造流程</a>
         </li>
         <li>
-          <a href="#guidance" style="color:#26a69a">
+          <a href="#321" style="color:#26a69a">
             <i class="material-icons">highlight</i>畸零空间设计导则</a>
         </li>
         <li>
@@ -123,7 +118,7 @@
           <img id="imgAvatarSide" src="avatar/default.jpg" alt="" class="avatar"
             style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
           <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)"></label>
-          <label for="" style="position:absolute;right:16px;transform: translateY(8px)">角色：政府机构</label>
+          <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)"></label>
         </a>
         <li>
           <a id="infoSide" href="http://urp360.org/wordpress/?page_id=11671" style="color:#26a69a;display:none">
@@ -134,18 +129,14 @@
               <i class="material-icons">highlight_off</i>登出</a>
           </li>
         <li>
-            <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
-          </li>
-        <li>
-          <a id="btnSignupSide" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
-        </li>
-        <li>
           <!-- TODO -->
           <a id="btnMyprojectSide" href="" class="btn purple lighten-4" style="display:none;">我的项目</a>
         </li>
-        <li>
-            <!-- TODO -->
-            <a id="btnMydesignSide" href="" class="btn purple lighten-4" style="display:none;">我的设计</a>
+          <li>
+              <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
+            </li>
+          <li>
+            <a id="btnSignupSide" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
           </li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse">
@@ -168,6 +159,8 @@
             class="btn-large waves-effect waves-light purple lighten-4">查看已发布的项目</a>
           <a href="#uploadscreen" id="upload" class="btn-large waves-effect waves-light purple lighten-1"
             style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid">发布新的项目</a>
+          <a href="#designscreen" id="uploaddesign" class="btn-large waves-effect waves-light purple lighten-1"
+            style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid;display:none">发布新的设计方案</a>
         </div>
         <br>
         <br>
@@ -184,13 +177,13 @@
     <div class="modal-content" id="uploadModal" v-show="ifshowupload">
       <div class="row">
         <div class="col s12">
-          <h4 class="header main-color">发布项目</h4>
+          <h2 class="header main-color">发布项目</h2>
         </div>
       </div>
 
       <div class="row">
         <div class="col s12">
-          <p>政府发布新的畸零空间改造项目</p>
+          <p>新的畸零空间改造项目</p>
         </div>
       </div>
 
@@ -271,7 +264,7 @@
     <div class="modal-content" id="aidesignModal" v-show="ifshowaidesign">
       <div class="row">
         <div class="col s12 ">
-          <h2>选择您想要的设计方案</h2>
+          <h2 class="header main-color">选择您想要的设计方案</h2>
         </div>
       </div>
       <div class="row">
@@ -280,53 +273,36 @@
         </div>
       </div>
       <div class="divider"></div>
-      <div id="aiSelectFull">
+      <div id="aiSelectFull" class="centered center z-depth-1">
+        <br>
         <div class="row">
-          <h5>选择畸零空间大小</h5>
+          <h5>大小</h5>
           <label for="chips1">将决定生成的畸零空间设计大小</label>
           <div class="col s12" id="chips1" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="11" @click="c1 = 1">大型(50㎡以上)</div>
             <div class="chip" id="12" @click="c1 = 2">中型(20~50㎡)</div>
             <div class="chip" id="13" @click="c1 = 3">小型(20㎡以下)</div>
           </div>
         </div>
-        <!-- <div class="row">
-            <h5>选择畸零空间形状</h5>
-            <label for="chips8">将决定畸零空间设计结果图的形状</label>
-            <div class="col s12" id="chips8" style="margin-top: 5px;">
-                <div class="chip" id="81">正方形</div>
-                <div class="chip" id="82">长方形</div>
-                <div class="chip" id="83">线形</div>
-                <div class="chip" id="84">圆形</div>
-                <div class="chip" id="85">半圆形</div>
-
-            </div>
-        </div> -->
         <div class="row">
-          <h5>选择畸零空间形态</h5>
+          <h5>形态</h5>
           <label for="chips8">将决定畸零空间设计的形态<br>对畸零空间的形态分类不了解？<a href="http://urp360.org/wordpress/?page_id=5#type">点击此处<i
                 class="material-icons" style="font-size: inherit;">open_in_new</i></a>查看我们的畸零空间形态的定义</label>
           <div class="col s12" id="chips8" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="81" @click="c2 = 1">线性</div>
             <div class="chip" id="82" @click="c2 = 2">散点</div>
             <div class="chip" id="83" @click="c2 = 3">团块</div>
 
           </div>
         </div>
-        <!-- <div class="row">
-            <h5>选择畸零空间的d/L</h5>
-            <label for="chips10">我也不太清楚这是什么</label>
-            <div class="col s12" id="chips10" style="margin-top: 5px;">
-                <div class="chip" id="101">楼间</div>
-                <div class="chip" id="102">桥体</div>
-                <div class="chip" id="103">开阔地</div>
-            </div>
-        </div> -->
         <div class="row">
-          <h5>选择畸零空间的属性</h5>
+          <h5>属性</h5>
           <label for="chips9">畸零空间成为畸零空间的原因<br>对畸零空间的形成原因不了解？<a href="http://urp360.org/wordpress/?page_id=5">点击此处<i
                 class="material-icons" style="font-size: inherit;">open_in_new</i></a>查看我们的畸零空间分类</label>
           <div class="col s12" id="chips9" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="91" @click="c3 = 1">商业摊地</div>
             <div class="chip" id="92" @click="c3 = 2">休闲空地</div>
             <div class="chip" id="93" @click="c3 = 3">街头文化</div>
@@ -335,9 +311,10 @@
           </div>
         </div>
         <div class="row">
-          <h5 for="chips2">选择设计使用年限</h5>
+          <h5 for="chips2">使用年限</h5>
           <label for="chips2">将决定选取的材料寿命，选取更好的材料的同时也会增加预算。</label>
           <div class="col s12" id="chips2" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="21" @click="c4 = 1">两年以下</div>
             <div class="chip" id="22" @click="c4 = 2">两年到五年</div>
             <div class="chip" id="23" @click="c4 = 3">五年到十年</div>
@@ -345,18 +322,20 @@
           </div>
         </div>
         <div class="row">
-          <h5 for="chips3">选择畸零空间场所</h5>
+          <h5 for="chips3">场所</h5>
           <label for="chips3">将决定畸零空间设计方式</label>
           <div class="col s12" id="chips3" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="31" @click="c5 = 1">室内</div>
             <div class="chip" id="32" @click="c5 = 2">室外</div>
           </div>
         </div>
         <div class="row">
-          <h5 for="chips4">选择畸零空间位置</h5>
+          <h5 for="chips4">位置</h5>
           <label for="chips4">将根据区域选择合适的畸零空间设计风格</label>
           <br>
           <div class="col s12" id="chips4" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="41" @click="c6 = '01'">杨浦区</div>
             <div class="chip" id="42" @click="c6 = '02'">浦东新区</div>
             <div class="chip" id="43" @click="c6 = '03'">嘉定区</div>
@@ -377,41 +356,34 @@
           </div>
         </div>
         <div class="row">
-          <h5>选择畸零空间所在环境</h5>
+          <h5>环境</h5>
           <label for="chips5">将决定畸零空间设计风格</label>
           <div class="col s12" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info" value="0"/>
             <div class="chip" id="51" @click="c7 = 1">商业圈</div>
             <div class="chip" id="52" @click=" c7 = 2">居住区</div>
             <div class="chip" id="53" @click=" c7 = 3">办公区</div>
             <div class="chip" id="54" @click=" c7 = 4">混合区域</div>
           </div>
         </div>
-        <!-- <div class="row">
-            <h5>选择大致的预算</h5>
-            <label for="chips6">将决定使用的材料价格</label>
-            <div class="col s12" style="margin-top: 5px;">
-                <div class="chip" id="61">五万元以下</div>
-                <div class="chip" id="62">五万元至十万元</div>
-                <div class="chip" id="63">十万元至二十万元</div>
-                <div class="chip" id="64">二十万元以上</div>
-            </div>
-        </div> -->
         <div class="row">
-          <h5>选择畸零空间需要的功能（多选）</h5>
+          <h5>功能（多选）</h5>
           <label for="chpis7">将决定畸零空间设计的功能</label>
           <div class="col s12" style="margin-top: 5px;">
-            <div class="chip" id="71" @click="c8 == 0?c8=1:c8=0">绿化</div>
-            <div class="chip" id="72" @click="c9 == 0?c9=1:c9=0 ">社交</div>
-            <div class="chip" id="73" @click="c10 == 0?c10=1:c10=0">健身</div>
-            <div class="chip" id="74" @click="c11 == 0?c11=1:c11=0">文化</div>
-            <div class="chip" id="75" @click="c12 == 0?c12=1:c12=0">自由市场</div>
-            <div class="chip" id="76" @click="c13 == 0?c13=1:c13=0">艺术</div>
-            <div class="chip" id="77" @click="c14 == 0?c14=1:c14=0">农园</div>
-            <div class="chip" id="77" @click="c15 == 0?c15=1:c15=0">互动</div>
-            <div class="chip" id="78" @click="c16 == 0?c16=1:c16=0">小商店</div>
-            <div class="chip" id="79" @click="c17 == 0?c17=1:c17=0">休息</div>
+              <input type="hidden" class="hidden_info" id="F" value="0"/>
+            <div class="chip" id="70" @click="c8 == 0?c8=1:c8=0">绿化</div><input type="hidden" id="F70" value="0"/>
+            <div class="chip" id="71" @click="c9 == 0?c9=1:c9=0 ">社交</div><input type="hidden" id="F71" value="0"/>
+            <div class="chip" id="72" @click="c10 == 0?c10=1:c10=0">健身</div><input type="hidden" id="F72" value="0"/>
+            <div class="chip" id="73" @click="c11 == 0?c11=1:c11=0">文化</div><input type="hidden" id="F73" value="0"/>
+            <div class="chip" id="74" @click="c12 == 0?c12=1:c12=0">自由市场</div><input type="hidden" id="F74" value="0"/>
+            <div class="chip" id="75" @click="c13 == 0?c13=1:c13=0">艺术</div><input type="hidden" id="F75" value="0"/>
+            <div class="chip" id="76" @click="c14 == 0?c14=1:c14=0">农园</div><input type="hidden" id="F76" value="0"/>
+            <div class="chip" id="77" @click="c15 == 0?c15=1:c15=0">互动</div><input type="hidden" id="F77" value="0"/>
+            <div class="chip" id="78" @click="c16 == 0?c16=1:c16=0">小商店</div><input type="hidden" id="F78" value="0"/>
+            <div class="chip" id="79" @click="c17 == 0?c17=1:c17=0">休息</div><input type="hidden" id="F79" value="0"/>
           </div>
         </div>
+        <br>
       </div>
       <div class="row">
         <div class="col s12">
@@ -425,8 +397,8 @@
           <a href="#uploadModal" class="btn purple lighten-4" @click="showupload">上一步</a>
         </div>
       </div>
-
     </div>
+
     <!-- 发布方案modal -->
     <div class="modal-content" id="designModal" v-show="ifshowdesign">
       <div class="row">
@@ -535,6 +507,174 @@
     </div>
   </div>
 
+    <!-- 设计师添加设计方案modal -->
+    <div id="designscreen" class="modal">
+    <div class="modal-content" id="aiadddesignModal">
+      <div class="row">
+        <div class="col s12">
+          <h2 class="header main-color">发布设计方案</h2>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12">
+          <p>选择设计方案满足的要素</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div id="aiSelectFull" class="centered center z-depth-1">
+        <br>
+        <div class="row">
+          <h5>大小</h5>
+          <label for="chips1">将决定生成的畸零空间设计大小</label>
+          <div class="col s12" id="chips1" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="11" @click="c1 = 1">大型(50㎡以上)</div>
+            <div class="chip" id="12" @click="c1 = 2">中型(20~50㎡)</div>
+            <div class="chip" id="13" @click="c1 = 3">小型(20㎡以下)</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5>形态</h5>
+          <label for="chips8">将决定畸零空间设计的形态<br>对畸零空间的形态分类不了解？<a href="http://urp360.org/wordpress/?page_id=5#type">点击此处<i
+                class="material-icons" style="font-size: inherit;">open_in_new</i></a>查看我们的畸零空间形态的定义</label>
+          <div class="col s12" id="chips8" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="81" @click="c2 = 1">线性</div>
+            <div class="chip" id="82" @click="c2 = 2">散点</div>
+            <div class="chip" id="83" @click="c2 = 3">团块</div>
+
+          </div>
+        </div>
+        <div class="row">
+          <h5>属性</h5>
+          <label for="chips9">畸零空间成为畸零空间的原因<br>对畸零空间的形成原因不了解？<a href="http://urp360.org/wordpress/?page_id=5">点击此处<i
+                class="material-icons" style="font-size: inherit;">open_in_new</i></a>查看我们的畸零空间分类</label>
+          <div class="col s12" id="chips9" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="91" @click="c3 = 1">商业摊地</div>
+            <div class="chip" id="92" @click="c3 = 2">休闲空地</div>
+            <div class="chip" id="93" @click="c3 = 3">街头文化</div>
+            <div class="chip" id="94" @click="c3 = 4">人员逗留</div>
+            <div class="chip" id="95" @click="c3 = 5">废弃空地</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5 for="chips2">使用年限</h5>
+          <label for="chips2">将决定选取的材料寿命，选取更好的材料的同时也会增加预算。</label>
+          <div class="col s12" id="chips2" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="21" @click="c4 = 1">两年以下</div>
+            <div class="chip" id="22" @click="c4 = 2">两年到五年</div>
+            <div class="chip" id="23" @click="c4 = 3">五年到十年</div>
+            <div class="chip" id="24" @click="c4 = 4">十年以上</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5 for="chips3">场所</h5>
+          <label for="chips3">将决定畸零空间设计方式</label>
+          <div class="col s12" id="chips3" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="31" @click="c5 = 1">室内</div>
+            <div class="chip" id="32" @click="c5 = 2">室外</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5 for="chips4">位置</h5>
+          <label for="chips4">将根据区域选择合适的畸零空间设计风格</label>
+          <br>
+          <div class="col s12" id="chips4" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="41" @click="c6 = '01'">杨浦区</div>
+            <div class="chip" id="42" @click="c6 = '02'">浦东新区</div>
+            <div class="chip" id="43" @click="c6 = '03'">嘉定区</div>
+            <div class="chip" id="44" @click="c6 = '04'">黄浦区</div>
+            <div class="chip" id="45" @click="c6 = '05'">徐汇区</div>
+            <div class="chip" id="46" @click="c6 = '06'">宝山区</div>
+            <div class="chip" id="47" @click="c6 = '07'">奉贤区</div>
+            <div class="chip" id="48" @click=" c6 = '08'">静安区</div>
+            <div class="chip" id="49" @click=" c6 = '09'">普陀区</div>
+            <div class="chip" id="410" @click=" c6 = '10'">虹口区</div>
+            <div class="chip" id="411" @click=" c6 = '11'">闵行区</div>
+            <div class="chip" id="412" @click=" c6 = '12'">金山区</div>
+            <div class="chip" id="413" @click=" c6 = '13'">松江区</div>
+            <div class="chip" id="414" @click=" c6 = '14'">青浦区</div>
+            <div class="chip" id="415" @click=" c6 = '15'">长宁区</div>
+            <div class="chip" id="416" @click=" c6 = '16'">崇明县</div>
+            <div class="chip" id="417" @click=" c6 = '17'">其他</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5>环境</h5>
+          <label for="chips5">将决定畸零空间设计风格</label>
+          <div class="col s12" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" value="0"/>
+            <div class="chip" id="51" @click="c7 = 1">商业圈</div>
+            <div class="chip" id="52" @click=" c7 = 2">居住区</div>
+            <div class="chip" id="53" @click=" c7 = 3">办公区</div>
+            <div class="chip" id="54" @click=" c7 = 4">混合区域</div>
+          </div>
+        </div>
+        <div class="row">
+          <h5>功能（多选）</h5>
+          <label for="chpis7">将决定畸零空间设计的功能</label>
+          <div class="col s12" style="margin-top: 5px;">
+              <input type="hidden" class="hidden_info_" id="FF" value="0"/>
+            <div class="chip" id="701" @click="c8 == 0?c8=1:c8=0">绿化</div><input type="hidden" id="F700" value="0"/>
+            <div class="chip" id="702" @click="c9 == 0?c9=1:c9=0 ">社交</div><input type="hidden" id="F701" value="0"/>
+            <div class="chip" id="703" @click="c10 == 0?c10=1:c10=0">健身</div><input type="hidden" id="F702" value="0"/>
+            <div class="chip" id="704" @click="c11 == 0?c11=1:c11=0">文化</div><input type="hidden" id="F703" value="0"/>
+            <div class="chip" id="705" @click="c12 == 0?c12=1:c12=0">自由市场</div><input type="hidden" id="F704" value="0"/>
+            <div class="chip" id="706" @click="c13 == 0?c13=1:c13=0">艺术</div><input type="hidden" id="F705" value="0"/>
+            <div class="chip" id="707" @click="c14 == 0?c14=1:c14=0">农园</div><input type="hidden" id="F706" value="0"/>
+            <div class="chip" id="707" @click="c15 == 0?c15=1:c15=0">互动</div><input type="hidden" id="F707" value="0"/>
+            <div class="chip" id="708" @click="c16 == 0?c16=1:c16=0">小商店</div><input type="hidden" id="F708" value="0"/>
+            <div class="chip" id="709" @click="c17 == 0?c17=1:c17=0">休息</div><input type="hidden" id="F709" value="0"/>
+          </div>
+        </div>
+        <br>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <p>上传设计图纸</p>
+        </div>
+      </div>
+      <div class="row center centered z-depth-2">
+          <br>
+          <div class="col s12">
+            <form action="#">
+              <div class="file-field input-field">
+                <div class="btn purple lighten-4">
+                  <span>上传图片</span>
+                  <form id="formImage" enctype="multipart/form-data">
+                    <input id="fileImage" accept="image/*" type="file" name="file" multiple>
+                  </form>
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" placeholder="上传您创作的设计方案">
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+          <br>
+          <img id="preview" src="" style="display:none;max-width: 95%;"/>
+          <br>
+      </div>
+    <div class="row">
+        <div class="col s12">
+            <a href="#" class="btn purple lighten-4 right" style="margin-right: 15px;"
+            @click="uploaddesign">提交</a>
+        </div>
+      </div>
+      </div>
+    </div>
+
   <div class="modal" id="loginscreen" style="max-width: 400px;">
     <div class="modal-content">
       <div class="row">
@@ -614,62 +754,7 @@
             <li class="tab col s2"><a class="" href="#signupWrk">施工方</a></li>
           </ul>
         </div>
-        <div id="signupDesigner" class="col s12">
-          <div class="row">
-            <div class="col s12" style="display: flex;align-items: center;height: 64.5;margin-top:14.5px;">
-              <span>您的职业：</span>
-              <!-- Dropdown Trigger -->
-              <a class='dropdown-button btn btn-flat' href='#' data-activates='jobselect' id="job">职业设计师</a>
-
-              <!-- Dropdown Structure -->
-              <ul id='jobselect' class='dropdown-content'>
-                <li><a href="#!" onclick="javascript:$('#job')[0].innerHTML='职业设计师'">职业设计师</a></li>
-                <li><a href="#!" onclick="javascript:$('#job')[0].innerHTML='兼职设计师'">兼职设计师</a></li>
-                <li><a href="#!" onclick="javascript:$('#job')[0].innerHTML='学生'">学生</a></li>
-                <li><a href="#!" onclick="javascript:$('#job')[0].innerHTML='其他'">其他</a></li>
-              </ul>
-            </div>
-
-          </div>
-
-        </div>
-        <div id="signupGov" class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">account_balance</i>
-              <input id="govname" type="text" class="validate">
-              <label for="govname">您工作的机构</label>
-            </div>
-          </div>
-        </div>
-        <div id="signupCmt" class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">account_balance</i>
-              <input id="cmtname" type="text" class="validate">
-              <label for="cmtname">您隶属的居委会</label>
-            </div>
-          </div>
-        </div>
-        <div id="signupCtz" class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">account_balance</i>
-              <input id="ctzname" type="text" class="validate">
-              <label for="ctzname">您居住的地址</label>
-            </div>
-          </div>
-        </div>
-        <div id="signupWrk" class="col s12">
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">account_balance</i>
-              <input id="wrkname" type="text" class="validate">
-              <label for="wrkname">您的工作单位</label>
-            </div>
-          </div>
-        </div>
-
+        <div class="col s12">&nbsp</div>
         <div class="row">
           <div class="col s12">
             <a href="#!" class="btn btn-large btn-block purple lighten-4" onclick="newuser()">注册</a>
@@ -993,7 +1078,7 @@
           <p>人工智能方法自动设计甲方想要的方案，设计师可以直接根据人工智能设计出的方案设计，提高设计效率。</p>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col s12">
           <div class="divider"></div>
         </div>
@@ -1039,7 +1124,7 @@
       </div>
       <div class="row">
         <div class="col s12 center"><a href="childpage/aidesign.html" class="btn purple lighten-4">生成我的设计方案</a></div>
-      </div>
+      </div> -->
 
     </div>
   </div>
@@ -1100,6 +1185,13 @@
             columnWidth: '.masonry'
           }
         });
+      });
+      var $main_window = $(window);
+      /*====================================
+          preloader js
+        ======================================*/
+      $main_window.on('load', function () {
+          $('#preloader').fadeOut('slow');
       });
     })(jQuery);
   </script>

@@ -71,9 +71,9 @@ var vm=new Vue({
       c1:'0',
       c2:'0',
       c3:'0',
-      c4:'00',
+      c4:'0',
       c5:'0',
-      c6:'0',
+      c6:'00',
       c7:'0',
       c8:'0',
       c9:'0',
@@ -115,12 +115,23 @@ var vm=new Vue({
           this.ifshowdesign=false;
         },
         showdesign(){
+          //判断各项指标是否已经选择
+          post=1;
+          $(".hidden_info").each(function(){
+              if($(this).val() == 0){   //如果没有选择，则弹框提示
+                  alert("请选择："+$(this).parent().parent().find('h5').text());
+                  post=0;
+                  return false;        //停止执行
+              }
+          });
+          if(post===0)
+          return;
           this.ifshowaidesign=false;
           this.ifshowdesign=true;
         
           console.log(this.gencode());
           axios
-            .get('php/finddesign.php', {"code":this.gencode()})
+            .get('php/finddesign.php', {"demand":this.gencode()})
             .then(function(response){
                 jsonData = JSON.parse(response);
                 for(var i=0;i<4;i++){
@@ -140,8 +151,72 @@ var vm=new Vue({
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
-        }
+        },
       }
+  })
+
+  var vm_design=new Vue({
+    el:'#designscreen',
+    data:{
+      c1:'0',
+      c2:'0',
+      c3:'0',
+      c4:'0',
+      c5:'0',
+      c6:'00',
+      c7:'0',
+      c8:'0',
+      c9:'0',
+      c10:'0',
+      c11:'0',
+      c12:'0',
+      c13:'0',
+      c14:'0',
+      c15:'0',
+      c16:'0',
+      c17:'0'
+    },
+    methods:{
+      gencode:function(){
+        return this.c1.toString() + this.c2.toString() + this.c3.toString() + this.c4.toString() + this.c5.toString() + this.c6.toString() 
+        + this.c7.toString() + this.c8.toString() + this.c9.toString() + this.c10.toString()+ this.c11.toString()+ this.c12.toString()
+        + this.c13.toString()+ this.c14.toString()+ this.c15.toString()+ this.c16.toString()+ this.c17.toString()
+      },
+      uploaddesign(){
+        post=1;
+        $(".hidden_info_").each(function(){
+            if($(this).val() == 0){   //如果没有选择，则弹框提示
+                alert("请选择："+$(this).parent().parent().find('h5').text());
+                post=0;
+                return false;        //停止执行
+            }
+        });
+        if(post===0)
+        return;
+        var file=document.getElementById("fileImage").files;
+        if(file[0]===undefined){
+          alert("请上传设计图纸");
+          return;
+        }
+        var formdata=new FormData();
+        formdata.append("design",file[0]);
+        var code=this.gencode();
+        console.log(code);
+
+        axios
+            .post('php/finddesign.php', {
+              "demand":code,
+              "formdata":formdata
+          })
+            .then(function(response){  
+              alert("上传成功");
+              $("#aiadddesignModal").modal('close');
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+      }
+    }
   })
 
   var vm_=new Vue({
@@ -175,18 +250,72 @@ $('.carousel.carousel-slider').carousel({full_width: true});
       $("#uploadscreen").modal('open');
   });
 
+  var fileInput = $('#fileImage');
+  var preview = $('#preview');
+      //respond when the content of the 'file' item change
+      fileInput.change(function () {
+        //clear the old background
+        preview.attr("src","");
+        var file = fileInput.get(0).files[0];
+        
+        if (file===undefined){
+            preview.slideUp('slow');
+        }
+        else if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+            fileInput.get(0).value='';
+            preview.hide();
+            alert('不是有效的图片文件!'); 
+        }
+        else{
+        var reader = new FileReader();
+        //respond once the filreader finish its uploading process
+        reader.onload = function(e) {
+            var data = e.target.result;
+            preview.attr("src",data);
+            preview.slideDown('slow');
+        };
+        reader.readAsDataURL(file);
+        }
+    });
+
   $('.chips').material_chip();
   $(".chip").click(function(){ 
     for(item=0;item < this.parentNode.children.length;item++){
-        if(parseInt(this.id/10) == 7)continue;
+        if(parseInt(this.id/10) == 7||parseInt(this.id/10) == 70){
+          continue;
+        }
         this.parentNode.children[item].style.backgroundColor = "#e4e4e4";
         this.parentNode.children[item].style.color = "rgba(0, 0, 0, 0.6)";
+        $(this).parent().find('.hidden_info').val(this.id); 
+        $(this).parent().find('.hidden_info_').val(this.id); 
     }
     if(this.style.backgroundColor != "teal"){
+      if(parseInt(this.id/10) == 7){
+        $("#F"+this.id).val(1);
+        $("#F").val(1);
+      }
+      if(parseInt(this.id/10) == 70){
+        $("#F"+this.id).val(1);
+        $("#FF").val(1);
+      }
         this.style.backgroundColor = "teal";
         this.style.color = "white";
     }
     else{
+      if(parseInt(this.id/10) == 7){
+        $("#F"+this.id).val(0);
+            if($("#F70").val()==0 && $("#F71").val()==0  && $("#F72").val()==0 && $("#F73").val()==0&& $("#F74").val()==0
+            && $("#F75").val()==0&& $("#F76").val()==0&& $("#F77").val()==0&& $("#F78").val()==0&& $("#F79").val()==0){
+              $("#F").val(0);
+        }
+      }
+      if(parseInt(this.id/10) == 70){
+        $("#F"+this.id).val(0);
+            if($("#F700").val()==0 && $("#F701").val()==0  && $("#F702").val()==0 && $("#F703").val()==0&& $("#F704").val()==0
+            && $("#F705").val()==0&& $("#F706").val()==0&& $("#F707").val()==0&& $("#F708").val()==0&& $("#F709").val()==0){
+              $("#FF").val(0);
+        }
+      }
         this.style.backgroundColor = "#e4e4e4";
         this.style.color = "rgba(0, 0, 0, 0.6)";
     }
@@ -201,8 +330,6 @@ $('.carousel.carousel-slider').carousel({full_width: true});
   var uploadcoords;
 
   setUserFromSesssion();
-
-
 
   function showInfo(e){
       uploadcoords = e.point;
@@ -231,6 +358,7 @@ $('.carousel.carousel-slider').carousel({full_width: true});
         return null;  
     }  
 }  
+
 
 function openSignupscreen(){
   $("#signupscreen").modal('open');

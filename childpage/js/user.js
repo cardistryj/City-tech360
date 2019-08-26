@@ -35,51 +35,52 @@ function newuser(){
 
 
     var job;
-    // if( $("[href=#signupDesigner]").hasClass("active")){
-    //     job = 1;
-    //     jobdetail = $("#job")[0].innerHTML;
-    //     if(!jobdetail){
-    //         alert("请填写职业");
-    //         $("#job").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupGov]").hasClass("active")){
-    //     job = 2;
-    //     jobdetail = $("#govname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写政府机构");
-    //         $("#govname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupCmt]").hasClass("active")){
-    //     job = 3;
-    //     jobdetail = $("#cmtname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写居委会名称");
-    //         $("#cmtname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupCtz]").hasClass("active")){
-    //     job = 4;
-    //     jobdetail = $("#ctzname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写居住地址");
-    //         $("#ctzname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupWrk]").hasClass("active")){
-    //     job = 5;
-    //     jobdetail = $("#wrkname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写施工单位名称");
-    //         $("#wrkname").addClass("invalid");
-    //         return;
-    //     }
-    // }
+    var jobdetail;
+    if( $("[href=#signupDesigner]").hasClass("active")){
+        job = 1;
+        jobdetail = $("#job")[0].innerHTML;
+        if(!jobdetail){
+            alert("请填写职业");
+            $("#job").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupGov]").hasClass("active")){
+        job = 2;
+        jobdetail = $("#govname")[0].value;
+        if(!jobdetail){
+            alert("请填写政府机构");
+            $("#govname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupCmt]").hasClass("active")){
+        job = 3;
+        jobdetail = $("#cmtname")[0].value;
+        if(!jobdetail){
+            alert("请填写居委会名称");
+            $("#cmtname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupCtz]").hasClass("active")){
+        job = 4;
+        jobdetail = $("#ctzname")[0].value;
+        if(!jobdetail){
+            alert("请填写居住地址");
+            $("#ctzname").addClass("invalid");
+            return;
+        }
+    }
+    if($("[href=#signupWrk]").hasClass("active")){
+        job = 5;
+        jobdetail = $("#wrkname")[0].value;
+        if(!jobdetail){
+            alert("请填写施工单位名称");
+            $("#wrkname").addClass("invalid");
+            return;
+        }
+    }
     var tel = $("#telnum")[0].value;
     var birth = "none";
     var avatar = "default";
@@ -101,9 +102,12 @@ function newuser(){
         data: {
             "nickname":username,
             "password":sha1password,
-            "type":job,
+            "job":job,
+            "jobdetail":jobdetail,
             "email":email,
             "tel":tel,
+            "birth":birth,
+            "avatar":avatar
         },
         success: function(result){
             console.log(result);
@@ -113,8 +117,9 @@ function newuser(){
                 $("#password")[0].value = "";
                 $("#password-re")[0].value = "";
                 $("#telnum")[0].value = "";
+                $("#govname")[0].value = "";
                 showinfo("注册成功");
-                setUser(username,email,avatar,job,tel);
+                setUser(username,email,avatar,job,jobdetail,tel);
             }
             else if(result == "用户名重复"){
                 $("#username").addClass("invalid");
@@ -155,7 +160,7 @@ function signin(){
                 showinfo(jsonResult.errortype);
             }
             else if(jsonResult.login=="1"){
-                setUser(jsonResult.nickname,jsonResult.email,jsonResult.avatar,jsonResult.job,jsonResult.tel);
+                setUser(jsonResult.nickname,jsonResult.email,jsonResult.avatar,jsonResult.job,jsonResult.jobdetail,jsonResult.tel);
                 showinfo("登录成功");
             }
         },
@@ -173,6 +178,7 @@ function signout(){
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('avatar');
     sessionStorage.removeItem('job');
+    sessionStorage.removeItem('jobdetail');
     sessionStorage.removeItem('tel');
     $("#btnSignup").fadeIn('slow');
     $("#btnSignin").fadeIn('slow');

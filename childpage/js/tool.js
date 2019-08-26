@@ -3,12 +3,13 @@ function showinfo(info){
     $("#infoscreen").modal("open");
 }
 
-function setUser(username,email,avatar,job,tel){
+function setUser(username,email,avatar,job,jobdetail,tel){
     sessionStorage.setItem('login',true);
     sessionStorage.setItem('username',username);
     sessionStorage.setItem('email',email);
     sessionStorage.setItem('avatar',avatar);
     sessionStorage.setItem('job',job);
+    sessionStorage.setItem('jobdetail',jobdetail);
     sessionStorage.setItem('tel',tel);
 
     $("#btnSignup").hide();
@@ -27,31 +28,17 @@ function setUser(username,email,avatar,job,tel){
     $("#pUsername")[0].innerHTML = username;
     $("#pUsername").show();
     $("#btnMyproject").show();
-    $("#btnMyprojectSide").show();
-    var role="";
-    if(job===1){
-        role="设计师";
-        $('#uploaddesign').show();
-    }
-    else{
-        if(job===2)
-        role="政府机构";
-        else if(job===3)
-        role="居委会";
-        else if(job===4)
-        role="居民";
-        else if(job===5)
-        role="施工方";
-    }
-    $('#role')[0].innerHTML="角色："+role;
-    $('#roleSide')[0].innerHTML="角色："+role;
-    
+    $("#btnMydesign").show();
+
     // $("#logo-container")[0].style.display = "none";
     $("#liAvatarSide").show();
     $("#infoSide").show();
     $("#signoutSide").show();
     $("#pUsernameSide")[0].innerHTML = username;
     $("#pUsernameSide").show();
+    $("#btnMyprojectSide").show();
+    $("#btnMydesignSide").show();
+    
 }
 
 function setUserFromSesssion(){
@@ -72,26 +59,8 @@ function setUserFromSesssion(){
         $("#liAvatar").show();
         $("#pUsername")[0].innerHTML = sessionStorage.getItem('username');
         $("#pUsername").show();
-        job=parseInt(sessionStorage.getItem('job'));
         $("#btnMyproject").show();
-        $("#btnMyprojectSide").show();
-        var role="";
-        if(job===1){
-            role="设计师";
-            $('#uploaddesign').show();
-        }
-        else{
-            if(job===2)
-            role="政府机构";
-            else if(job===3)
-            role="居委会";
-            else if(job===4)
-            role="居民";
-            else if(job===5)
-            role="施工方";
-        }
-        $('#role')[0].innerHTML="角色："+role;
-        $('#roleSide')[0].innerHTML="角色："+role;
+        $("#btnMydesign").show();
 
         //$("#logo-container")[0].style.display = "none";
         $("#liAvatarSide").show();
@@ -99,6 +68,8 @@ function setUserFromSesssion(){
         $("#signoutSide").show();
         $("#pUsernameSide")[0].innerHTML = sessionStorage.getItem('username');
         $("#pUsernameSide").show();
+        $("#btnMyprojectSide").show();
+        $("#btnMydesignSide").show();
     }
 }
 

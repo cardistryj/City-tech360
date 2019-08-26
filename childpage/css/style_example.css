@@ -174,7 +174,7 @@ select {
 	width: 100%;
 	height: 100%;
 	overflow: visible;
-	background: rgb(6, 39, 52) url("../images/loader.gif") no-repeat center center;
+	background: rgb(255, 255, 255) url("../../img/loader.gif") no-repeat center center;
 }
 /*----------- Button-bottom-to-top -------------*/
 

@@ -55,3 +55,7 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.dropdown-content li a{
+  font-size: 12px !important;
+}
