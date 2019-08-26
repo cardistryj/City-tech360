@@ -35,53 +35,22 @@ function newuser(){
 
 
     var job;
-    // if( $("[href=#signupDesigner]").hasClass("active")){
-    //     job = 1;
-    //     jobdetail = $("#job")[0].innerHTML;
-    //     if(!jobdetail){
-    //         alert("请填写职业");
-    //         $("#job").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupGov]").hasClass("active")){
-    //     job = 2;
-    //     jobdetail = $("#govname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写政府机构");
-    //         $("#govname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupCmt]").hasClass("active")){
-    //     job = 3;
-    //     jobdetail = $("#cmtname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写居委会名称");
-    //         $("#cmtname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupCtz]").hasClass("active")){
-    //     job = 4;
-    //     jobdetail = $("#ctzname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写居住地址");
-    //         $("#ctzname").addClass("invalid");
-    //         return;
-    //     }
-    // }
-    // if($("[href=#signupWrk]").hasClass("active")){
-    //     job = 5;
-    //     jobdetail = $("#wrkname")[0].value;
-    //     if(!jobdetail){
-    //         alert("请填写施工单位名称");
-    //         $("#wrkname").addClass("invalid");
-    //         return;
-    //     }
-    // }
+    if( $("[href=#signupDesigner]").hasClass("active")){
+        job = 1;
+    }
+    else if($("[href=#signupGov]").hasClass("active")){
+        job = 2;
+    }
+    else if($("[href=#signupCmt]").hasClass("active")){
+        job = 3;
+    }
+    else if($("[href=#signupCtz]").hasClass("active")){
+        job = 4;
+    }
+    else if($("[href=#signupWrk]").hasClass("active")){
+        job = 5;
+    }
     var tel = $("#telnum")[0].value;
-    var birth = "none";
     var avatar = "default";
 
     if(passwordre != password){
