@@ -3,12 +3,12 @@ var vm=new Vue({
     data : {
       factors:{
         name:'',
-        author:'',
-        street:'',
         tel:'',
         budget:'',
         demand:'',
-        address:''
+        address:'',
+        lng:'',
+        lat:'',
       },
       ifshowupload:true,
       ifshowaidesign:false,
@@ -255,17 +255,17 @@ var vm=new Vue({
         {
           img:'img/20-400x293.jpg',
           name:'同济新村院落空间',
-          detail:'同济新村老旧院落型住宅改造'
+          detail:'学生实践平台'
+        },
+        {
+          img:'img/19.jpg',
+          name:'四平体育弄',
+          detail:'激发社区活力'
         },
         {
           img:'img/13.jpg',
-          name:'四平体育弄',
-          detail:'社区公共空间改造设计'
-        },
-        {
-          img:'img/9.jpg',
           name:'创智农园',
-          detail:'将建筑废料堆放处改造成社区花园'
+          detail:'增强邻里互动社交'
         }
       ]
     }
@@ -275,8 +275,6 @@ $('.carousel.carousel-slider').carousel({full_width: true});
  $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
-    if(GetQueryString("fun")=="upload")
-      $("#uploadscreen").modal('open');
   });
 
   var fileInput = $('#fileImage');
@@ -306,6 +304,13 @@ $('.carousel.carousel-slider').carousel({full_width: true});
         reader.readAsDataURL(file);
         }
     });
+
+  function showmodal(){
+    if(isLogin())
+            $("#uploadscreen").modal('open');
+          else
+            alert("请先登录");
+  }
 
   $('.chips').material_chip();
   $(".chip").click(function(){
@@ -350,7 +355,9 @@ $('.carousel.carousel-slider').carousel({full_width: true});
 
   function showInfo(e){
       uploadcoords = e.point;
-      $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat
+      $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
+      vm.lng=e.point.lng;
+      vm.lat=e.point.lat;
       map.clearOverlays();
       var marker = new BMap.Marker(e.point);
       map.addOverlay(marker);
