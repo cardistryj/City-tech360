@@ -16,56 +16,56 @@ var vm=new Vue({
       ifinvalid:false,
       solutions:[
             {
-              name:'123',
-              img:'1.png',
-              detail:'123',
+              id:'0',
+              designName:'123设计方案',
+              pic:'1.png',
+              surround:'123',
               size:'123',
-              shape:'123',
-              type:'23',
-              designage:'4',
-              outdoor:'54',
-              district:'3',
-              region:'345',
-              function:'345'
+              greenRate:'123',
+              function:'娱乐',
+              style:'123',
+              viewFactor:'54',
+              chairNum:'3',
+              isCovered:'345',
             },
             {
-              name:'2',
-              img:'2.png',
-              detail:'2',
-              size:'2',
-              shape:'2',
-              type:'2',
-              designage:'2',
-              outdoor:'2',
-              district:'2',
-              region:'2',
-              function:'2'
+              id:'0',
+              designName:'瞎几把设计',
+              pic:'2.png',
+              surround:'无',
+              size:'大',
+              greenRate:'高',
+              function:'无',
+              style:'朋克',
+              viewFactor:'没有',
+              chairNum:'10',
+              isCovered:'是',
             },
             {
-              name:'3',
-              img:'3.png',
-              detail:'3',
-              size:'3',
-              shape:'3',
-              type:'3',
-              designage:'3',
-              outdoor:'3',
-              district:'3',
-              region:'3',
-              function:'3'
+              id:'0',
+              designName:'乱求设计',
+              pic:'3.png',
+              surround:'有',
+              size:'小',
+              greenRate:'0%',
+              function:'大保健',
+              style:'淫欲',
+              viewFactor:'晓不得',
+              chairNum:'0',
+              isCovered:'否',
             },
             {
-              name:'4',
-              img:'4.png',
-              detail:'4',
-              size:'4',
-              shape:'4',
-              type:'4',
-              designage:'4',
-              outdoor:'4',
-              district:'4',
-              region:'4',
-              function:'4'
+              id:'0',
+              designName:'锤子设计',
+              pic:'4.png',
+              surround:'晓不得',
+              size:'晓求不得',
+              greenRate:'你猜',
+              function:'没得',
+              style:'XXXL',
+              viewFactor:'这个真没有',
+              chairNum:'-1',
+              isCovered:'非也',
             }
       ],
       A:'0',
@@ -95,7 +95,7 @@ var vm=new Vue({
           this.ifshowaidesign=false;
         },
         showaidesign:function(){
-          if (!this.factors.author||!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
+          if (!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
           {
               alert("请填写必要信息");
               this.ifinvalid=true;
@@ -106,7 +106,7 @@ var vm=new Vue({
           this.ifshowaidesign=true;
           this.ifshowdesign=false;
         },
-        showdesign(){
+        showdesign:function(){
           if(this.A==='0'){
             alert("请选择：尺寸");
             return;
@@ -167,6 +167,80 @@ var vm=new Vue({
             console.log(error);
             });
         },
+        publishproject:function(){
+          if (!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
+          {
+              alert("请填写必要信息");
+              this.ifinvalid=true;
+              return;
+          } 
+          console.log(this.factors.lng);
+          console.log(this.factors.lat);
+          axios
+            .post('http://localhost:8888/upload.php', 
+            {"name":this.factors.name,"tel" : this.factors.tel, "budget": this.factors.budget, "demand": this.factors.demand, "address": this.factors.address, "lng":this.factors.lng, "lat":this.factors.lat},
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+          })
+            .then(function(response){
+              vm.factors.name = "";
+              vm.factors.tel = "";
+              vm.factors.budget = "";
+              vm.factors.demand = "";
+              vm.factors.address = "";
+              vm.factors.lng = "";
+              vm.factors.lat = "";
+              $("#infotext")[0].innerHTML = "上传成功";
+              $("#infoscreen").modal("open");
+              vm.ifshowupload=true;
+              vm.ifshowaidesign=false;
+              vm.ifshowdesign=false;
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+          // $.ajax({
+          //     url: ,        
+          //     type: "post",
+          //     dataType:"text",
+          //     async: false,
+          //     data: {"name":this.factors.name,"tel" : this.factors.tel, "budget": this.factors.budget, "demand": this.factors.demand, "address": this.factors.address, "lng":this.factors.lng, "lat":this.factors.lat},
+          //     success: function(result){
+          //         // alert(result);
+          //         vm.factors.name = "";
+          //         vm.factors.tel = "";
+          //         vm.factors.budget = "";
+          //         vm.factors.demand = "";
+          //         vm.factors.address = "";
+          //         $("#infotext")[0].innerHTML = "上传成功";
+          //         $("#infoscreen").modal("open");
+          //     },
+          //     error: function (XMLHttpRequest, textStatus, errorThrown){
+          //         alert(XMLHttpRequest.status);
+          //         alert(XMLHttpRequest.readyState);
+          //         alert(textStatus);
+          //     }
+          // });
+          // for (var item in $("#file")[0].files){
+          //     if($("#file")[0].files[item] != undefined){
+          //         var fileform = new FormData($('#uploadForm'));
+          //         fileform.append('name',vm.factors.name);
+          //         //fileform.append('files',$("#file")[0].files[item]);
+          //         fileform.append('file',$("#file")[0].files[item]);
+          //         $.ajax({
+          //             url: 'php/fileupload.php',
+          //             type: 'POST',
+          //             cache: false,
+          //             data: fileform,
+          //             processData: false,
+          //             contentType: false
+          //         }).done(function(res) {}).fail(function(res) {});
+          //     }
+          //     else{
+          //         console.log("nofile");
+          //     }
+          // }
+        }
       }
   })
 
@@ -189,7 +263,7 @@ var vm=new Vue({
       gencode:function(){
         return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+(this.F4==='0'?'':this.F4)+'G'+this.G+'H'+this.H;
       },
-      uploaddesign(){
+      uploaddesign:function(){
         if(this.A==='0'){
           alert("请选择：尺寸");
           return;
@@ -244,6 +318,9 @@ var vm=new Vue({
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
+      },
+      publishproject:function(){
+
       }
     }
   })
@@ -356,8 +433,8 @@ $('.carousel.carousel-slider').carousel({full_width: true});
   function showInfo(e){
       uploadcoords = e.point;
       $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
-      vm.lng=e.point.lng;
-      vm.lat=e.point.lat;
+      vm.factors.lng=e.point.lng;
+      vm.factors.lat=e.point.lat;
       map.clearOverlays();
       var marker = new BMap.Marker(e.point);
       map.addOverlay(marker);
@@ -479,10 +556,7 @@ function openSignupscreen(){
 //}
 
 function publish(){
-    // if(isLogin())
-        ajaxtest();
-    // else
-    //     showinfo("请先登录");
+    ajaxtest();
 }
 
 function closeAllModal(){

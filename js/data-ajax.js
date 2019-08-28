@@ -4,15 +4,7 @@ const signupURL = "/php/signup.php";
 
 function ajaxtest()
 {
-    // var name = $("#name")[0].value;
-    // var author = $("#author")[0].value;
-    // var street = $("#street")[0].value;
-    // var tel = $("#tel")[0].value;
-    // var budget = $("#budget")[0].value;
-    // var demand = $("#demand")[0].value;
-    // var address = $("#address")[0].value;
-
-    if (!vm.factors.author||!vm.factors.address||!vm.factors.tel||!vm.factors.demand||!vm.factors.name)
+    if (!vm.factors.address||!vm.factors.tel||!vm.factors.demand||!vm.factors.name)
     {
         alert("请填写必要信息");
         vm.ifinvalid=true;
@@ -95,64 +87,64 @@ function ajaxtest()
 
 }
 
-function deleteAjax(id){
-    var passwd = $("#passwd")[0].value;
-    $("#passwd")[0].value = "";
-    $.ajax({
-        url: deleteURL,        
-        type: "post",
-        dataType:"text",
-        async: false,
-        data: {"id":id,"passwd":passwd},
-        success: function(result){
-            alert(result);
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown){
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-        }
-    });
+// function deleteAjax(id){
+//     var passwd = $("#passwd")[0].value;
+//     $("#passwd")[0].value = "";
+//     $.ajax({
+//         url: deleteURL,        
+//         type: "post",
+//         dataType:"text",
+//         async: false,
+//         data: {"id":id,"passwd":passwd},
+//         success: function(result){
+//             alert(result);
+//         },
+//         error: function (XMLHttpRequest, textStatus, errorThrown){
+//             alert(XMLHttpRequest.status);
+//             alert(XMLHttpRequest.readyState);
+//             alert(textStatus);
+//         }
+//     });
 
-}
+// }
 
-function signup(type){
-    var username = $("#username")[0].value;
-    var email = $("#email")[0].value;
-    var passwd = $("#password")[0].value;
-    var passwd_re = $("#password-re")[0].value;
-    if(type == "designer"){
-        var job = $("#job")[0].innerHTML;
-        if(passwd_re == passwd){
-            $.ajax({
-                url: signupURL,        
-                type: "post",
-                dataType:"text",
-                async: false,
-                data: {
-                    "username" : username,
-                    "email" : email,
-                    "passwd" : passwd,
-                    "type" : type,
-                    "job" : job
-                        },
-                success: function(result){
-                    alert(result);
-                    var data = loadData();
-                    $("#cardholder")[0].innerHTML = "";
-                    for (item in data) {
-                        var div = newcard(data[item].name,data[item].author,data[item].street,data[item].tel,data[item].budget,data[item].demand,data[item].time,data[item].address,data[item].lng,data[item].lat,data[item].id);
-                        $("#cardholder")[0].appendChild(div);
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown){
-                    alert(XMLHttpRequest.status);
-                    alert(XMLHttpRequest.readyState);
-                    alert(textStatus);
-                }
-            });
-        }
-        else
-            alert("两次输入的密码不一致");
-    }
-}
+// function signup(type){
+//     var username = $("#username")[0].value;
+//     var email = $("#email")[0].value;
+//     var passwd = $("#password")[0].value;
+//     var passwd_re = $("#password-re")[0].value;
+//     if(type == "designer"){
+//         var job = $("#job")[0].innerHTML;
+//         if(passwd_re == passwd){
+//             $.ajax({
+//                 url: signupURL,        
+//                 type: "post",
+//                 dataType:"text",
+//                 async: false,
+//                 data: {
+//                     "username" : username,
+//                     "email" : email,
+//                     "passwd" : passwd,
+//                     "type" : type,
+//                     "job" : job
+//                         },
+//                 success: function(result){
+//                     alert(result);
+//                     var data = loadData();
+//                     $("#cardholder")[0].innerHTML = "";
+//                     for (item in data) {
+//                         var div = newcard(data[item].name,data[item].author,data[item].street,data[item].tel,data[item].budget,data[item].demand,data[item].time,data[item].address,data[item].lng,data[item].lat,data[item].id);
+//                         $("#cardholder")[0].appendChild(div);
+//                     }
+//                 },
+//                 error: function (XMLHttpRequest, textStatus, errorThrown){
+//                     alert(XMLHttpRequest.status);
+//                     alert(XMLHttpRequest.readyState);
+//                     alert(textStatus);
+//                 }
+//             });
+//         }
+//         else
+//             alert("两次输入的密码不一致");
+//     }
+// }

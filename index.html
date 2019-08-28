@@ -352,7 +352,6 @@
       <div class="row">
         <div class="col s12 ">
           <h2 style="color: gainsboro;">生成的设计方案</h2>
-          <h4 id="ai_name">{{solutions[0].name}}</h4>
         </div>
       </div>
       <div class="row">
@@ -361,25 +360,31 @@
         </div>
       </div>
       <div class="row">
+        <div class="col s12 ">
+          <h4 style="font-size: 22px;" id="ai_name">{{solutions[0].designName}}</h4>
+        </div>
+      </div>
+      <div class="row">
         <div class="col s12">
-          <p id="ai_detail">{{solutions[0].detail}}</p>
+          <p id="ai_detail">{{'功能：'+solutions[0].function}}</p>
         </div>
         <div class="col s12">
-          <img id="ai_img" v-bind:src="'img/'+solutions[0].img" alt="" style="width: 100%;">
+          <img id="ai_img" v-bind:src="'img/'+solutions[0].pic" alt="" style="width: 100%;">
         </div>
         <div class="col s12">
-          <label for="" id="ai_label">{{'大小:'+solutions[0].size
-                  +';形态:'+solutions[0].shape
-                  +';属性:'+solutions[0].type
-                  +';年限:'+solutions[0].designage
-                  +';场所:'+solutions[0].outdoor
-                  +';位置:'+solutions[0].district
-                  +';环境:'+solutions[0].region
-                  +';功能:'+solutions[0].function}}</label>
+          <label for="" id="ai_label">{{'围合：'+solutions[0].surround
+                  +'；大小：'+solutions[0].size
+                  +'；绿地比例：'+solutions[0].greenRate
+                  +'；风格：'+solutions[0].style
+                  +'；景观要素：'+solutions[0].viewFactor
+                  +'；座椅数量：'+solutions[0].chairNum
+                  +'；是否需要顶棚：'+solutions[0].isCovered}}</label>
+          <br>
+          <br>
         </div>
         <div class="col s12">
           <a href="#designModal" class="btn purple lighten-4 right" style="margin-right: 15px;"
-            onclick="publish()">采用该方案并发布</a>
+            @click="publishproject">采用该方案并发布</a>
           <a href="#uploadModal" class="btn purple lighten-4 rights" @click="showaidesign">上一步</a>
         </div>
       </div>
@@ -390,20 +395,20 @@
       </div>
       <div class="row">
         <div class="col s12">
-          <h3 style="    font-weight: 600;color: gray;font-size: 2rem;">其他的相似案例</h3>
+          <h3 style="font-weight: 600;color: gray;font-size: 2rem;">其他的相似案例</h3>
           <div class="row" style="display: flex;justify-content: center;">
             <div class="card z-depth-0 col s12 m4">
               <div class="card-image">
-                <img id="ai_img2" v-bind:src="'img/'+solutions[1].img">
+                <img id="ai_img2" v-bind:src="'img/'+solutions[1].pic">
                 <span class="card-title"></span>
               </div>
               <div class="card-content">
                 <h5 class="card-title" id="ai_name2"
-                  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">
-                  {{solutions[1].name}}</h5>
+                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
+                  {{solutions[1].designName}}</h5>
                 <p id="ai_p2"
-                  style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">
-                  {{solutions[1].detail}}</p>
+                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
+                  {{solutions[1].function}}</p>
               </div>
               <div class="card-action">
                 <a href="#!" id="ai_btn2" @click="present($event)">详情</a>
@@ -411,16 +416,16 @@
             </div>
             <div class="card z-depth-0 col s12 m4">
               <div class="card-image">
-                <img id="ai_img3" v-bind:src="'img/'+solutions[2].img">
+                <img id="ai_img3" v-bind:src="'img/'+solutions[2].pic">
                 <span class="card-title"></span>
               </div>
               <div class="card-content">
                 <h5 class="card-title" id="ai_name3"
-                  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">
-                  {{solutions[2].name}}</h5>
+                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
+                  {{solutions[2].designName}}</h5>
                 <p id="ai_p3"
-                  style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">
-                  {{solutions[2].detail}}</p>
+                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
+                  {{solutions[2].function}}</p>
               </div>
               <div class="card-action">
                 <a href="#!" id="ai_btn3" @click="present($event)">详情</a>
@@ -428,16 +433,16 @@
             </div>
             <div class="card z-depth-0 col s12 m4">
               <div class="card-image">
-                <img id="ai_img4" v-bind:src="'img/'+solutions[3].img">
+                <img id="ai_img4" v-bind:src="'img/'+solutions[3].pic">
                 <span class="card-title"></span>
               </div>
               <div class="card-content">
                 <h5 class="card-title" id="ai_name4"
-                  style="line-height: inherit !important;font-size: 16px !important;margin:0px;height: 50px;overflow: hidden;">
-                  {{solutions[3].name}}</h5>
+                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
+                  {{solutions[3].designName}}</h5>
                 <p id="ai_p4"
-                  style="font-size: 10px !important;line-height: 14px !important;color: gray !important;height: 60px;">
-                  {{solutions[3].detail}}</p>
+                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
+                  {{solutions[3].function}}</p>
               </div>
               <div class="card-action">
                 <a href="#!" id="ai_btn4" @click="present($event)">详情</a>

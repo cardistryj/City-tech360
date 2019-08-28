@@ -116,7 +116,6 @@ function signin(){
         data: {
             "email":email,
             "password":sha1password,
-
         },
         success: function(result){
             jsonResult =  JSON.parse(result);
