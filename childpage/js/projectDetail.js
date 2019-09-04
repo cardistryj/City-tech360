@@ -14,6 +14,7 @@ var vm=new Vue({
     tel:'',
     budget:'',
     budgetMod:'',
+    budgetOri:'',
     demand:'',
     address:'',
     lng:'',
@@ -50,7 +51,7 @@ var vm=new Vue({
             .then(function(response){
                 alert('保存成功');
                 vm.ifModified=false;
-                vm.budget=vm.budgetMod;
+                vm.budget=vm.budgetMod===''?vm.budgetOri:vm.budgetMod;
                 vm.budgetMod='';
                 $('#budget').attr('disabled','disabled');   
                 $('#budgetlabel').removeClass('active');             
@@ -109,6 +110,7 @@ var vm=new Vue({
                 vm.author=jsonData['author'];
                 vm.tel=jsonData['tel'];
                 vm.budget=jsonData['budget'];
+                vm.budgetOri=vm.budget;
                 vm.demand=jsonData['demand'];
                 vm.address=jsonData['address'];
                 vm.state=jsonData['state'];
