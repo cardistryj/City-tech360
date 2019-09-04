@@ -81,6 +81,29 @@ var vm=new Vue({
       H:'0'
     },
     methods: {
+        reset:function(){
+          this.factors.name = "";
+          this.factors.tel = "";
+          this.factors.budget = "";
+          this.factors.demand = "";
+          this.factors.address = "";
+          this.factors.lng = "";
+          this.factors.lat = "";
+          this.A='0';
+          this.B='0';
+          this.C='0';
+          this.D='0';
+          this.E='0';
+          this.F1='0';
+          this.F2='0';
+          this.F3='0';
+          this.F4='0';
+          this.G='0';
+          this.H='0';
+          this.ifshowupload=true;
+          this.ifshowaidesign=false;
+          this.ifshowdesign=false;
+        },
         present: function (event) {
           var order=event.currentTarget.getAttributeNode('id');
           order=parseInt(order.value.substring(order.value.length-1))-1;
@@ -183,18 +206,12 @@ var vm=new Vue({
               headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
           })
             .then(function(response){
-              vm.factors.name = "";
-              vm.factors.tel = "";
-              vm.factors.budget = "";
-              vm.factors.demand = "";
-              vm.factors.address = "";
-              vm.factors.lng = "";
-              vm.factors.lat = "";
-              $("#infotext")[0].innerHTML = "上传成功";
-              $("#infoscreen").modal("open");
-              vm.ifshowupload=true;
-              vm.ifshowaidesign=false;
-              vm.ifshowdesign=false;
+              $("#uploadscreen").modal("close");
+              showinfo('发布成功');
+              resetProject();
+              resetMap();
+              resetFile();
+              vm.reset();
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -260,6 +277,19 @@ var vm=new Vue({
       H:'0'
     },
     methods:{
+      reset:function(){
+        this.A='0';
+        this.B='0';
+        this.C='0';
+        this.D='0';
+        this.E='0';
+        this.F1='0';
+        this.F2='0';
+        this.F3='0';
+        this.F4='0';
+        this.G='0';
+        this.H='0';
+      },
       gencode:function(){
         return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+(this.F4==='0'?'':this.F4)+'G'+this.G+'H'+this.H;
       },
@@ -312,15 +342,15 @@ var vm=new Vue({
               "formdata":formdata
           })
             .then(function(response){  
-              alert("上传成功");
-              $("#aiadddesignModal").modal('close');
+              vm_design.reset();
+              showinfo('上传成功');
+              $("#aiadddesignModal").modal("close");              
+              resetDesign();
+              resetDesignFile();
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
-      },
-      publishproject:function(){
-
       }
     }
   })
@@ -426,21 +456,55 @@ $('.carousel.carousel-slider').carousel({full_width: true});
   var top_left_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_SMALL});
   map.addControl(mapType1);
   map.addControl(top_left_navigation);
-  var uploadcoords;
 
   setUserFromSesssion();
 
-  function showInfo(e){
-      uploadcoords = e.point;
+  function showInfoMap(e){
       $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
       vm.factors.lng=e.point.lng;
       vm.factors.lat=e.point.lat;
       map.clearOverlays();
       var marker = new BMap.Marker(e.point);
       map.addOverlay(marker);
+      console.log(e.point);
     };
+
+  function resetMap(){
+    $("#coords")[0].value = "";
+      map.clearOverlays();
+  }
+
+  function resetFile(){
+    $('#uploadModal > div:nth-child(3) > div:nth-child(8)').empty();
+    $('#uploadModal > div:nth-child(3) > div:nth-child(8)').append('<form action="#"><div class="file-field input-field"><div class="btn purple lighten-4">'+
+        '<span>上传附件</span><form id="uploadForm" enctype="multipart/form-data"><input id="file" type="file" name="file" multiple>'+
+        '</form></div><div class="file-path-wrapper"><input class="file-path validate" type="text" placeholder="上传一个或多个文件"></div></div></form>');
+  }
+
+  function resetDesignFile(){
+    $('#aiadddesignModal > div.row.center.centered.z-depth-2 > div').empty();
+    $('#uploadModal > div:nth-child(3) > div:nth-child(8)').append('<form action="#"><div class="file-field input-field"><div class="btn purple lighten-4">'+
+        '<span>上传图片</span><form id="formImage" enctype="multipart/form-data"><input id="fileImage" accept="image/*" type="file" name="file" multiple>'+
+        '</form></div><div class="file-path-wrapper"><input class="file-path validate" type="text" placeholder="上传您创作的设计方案"></div></div></form>');
+  }
   
-  map.addEventListener("click", showInfo);
+  map.addEventListener("click", showInfoMap);
+
+  function resetProject(){
+    $('#uploadModal > div:nth-child(3) > div > label').removeClass('active');
+    $('#uploadModal > div:nth-child(3) > div > input').removeClass('valid');
+    $('#aidesignModal div.chip').css('color','rgba(0, 0, 0, 0.6)');
+    $('#aidesignModal div.chip').css('background-color','#e4e4e4');
+    $('#aidesignModal div.chipf').css('color','rgba(0, 0, 0, 0.6)');
+    $('#aidesignModal div.chipf').css('background-color','#e4e4e4');
+}
+
+function resetDesign(){
+    $('#aiadddesignModal div.chip').css('color','rgba(0, 0, 0, 0.6)');
+    $('#aiadddesignModal div.chip').css('background-color','#e4e4e4');
+    $('#aiadddesignModal div.chipf').css('color','rgba(0, 0, 0, 0.6)');
+    $('#aiadddesignModal div.chipf').css('background-color','#e4e4e4');
+}
 
   function GetQueryString(param) { //param为要获取的参数名 注:获取不到是为null  
     var currentUrl = window.location.href; //获取当前链接  
@@ -555,14 +619,6 @@ function openSignupscreen(){
 // });
 //}
 
-function publish(){
-    ajaxtest();
-}
-
 function closeAllModal(){
     $(".modal").modal("close");
-}
-
-function showallAiSelect(){
-    $("#aiSelect")[0].innerHTML = $("#aiSelectFull")[0].innerHTML;
 }

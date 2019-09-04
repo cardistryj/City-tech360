@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-    <title>已完成案例 - 城市360</title>
+    <title>已发布项目 - 城市360</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
     <!-- CSS  -->
@@ -12,6 +12,15 @@
     <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <!-- Custom.css -->
     <link rel="stylesheet" href="css/style_example.css">
+    <style>
+    th {
+      font-size: 24px;
+    }
+    tr:hover td{
+      color:#26a69a;
+      font-weight: bold;
+    }
+    </style>
 </head>
 <body>
     <div id="preloader"></div>
@@ -85,37 +94,33 @@
     </div>
   </nav>
     
-    <div class="section" id="index-banner2" style="background-color: teal;">
-            <div class="container">
-                <div class="row">
-                        <div class="col s12">
-                            <h1 class="header white-text" >已完成案例</h1>
-                        </div>
-                </div>
-            </div>
+  <div class="section purple lighten-4" id="index-banner2">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <h1 class="header white-text">已发布项目</h1>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 
 <section class="ws-section-spacing bg-gray">
-    <div class="container" id="example">
-        <div class="row masonry-item">
-            <div class="col l4 m6 masonry" style="position:relative;" v-for="example of examples">
-                <div class="package-one">
-                    <div class="img-wapper">
-                        <img :src="example.img" alt="package-img" style="max-height: 250px;min-height: 250px;">
-                    </div>
-                    <div class="package-content" align="center">
-                        <h3>{{example.name}}</h3>
-                        <p>{{example.detail}}</p>
-                        <ul class="ct-action">
-                            <li><a id="" v-bind:href="example.href" class="booking-btn">详情</a></li>
-                            <li></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container z-depth-2" id="project">
+      <table class="striped bordered">
+        <thead>
+           <tr><th></th><th>名称</th><th>改造需求</th><th>状态</th><th></th></tr>
+        </thead>
+        <tbody>
+           <tr v-for="project of projects" @mouseover="display($event)" @mouseout="hide($event)">
+             <td></td>
+             <td>{{project.name}}</td>
+             <td>{{project.demand}}</td>
+             <td>{{project.state}}</td>
+             <td><a href="#!" v-bind:id="project.id" style="color:#26a69a;visibility:hidden" @click="getDetail($event)">
+              <i class="material-icons">subject</i></a></td>
+            </tr>
+        </tbody>
+        </table>
     </div>
 </section>
 
@@ -166,23 +171,12 @@
 <script src="js/imagesloaded.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
-<script src="js/examples.js"></script>
+<script src="js/projects.js"></script>
 <script>
     (function ($) {
         "use strict";
-        /*====================================
-            masonry-item
-        ======================================*/
-        $('.masonry-item').imagesLoaded(function () {
-            $('.masonry-item').isotope({
-                itemSelector: '.masonry',
-                percentPosition: true,
-                masonry: {
-                    columnWidth: '.masonry'
-                }
-            });
-        });
         var $main_window = $(window);
+        vm.init();
         /*====================================
             preloader js
           ======================================*/

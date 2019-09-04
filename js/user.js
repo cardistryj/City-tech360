@@ -82,6 +82,7 @@ function newuser(){
                 $("#password")[0].value = "";
                 $("#password-re")[0].value = "";
                 $("#telnum")[0].value = "";
+                $("#signupscreen").modal('close');
                 showinfo("注册成功");
                 setUser(username,email,avatar,job,tel);
             }
@@ -119,6 +120,7 @@ function signin(){
         },
         success: function(result){
             jsonResult =  JSON.parse(result);
+            $("#loginscreen").modal("close");
             if(jsonResult.login=="0"){
                 showinfo(jsonResult.errortype);
             }
