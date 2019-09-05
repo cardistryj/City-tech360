@@ -51,6 +51,9 @@
       opacity: 0;
       /* transform:translateX(-100%);  */
     }
+    strong{
+      font-size:24px;
+    }
 </style>
 </head>
 <body>
@@ -299,6 +302,26 @@
           </div>
         </div>  
     </div>
+    </div>
+    <div class="container z-depth-1" style="margin-top: 20px;padding:15px">
+      <div class="row">
+      <div class="col s12">
+          <h3 class="left" style="font-size:30px;padding:20px">评论</h3>
+        </div>
+      </div>
+        <div class="z-depth-2 container" style="width:90%;margin-top: 30px;padding:20px" v-for="message of messages">
+          <div class="row">
+        <div class="col s4 m2">
+          <img v-bind:src="message.avatar" style="width:100%;border-radius: 50%;overflow:hidden;">  
+        </div>
+        <div class="col s8 m10" style="margin-bottom: 10px">
+          <strong><span style="color:#26a69a">{{message.type}}</span>：{{message.name}}</strong>
+        </div>
+        <div class="col s8 m10">
+            <p style="font-size:18px;text-indent: 36px;border:1px solid #cccccc;min-height: 100px;width:100%;border-radius: 8px;background-color: #fcfcfc;padding:10px">{{message.content}}</p>
+        </div>
+      </div>
+      </div>
     </div>
 </section>
 

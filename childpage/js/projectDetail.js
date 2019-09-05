@@ -26,7 +26,7 @@ var vm=new Vue({
     ifOwner_:false,
     ifModified:false,
     designs:[],
-    message:[],
+    messages:[],
   },
   methods:{
     switchDesign:function(event){
@@ -125,6 +125,7 @@ var vm=new Vue({
                   else
                     vm.designs.push(design);
                 }
+                vm.messages.splice(0,0,...jsonData['messages']);
                 vm.designs[0].ifchecked=true;
             })
             .catch(function (error) { // 请求失败处理
