@@ -41,7 +41,7 @@
       <label for="" id="role"></label>
     <li class="divider"></li>
     <li>
-      <a href="#!" style="text-align: center;">个人信息</a>
+      <a href="childpage/userinfo.html" style="text-align: center;">个人信息</a>
     </li>
     <li class="divider"></li>
     <li>
@@ -120,7 +120,7 @@
           <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)"></label>
         </a>
         <li>
-          <a id="infoSide" href="http://urp360.org/wordpress/?page_id=11671" style="color:#26a69a;display:none">
+          <a id="infoSide" href="childpage/userInfo.html" style="color:#26a69a;display:none">
             <i class="material-icons">description</i>个人信息</a>
         </li>
           <li>
@@ -461,6 +461,16 @@
         <div class="col s12">
           <h2 class="header main-color">发布设计方案</h2>
         </div>
+      </div>
+      <div class="row">
+          <div class="col s12">
+              <p>输入设计方案名称</p>
+            </div>
+          <div class="input-field col s8 m6">
+            <i class="material-icons prefix">title</i>
+            <input id="designname" type="text" class="validate" v-model="name">
+            <label for="designname">名称</label>
+          </div>
       </div>
 
       <div class="row">

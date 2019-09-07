@@ -1,10 +1,3 @@
-(function($){
-  $(function(){
-    $('.button-collapse').sideNav();
-    $('.parallax').parallax();
-  }); // end of document ready
-})(jQuery); // end of jQuery name space
-
 var vm=new Vue({
   el:'#project',
   data:{
@@ -22,9 +15,11 @@ var vm=new Vue({
     state:'',
     final_scheme:'',
     ifAuthor:false,
-    ifOwner:false,
-    ifOwner_:false,
+    ifHover:false,
+    ifHover_:false,
+    ifHover__:false,
     ifModified:false,
+    comment:'',
     designs:[],
     messages:[],
   },
@@ -49,7 +44,7 @@ var vm=new Vue({
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
             })
             .then(function(response){
-                alert('保存成功');
+                showinfo('保存成功');
                 vm.ifModified=false;
                 vm.budget=vm.budgetMod===''?vm.budgetOri:vm.budgetMod;
                 vm.budgetMod='';
@@ -96,6 +91,31 @@ var vm=new Vue({
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
+    },
+    stop:function(event){
+      event.stopPropagation();
+    },
+    addComment:function(){
+      if(this.comment==='')
+        return;
+      axios
+      .get('http://localhost:8888/initProjectDetail.php', {params:{id:this.project_id,message:this.comment}},{
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+      })
+      .then(function(response){
+        jsonData = response.data;
+        showinfo('评论成功');
+        $('#commentdropdown').hide();
+        vm.messages.push({
+          'avatar':'../default.jpg',   //jsonData['avatar']
+          'type':'政府',                //jsonData['type']
+          'name':'山姆大叔',            //jsonData['name']
+          'content':vm.comment
+        })
+      })
+      .catch(function (error) { // 请求失败处理
+      console.log(error);
+      });
     },
     init:function(project){
       var project_id=GetRequest()['id'];

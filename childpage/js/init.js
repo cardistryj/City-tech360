@@ -17,3 +17,17 @@ function GetRequest() {
   }
   return theRequest;
 }
+
+$(document).ready(function(){
+  // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+  $('.modal').modal();
+});
+
+function showinfo(info){
+  $("#infotext")[0].innerHTML = info;
+  $("#infoscreen").modal("open");
+}
+
+function closeAllModal(){
+  $(".modal").modal("close");
+}

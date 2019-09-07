@@ -264,6 +264,7 @@ var vm=new Vue({
   var vm_design=new Vue({
     el:'#designscreen',
     data:{
+      name:'',
       A:'0',
       B:'0',
       C:'0',
@@ -338,6 +339,7 @@ var vm=new Vue({
 
         axios
             .post('php/finddesign.php', {
+              "designName":this.name,
               "demand":code,
               "formdata":formdata
           })
