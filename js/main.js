@@ -170,7 +170,7 @@ var vm=new Vue({
           console.log(code);
         
           axios
-            .get('http://localhost:8888/finddesign.php', {params:{"code":code}})
+            .get('http://127.0.0.1:12450/api/public/scheme/query_scheme', {params:{"code":code}})
             .then(function(response){
                 vm.ifshowloader=false;
                 vm.ifshowdesign=true;
@@ -341,7 +341,7 @@ var vm=new Vue({
         console.log(code);
 
         axios
-            .post('php/finddesign.php', {
+            .post('http://127.0.0.1:12450/api/private/scheme/add_scheme', {
               "designName":this.name,
               "code":code,
               "formdata":formdata

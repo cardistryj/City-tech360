@@ -120,7 +120,7 @@ var vm=new Vue({
     init:function(project){
       var project_id=GetRequest()['id'];
       axios
-            .get('http://localhost:8888/initProjectDetail.php', {params:{id:project_id}},{
+            .get('http://127.0.0.1:12450/api/public/project/query_by_id', {params:{id:project_id}},{
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
             })
             .then(function(response){
