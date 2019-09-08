@@ -14,6 +14,7 @@ var vm=new Vue({
       ifshowaidesign:false,
       ifshowdesign:false,
       ifinvalid:false,
+      ifshowloader:false,
       solutions:[
             {
               id:'0',
@@ -103,6 +104,7 @@ var vm=new Vue({
           this.ifshowupload=true;
           this.ifshowaidesign=false;
           this.ifshowdesign=false;
+          this.ifshowloader=false;
         },
         present: function (event) {
           var order=event.currentTarget.getAttributeNode('id');
@@ -164,27 +166,28 @@ var vm=new Vue({
           }
           var code=this.gencode();
           this.ifshowaidesign=false;
-          this.ifshowdesign=true;
-
+          this.ifshowloader=true;
           console.log(code);
         
           axios
-            .get('php/finddesign.php', {"demand":code})
+            .get('http://localhost:8888/finddesign.php', {"demand":code})
             .then(function(response){
-                jsonData = JSON.parse(response);
-                for(var i=0;i<4;i++){
-                    this.solutions[i].name = jsonData[i].name;
-                    this.solutions[i].img = jsonData[i].img;
-                    this.solutions[i].detail = jsonData[i].detail;
-                    this.solutions[i].size = jsonData[i].size;
-                    this.solutions[i].shape = jsonData[i].shape;
-                    this.solutions[i].type = jsonData[i].type;
-                    this.solutions[i].designage = jsonData[i].designage;
-                    this.solutions[i].outdoor = jsonData[i].outdoor;
-                    this.solutions[i].district = jsonData[i].district;
-                    this.solutions[i].region = jsonData[i].region;
-                    this.solutions[i].function = jsonData[i].function;
-                }
+                vm.ifshowloader=false;
+                vm.ifshowdesign=true;
+                //jsonData = JSON.parse(response);
+                // for(var i=0;i<4;i++){
+                //     vm.solutions[i].name = jsonData[i].name;
+                //     vm.solutions[i].img = jsonData[i].img;
+                //     vm.solutions[i].detail = jsonData[i].detail;
+                //     vm.solutions[i].size = jsonData[i].size;
+                //     vm.solutions[i].shape = jsonData[i].shape;
+                //     vm.solutions[i].type = jsonData[i].type;
+                //     vm.solutions[i].designage = jsonData[i].designage;
+                //     vm.solutions[i].outdoor = jsonData[i].outdoor;
+                //     vm.solutions[i].district = jsonData[i].district;
+                //     vm.solutions[i].region = jsonData[i].region;
+                //     vm.solutions[i].function = jsonData[i].function;
+                // }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
