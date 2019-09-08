@@ -215,14 +215,17 @@ var vm=new Vue({
           formdata.append("project_address",this.factors.address);
           formdata.append("lng",this.factors.lng);
           formdata.append("lat",this.factors.lat);
-          formdata.append("designs",[this.solutions[0].id,this.solutions[1].id,this.solutions[2].id,this.solutions[3].id])
+          for(var i=0;i<4;++i){
+            formdata.append("designs",Number(this.solutions[i].id));
+          }
           axios
-            .post('http://localhost:8888/upload.php', 
+            .post('/api/private/project/upload_project', 
             formdata,
-            {
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-          })
+            {headers:{
+                  'Content-Type': 'multipart/form-data'
+          }})
             .then(function(response){
+              console.log(response)
               $("#uploadscreen").modal("close");
               showinfo('发布成功');
               resetProject();
@@ -233,47 +236,6 @@ var vm=new Vue({
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
-          // $.ajax({
-          //     url: ,        
-          //     type: "post",
-          //     dataType:"text",
-          //     async: false,
-          //     data: {"name":this.factors.name,"tel" : this.factors.tel, "budget": this.factors.budget, "demand": this.factors.demand, "address": this.factors.address, "lng":this.factors.lng, "lat":this.factors.lat},
-          //     success: function(result){
-          //         // alert(result);
-          //         vm.factors.name = "";
-          //         vm.factors.tel = "";
-          //         vm.factors.budget = "";
-          //         vm.factors.demand = "";
-          //         vm.factors.address = "";
-          //         $("#infotext")[0].innerHTML = "上传成功";
-          //         $("#infoscreen").modal("open");
-          //     },
-          //     error: function (XMLHttpRequest, textStatus, errorThrown){
-          //         alert(XMLHttpRequest.status);
-          //         alert(XMLHttpRequest.readyState);
-          //         alert(textStatus);
-          //     }
-          // });
-          // for (var item in $("#file")[0].files){
-          //     if($("#file")[0].files[item] != undefined){
-          //         var fileform = new FormData($('#uploadForm'));
-          //         fileform.append('name',vm.factors.name);
-          //         //fileform.append('files',$("#file")[0].files[item]);
-          //         fileform.append('file',$("#file")[0].files[item]);
-          //         $.ajax({
-          //             url: 'php/fileupload.php',
-          //             type: 'POST',
-          //             cache: false,
-          //             data: fileform,
-          //             processData: false,
-          //             contentType: false
-          //         }).done(function(res) {}).fail(function(res) {});
-          //     }
-          //     else{
-          //         console.log("nofile");
-          //     }
-          // }
         }
       }
   })
@@ -477,7 +439,7 @@ $('.carousel.carousel-slider').carousel({full_width: true});
   map.addControl(mapType1);
   map.addControl(top_left_navigation);
 
-  setUserFromSesssion();
+  init();
 
   function showInfoMap(e){
       $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
@@ -544,100 +506,10 @@ function resetDesign(){
     }  
 }  
 
-
 function openSignupscreen(){
   $("#signupscreen").modal('open');
   $('ul.tabs').tabs('select_tab', 'signupDesigner');
 }
-
-// function showdesign(){
-//   $("#aidesignModal")[0].style.display = "none";
-//   $("#designModal")[0].style.display = "block";
-
-//   $.ajax({
-//     url: "php/finddesign.php",        
-//     type: "post",
-//     dataType:"text",
-//     async: false,
-//     data: {"code":code},
-//     success: function(result){
-//          //alert(result);
-//         //////////////////////////////////////////////////此处使用vue 四个设计方案
-
-//          jsonData = eval(result);
-//          $("#ai_name")[0].innerHTML = jsonData[0].name;
-//          $("#ai_img")[0].src = "designdataimg/"+jsonData[0].img;
-//          $("#ai_detail")[0].innerHTML = jsonData[0].detail;
-//          $("#ai_label")[0].innerHTML = "大小:"+jsonData[0].size
-//                                     +";形态:"+jsonData[0].shape
-//                                     +";属性:"+jsonData[0].type
-//                                     +";年限:"+jsonData[0].designage
-//                                     +";场所:"+jsonData[0].outdoor
-//                                     +";位置:"+jsonData[0].district
-//                                     +";环境:"+jsonData[0].region
-//                                     +";功能:"+jsonData[0].function;
-//         $("#ai_name2")[0].innerHTML = jsonData[1].name;
-//         $("#ai_p2")[0].innerHTML = jsonData[1].detail;
-//         $("#ai_img2")[0].src = "designdataimg/" + jsonData[1].img;
-//         $("#ai_btn2")[0].onclick = function(){
-//             $("#ai_name")[0].innerHTML = jsonData[1].name;
-//             $("#ai_img")[0].src = "designdataimg/"+jsonData[1].img;
-//             $("#ai_detail")[0].innerHTML = jsonData[1].detail;
-//             $("#ai_label")[0].innerHTML = "大小:"+jsonData[1].size
-//                                         +";形态:"+jsonData[1].shape
-//                                         +";属性:"+jsonData[1].type
-//                                         +";年限:"+jsonData[1].designage
-//                                         +";场所:"+jsonData[1].outdoor
-//                                         +";位置:"+jsonData[1].district
-//                                         +";环境:"+jsonData[1].region
-//                                         +";功能:"+jsonData[1].function;
-//             window.location.href="#designModal";
-//         };
-
-//         $("#ai_name3")[0].innerHTML = jsonData[2].name;
-//         $("#ai_p3")[0].innerHTML = jsonData[2].detail;
-//         $("#ai_img3")[0].src = "designdataimg/" + jsonData[2].img;
-//         $("#ai_btn3")[0].onclick = function(){
-//             $("#ai_name")[0].innerHTML = jsonData[2].name;
-//             $("#ai_img")[0].src = "designdataimg/"+jsonData[2].img;
-//             $("#ai_detail")[0].innerHTML = jsonData[2].detail;
-//             $("#ai_label")[0].innerHTML = "大小:"+jsonData[2].size
-//                                         +";形态:"+jsonData[2].shape
-//                                         +";属性:"+jsonData[2].type
-//                                         +";年限:"+jsonData[2].designage
-//                                         +";场所:"+jsonData[2].outdoor
-//                                         +";位置:"+jsonData[2].district
-//                                         +";环境:"+jsonData[2].region
-//                                         +";功能:"+jsonData[2].function;
-//             window.location.href="#designModal";
-//         };
-
-//         $("#ai_name4")[0].innerHTML = jsonData[3].name;
-//         $("#ai_p4")[0].innerHTML = jsonData[3].detail;
-//         $("#ai_img4")[0].src = "designdataimg/" + jsonData[3].img;
-//         $("#ai_btn4")[0].onclick = function(){
-//             $("#ai_name")[0].innerHTML = jsonData[3].name;
-//             $("#ai_img")[0].src = "designdataimg/"+jsonData[3].img;
-//             $("#ai_detail")[0].innerHTML = jsonData[3].detail;
-//             $("#ai_label")[0].innerHTML = "大小:"+jsonData[3].size
-//                                         +";形态:"+jsonData[3].shape
-//                                         +";属性:"+jsonData[3].type
-//                                         +";年限:"+jsonData[3].designage
-//                                         +";场所:"+jsonData[3].outdoor
-//                                         +";位置:"+jsonData[3].district
-//                                         +";环境:"+jsonData[3].region
-//                                         +";功能:"+jsonData[3].function;
-//             window.location.href="#designModal";
-//         };
-
-//     },
-//     error: function (XMLHttpRequest, textStatus, errorThrown){
-//         alert(XMLHttpRequest.status);
-//         alert(XMLHttpRequest.readyState);
-//         alert(textStatus);
-//     }
-// });
-//}
 
 function closeAllModal(){
     $(".modal").modal("close");

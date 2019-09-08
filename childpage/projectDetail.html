@@ -84,7 +84,7 @@
           </a>
         </li>
         <li>
-          <a href=" https://www.city-tech360.com/city360_web/">首页</a>
+          <a href="/">首页</a>
         </li>
         <li>
           <a href="#!" class="dropdown-button" data-activates="dropdown1">关于畸零空间</a>
@@ -101,7 +101,7 @@
         </li>
         <li class="divider"></li>
         <li>
-          <a href="http://urp360.org/">
+          <a href="/">
             <i class="material-icons">home</i>首页</a>
         </li>
         <li>
@@ -264,12 +264,12 @@
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">nature</i>
                   <input id="greenRate" type="text" disabled>
-                  <label for="greenRate" style="color:black">绿地比例：{{design.greenRate}}</label>
+                  <label for="greenRate" style="color:black">绿地比例：{{design.green_rate}}</label>
                 </div>
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">highlight</i>
                   <input id="function" type="text" disabled>
-                  <label for="function" style="color:black">功能：{{design.function}}</label>
+                  <label for="function" style="color:black">功能：{{design.func}}</label>
                 </div>
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">style</i>
@@ -279,32 +279,32 @@
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">wallpaper</i>
                   <input id="viewFactor" type="text" disabled>
-                  <label for="viewFactor" style="color:black">景观要素：{{design.viewFactor}}</label>
+                  <label for="viewFactor" style="color:black">景观要素：{{design.view_factor}}</label>
                 </div>
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">event_seat</i>
                   <input id="chairNum" type="text" disabled>
-                  <label for="chairNum" style="color:black">座椅数量：{{design.chairNum}}</label>
+                  <label for="chairNum" style="color:black">座椅数量：{{design.chair_num}}</label>
                 </div>
               <div class="input-field col s12 m6">
                   <i class="material-icons prefix">map</i>
                   <input id="isCovered" type="text" disabled>
-                  <label for="isCovered" style="color:black">是否有顶棚：{{design.isCovered}}</label>
+                  <label for="isCovered" style="color:black">是否有顶棚：{{design.is_covered}}</label>
                 </div>
                 <div class="input-field col s12 m6">
                     <i class="material-icons prefix">favorite</i>
                     <input id="voted" type="text" disabled>
-                    <label for="voted" style="color:black">获得票数：{{design.voted}}</label>
+                    <label for="voted" style="color:black">获得票数：{{design.AlternativeScheme.vote_num}}</label>
                   </div>
                   <div class="col s12 m12 center">
                     <br>
                     <br>
                   </div>
                   <div class="col s12 m12 center">
-                      <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="vote($event)" v-show="final_scheme===''&&!ifAuthor">投票</a>
+                      <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="vote($event)" v-show="final_scheme===null&&!ifAuthor">投票</a>
                   </div>
                   <div class="col s12 m12 center">
-                      <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="finalize($event)" v-show="final_scheme===''&&ifAuthor">确定为最终方案</a>
+                      <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="finalize($event)" v-show="final_scheme===null&&ifAuthor">确定为最终方案</a>
                   </div>
               </div>
             </transition-group>

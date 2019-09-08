@@ -152,10 +152,10 @@ function signin(){
         data: {
             "email":email,
             "password":sha1password,
-
         },
         success: function(result){
             jsonResult =  JSON.parse(result);
+            console.log(jsonResult);
             if(jsonResult.login=="0"){
                 showinfo(jsonResult.errortype);
             }
@@ -173,13 +173,6 @@ function signin(){
 }
 
 function signout(){
-    sessionStorage.setItem('login',false);
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('avatar');
-    sessionStorage.removeItem('job');
-    sessionStorage.removeItem('jobdetail');
-    sessionStorage.removeItem('tel');
     $("#btnSignup").fadeIn('slow');
     $("#btnSignin").fadeIn('slow');
     $("#imgAvatar").src = "default.jpg";
@@ -196,6 +189,21 @@ function signout(){
     $("#pUsernameSide")[0].innerHTML = "";
     $("#btnMyprojectSide").fadeOut('slow');
     $("#btnMydesignSide").fadeOut('slow');
+    $.ajax({
+        url:'/api/private/user/logout',
+        type: "get",
+        dataType:"text",
+        async: false,
+        data: {},
+        success: function(result){
+            
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown){
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
 
     showinfo("已登出");
 }

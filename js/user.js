@@ -84,7 +84,7 @@ function newuser(){
                 $("#telnum")[0].value = "";
                 $("#signupscreen").modal('close');
                 showinfo("注册成功");
-                setUser(username,email,avatar,job,tel);
+                //setUser(username,email,avatar,job,tel);
             }
             else if(jsonResult.message === "Email already exists"){
                 $("#mailaddr").addClass("invalid");
@@ -134,12 +134,6 @@ function signin(){
 }
 
 function signout(){
-    sessionStorage.setItem('login',false);
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('avatar');
-    sessionStorage.removeItem('job');
-    sessionStorage.removeItem('tel');
     $("#btnSignup").fadeIn('slow');
     $("#btnSignin").fadeIn('slow');
     $("#imgAvatar").src = "default.jpg";
@@ -156,6 +150,21 @@ function signout(){
     $("#pUsernameSide")[0].innerHTML = "";
     $("#btnMyprojectSide").fadeOut('slow');
     $("#btnMydesignSide").fadeOut('slow');
+    $.ajax({
+        url:'/api/private/user/logout',
+        type: "get",
+        dataType:"text",
+        async: false,
+        data: {},
+        success: function(result){
+            console.log(result);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown){
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
 
     showinfo("已登出");
 }

@@ -13,7 +13,7 @@ var vm=new Vue({
     lng:'',
     lat:'',
     state:'',
-    final_scheme:'',
+    final_scheme:null,
     ifAuthor:false,
     ifHover:false,
     ifHover_:false,
@@ -28,7 +28,7 @@ var vm=new Vue({
       var el = event.currentTarget;      
       for(var design of this.designs){
         design.ifchecked=false;
-        if(design.id===$(el).attr('id')){
+        if(design.id===parseInt($(el).attr('id'))){
           design.ifchecked=true;
         }
       }
@@ -63,7 +63,7 @@ var vm=new Vue({
             })
             .then(function(response){
               for(design of vm.designs){
-                if(design.id===$(el).attr('id')){
+                if(design.id===parseInt($(el).attr('id'))){
                   design.voted++;
                   break;
                 }
@@ -120,32 +120,32 @@ var vm=new Vue({
     init:function(project){
       var project_id=GetRequest()['id'];
       axios
-            .get('http://127.0.0.1:12450/api/public/project/query_by_id', {params:{id:project_id}},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-            })
+            .post('/api/public/project/query_by_id', {project_id:project_id})
             .then(function(response){
-                jsonData = response.data;
+                jsonData = response.data.data;
+              console.log(jsonData);
                 vm.project_id=project_id;
                 vm.name=jsonData['name'];
-                vm.author=jsonData['author'];
-                vm.tel=jsonData['tel'];
+                vm.author=jsonData['Author']['nickname']
+                vm.tel=jsonData['Author']['tel'];
                 vm.budget=jsonData['budget'];
                 vm.budgetOri=vm.budget;
                 vm.demand=jsonData['demand'];
-                vm.address=jsonData['address'];
+                vm.address=jsonData['project_address'];
                 vm.state=jsonData['state'];
                 vm.lng=jsonData['lng'];
                 vm.lat=jsonData['lat'];
-                vm.ifAuthor=jsonData['ifAuthor'];
+                vm.ifAuthor=jsonData['is_me'];
                 vm.final_scheme=jsonData['final_scheme'];
-                for(var design of jsonData['designs']){
+                for(var design of jsonData['Schemes']){
+                  console.log(design);
                   design.ifchecked=false;
                   if(vm.final_scheme===design.id)
                     vm.designs.unshift(design);
                   else
                     vm.designs.push(design);
                 }
-                vm.messages.splice(0,0,...jsonData['messages']);
+                vm.messages.splice(0,0,...jsonData['Comments']);
                 vm.designs[0].ifchecked=true;
             })
             .catch(function (error) { // 请求失败处理
