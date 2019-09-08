@@ -75,8 +75,8 @@ function newuser(){
             "tel":tel,
         },
         success: function(result){
-            console.log(result);
-            if(result=="上传成功"){
+            jsonResult=JSON.parse(result);
+            if(jsonResult.message==="success"){
                 $("#username")[0].value = "";
                 $("#mailaddr")[0].value = "";
                 $("#password")[0].value = "";
@@ -86,11 +86,7 @@ function newuser(){
                 showinfo("注册成功");
                 setUser(username,email,avatar,job,tel);
             }
-            else if(result == "用户名重复"){
-                $("#username").addClass("invalid");
-                showinfo("用户名重复");
-            }
-            else if(result == "邮箱重复"){
+            else if(jsonResult.message === "Email already exists"){
                 $("#mailaddr").addClass("invalid");
                 showinfo("邮箱重复");
             }  
@@ -121,11 +117,11 @@ function signin(){
         success: function(result){
             jsonResult =  JSON.parse(result);
             $("#loginscreen").modal("close");
-            if(jsonResult.login=="0"){
-                showinfo(jsonResult.errortype);
+            if(jsonResult.message!=="success"){
+                showinfo(jsonResult.message);
             }
-            else if(jsonResult.login=="1"){
-                setUser(jsonResult.nickname,jsonResult.email,jsonResult.avatar,jsonResult.job,jsonResult.tel);
+            else{
+                setUser(jsonResult.data.nickname,jsonResult.data.email,jsonResult.data.avatar,jsonResult.data.type,jsonResult.data.tel);
                 showinfo("登录成功");
             }
         },
