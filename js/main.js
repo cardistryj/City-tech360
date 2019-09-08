@@ -17,56 +17,56 @@ var vm=new Vue({
       ifshowloader:false,
       solutions:[
             {
-              id:'0',
-              designName:'123设计方案',
-              pic:'1.png',
-              surround:'123',
-              size:'123',
-              greenRate:'123',
-              function:'娱乐',
-              style:'123',
-              viewFactor:'54',
-              chairNum:'3',
-              isCovered:'345',
+              id:'',
+              designName:'',
+              pic:'',
+              surround:'',
+              size:'',
+              greenRate:'',
+              function:'',
+              style:'',
+              viewFactor:'',
+              chairNum:'',
+              isCovered:'',
             },
             {
-              id:'0',
-              designName:'瞎几把设计',
-              pic:'2.png',
-              surround:'无',
-              size:'大',
-              greenRate:'高',
-              function:'无',
-              style:'朋克',
-              viewFactor:'没有',
-              chairNum:'10',
-              isCovered:'是',
+              id:'',
+              designName:'',
+              pic:'',
+              surround:'',
+              size:'',
+              greenRate:'',
+              function:'',
+              style:'',
+              viewFactor:'',
+              chairNum:'',
+              isCovered:'',
             },
             {
-              id:'0',
-              designName:'乱求设计',
-              pic:'3.png',
-              surround:'有',
-              size:'小',
-              greenRate:'0%',
-              function:'大保健',
-              style:'淫欲',
-              viewFactor:'晓不得',
-              chairNum:'0',
-              isCovered:'否',
+              id:'',
+              designName:'',
+              pic:'',
+              surround:'',
+              size:'',
+              greenRate:'',
+              function:'',
+              style:'',
+              viewFactor:'',
+              chairNum:'',
+              isCovered:'',
             },
             {
-              id:'0',
-              designName:'锤子设计',
-              pic:'4.png',
-              surround:'晓不得',
-              size:'晓求不得',
-              greenRate:'你猜',
-              function:'没得',
-              style:'XXXL',
-              viewFactor:'这个真没有',
-              chairNum:'-1',
-              isCovered:'非也',
+              id:'',
+              designName:'',
+              pic:'',
+              surround:'',
+              size:'',
+              greenRate:'',
+              function:'',
+              style:'',
+              viewFactor:'',
+              chairNum:'',
+              isCovered:'',
             }
       ],
       A:'0',
@@ -201,11 +201,24 @@ var vm=new Vue({
               this.ifinvalid=true;
               return;
           } 
-          console.log(this.factors.lng);
-          console.log(this.factors.lat);
+          var file=document.getElementById("file").files;
+          if(file[0]===undefined){
+            alert("请上传项目封面");
+            return;
+          }
+          var formdata=new FormData();
+          formdata.append("pic",file[0]);
+          formdata.append("name",this.factors.name);
+          formdata.append("tel",this.factors.tel);
+          formdata.append("budget",this.factors.budget);
+          formdata.append("demand",this.factors.demand);
+          formdata.append("project_address",this.factors.address);
+          formdata.append("lng",this.factors.lng);
+          formdata.append("lat",this.factors.lat);
+          formdata.append("designs",[this.solutions[0].id,this.solutions[1].id,this.solutions[2].id,this.solutions[3].id])
           axios
             .post('http://localhost:8888/upload.php', 
-            {"name":this.factors.name,"tel" : this.factors.tel, "budget": this.factors.budget, "demand": this.factors.demand, "address": this.factors.address, "lng":this.factors.lng, "lat":this.factors.lat},
+            formdata,
             {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
           })
