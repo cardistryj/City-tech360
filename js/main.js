@@ -170,24 +170,25 @@ var vm=new Vue({
           console.log(code);
         
           axios
-            .get('http://localhost:8888/finddesign.php', {params:{"code":code}})
+            .post('http://127.0.0.1:12450/api/public/scheme/query_scheme', {code:code})
             .then(function(response){
                 vm.ifshowloader=false;
                 vm.ifshowdesign=true;
-                //jsonData = JSON.parse(response);
-                // for(var i=0;i<4;i++){
-                //     vm.solutions[i].name = jsonData[i].name;
-                //     vm.solutions[i].img = jsonData[i].img;
-                //     vm.solutions[i].detail = jsonData[i].detail;
-                //     vm.solutions[i].size = jsonData[i].size;
-                //     vm.solutions[i].shape = jsonData[i].shape;
-                //     vm.solutions[i].type = jsonData[i].type;
-                //     vm.solutions[i].designage = jsonData[i].designage;
-                //     vm.solutions[i].outdoor = jsonData[i].outdoor;
-                //     vm.solutions[i].district = jsonData[i].district;
-                //     vm.solutions[i].region = jsonData[i].region;
-                //     vm.solutions[i].function = jsonData[i].function;
-                // }
+                console.log(response);
+                jsonData = response.data.data;
+                for(var i=0;i<4;i++){
+                  vm.solutions[i].id = jsonData[i].id;
+                    vm.solutions[i].designName = jsonData[i].name;
+                    vm.solutions[i].pic = jsonData[i].pic;
+                    vm.solutions[i].surround = jsonData[i].surround;
+                    vm.solutions[i].size = jsonData[i].size;
+                    vm.solutions[i].greenRate = jsonData[i].green_rate;
+                    vm.solutions[i].function = jsonData[i].func;
+                    vm.solutions[i].style = jsonData[i].style;
+                    vm.solutions[i].viewFactor = jsonData[i].view_factor;
+                    vm.solutions[i].chairNum = jsonData[i].chair_num;
+                    vm.solutions[i].isCovered = jsonData[i].is_covered;
+                }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -335,18 +336,19 @@ var vm=new Vue({
           alert("请上传设计图纸");
           return;
         }
-        var formdata=new FormData();
-        formdata.append("design",file[0]);
         var code=this.gencode();
-        console.log(code);
-
+        var formdata=new FormData();
+        formdata.append("scheme",file[0]);
+        formdata.append("name",this.name);
+        formdata.append("code",code);
         axios
-            .post('php/finddesign.php', {
-              "designName":this.name,
-              "code":code,
-              "formdata":formdata
+            .post('http://127.0.0.1:12450/api/private/scheme/add_scheme', formdata,{
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
           })
             .then(function(response){  
+              console.log(response);
               vm_design.reset();
               showinfo('上传成功');
               $("#aiadddesignModal").modal("close");              

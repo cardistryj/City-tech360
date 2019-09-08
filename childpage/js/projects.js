@@ -11,7 +11,7 @@ var vm = new Vue({
         },
         init:function(){
             axios
-            .get('http://localhost:8888/initProject.php', {},{
+            .get('http://127.0.0.1:12450/api/public/project/query_all', {},{
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
             })
             .then(function(response){
