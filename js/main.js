@@ -170,7 +170,7 @@ var vm=new Vue({
           console.log(code);
         
           axios
-            .get('http://localhost:8888/finddesign.php', {"demand":code})
+            .get('http://localhost:8888/finddesign.php', {params:{"code":code}})
             .then(function(response){
                 vm.ifshowloader=false;
                 vm.ifshowdesign=true;
@@ -343,7 +343,7 @@ var vm=new Vue({
         axios
             .post('php/finddesign.php', {
               "designName":this.name,
-              "demand":code,
+              "code":code,
               "formdata":formdata
           })
             .then(function(response){  
