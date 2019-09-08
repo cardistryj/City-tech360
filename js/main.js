@@ -170,24 +170,25 @@ var vm=new Vue({
           console.log(code);
         
           axios
-            .get('http://127.0.0.1:12450/api/public/scheme/query_scheme', {params:{"code":code}})
+            .post('http://127.0.0.1:12450/api/public/scheme/query_scheme', {code:code})
             .then(function(response){
                 vm.ifshowloader=false;
                 vm.ifshowdesign=true;
-                //jsonData = JSON.parse(response);
-                // for(var i=0;i<4;i++){
-                //     vm.solutions[i].name = jsonData[i].name;
-                //     vm.solutions[i].img = jsonData[i].img;
-                //     vm.solutions[i].detail = jsonData[i].detail;
-                //     vm.solutions[i].size = jsonData[i].size;
-                //     vm.solutions[i].shape = jsonData[i].shape;
-                //     vm.solutions[i].type = jsonData[i].type;
-                //     vm.solutions[i].designage = jsonData[i].designage;
-                //     vm.solutions[i].outdoor = jsonData[i].outdoor;
-                //     vm.solutions[i].district = jsonData[i].district;
-                //     vm.solutions[i].region = jsonData[i].region;
-                //     vm.solutions[i].function = jsonData[i].function;
-                // }
+                console.log(response);
+                jsonData = response.data.data;
+                for(var i=0;i<4;i++){
+                  vm.solutions[i].id = jsonData[i].id;
+                    vm.solutions[i].designName = jsonData[i].name;
+                    vm.solutions[i].pic = jsonData[i].pic;
+                    vm.solutions[i].surround = jsonData[i].surround;
+                    vm.solutions[i].size = jsonData[i].size;
+                    vm.solutions[i].greenRate = jsonData[i].green_rate;
+                    vm.solutions[i].function = jsonData[i].func;
+                    vm.solutions[i].style = jsonData[i].style;
+                    vm.solutions[i].viewFactor = jsonData[i].view_factor;
+                    vm.solutions[i].chairNum = jsonData[i].chair_num;
+                    vm.solutions[i].isCovered = jsonData[i].is_covered;
+                }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
