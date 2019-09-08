@@ -336,18 +336,19 @@ var vm=new Vue({
           alert("请上传设计图纸");
           return;
         }
-        var formdata=new FormData();
-        formdata.append("design",file[0]);
         var code=this.gencode();
-        console.log(code);
-
+        var formdata=new FormData();
+        formdata.append("scheme",file[0]);
+        formdata.append("name",this.name);
+        formdata.append("code",code);
         axios
-            .post('http://127.0.0.1:12450/api/private/scheme/add_scheme', {
-              "designName":this.name,
-              "code":code,
-              "formdata":formdata
+            .post('http://127.0.0.1:12450/api/private/scheme/add_scheme', formdata,{
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
           })
             .then(function(response){  
+              console.log(response);
               vm_design.reset();
               showinfo('上传成功');
               $("#aiadddesignModal").modal("close");              
