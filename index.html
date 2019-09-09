@@ -173,6 +173,7 @@
 
   <!-- 发布项目modal -->
   <div id="uploadscreen" class="modal">
+    <transition-group name="fade">
     <div class="modal-content" id="uploadModal" v-show="ifshowupload">
       <div class="row">
         <div class="col s12">
@@ -461,6 +462,7 @@
         </div>
       </div>
     </div>
+  </transition-group>
   </div>
 
     <!-- 设计师添加设计方案modal -->
