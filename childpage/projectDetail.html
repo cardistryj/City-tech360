@@ -194,19 +194,19 @@
                 <label for="radio0">提出</label>
               </p>
             <p>
-              <input name="group1" class="with-gap" type="radio" id="radio1" value="设计中"  v-model="state"/>
+              <input name="group1" class="with-gap" type="radio" id="radio1" value="2"  v-model="state"/>
               <label for="radio1">设计中</label>
             </p>
             <p>
-              <input name="group1" class="with-gap" type="radio" id="radio2" value="征求意见"  v-model="state"/>
+              <input name="group1" class="with-gap" type="radio" id="radio2" value="3"  v-model="state"/>
               <label for="radio2">征求意见</label>
             </p>
             <p>
-              <input class="with-gap" name="group1" type="radio" id="radio3" value="施工中"  v-model="state"/>
+              <input class="with-gap" name="group1" type="radio" id="radio3" value="4"  v-model="state"/>
               <label for="radio3">施工中</label>
             </p>
             <p>
-              <input name="group1" class="with-gap" type="radio" id="radio4" value="已完成"  v-model="state"/>
+              <input name="group1" class="with-gap" type="radio" id="radio4" value="5"  v-model="state"/>
               <label for="radio4">已完成</label>
             </p>
           </form>
@@ -321,16 +321,16 @@
           <a href="#!" class="dropdown-button right" style="color:black" data-activates="commentdropdown" v-show="ifHover__"><i class="material-icons prefix">mode_edit</i></a>
         </div>
       </div>
-        <div class="z-depth-2 container" style="width:90%;margin-top: 30px;padding:20px" v-for="message of messages">
+        <div class="z-depth-2 container" style="width:90%;margin-top: 30px;padding:20px" v-for="comment of messages">
           <div class="row">
         <div class="col s4 m2">
-          <img v-bind:src="message.avatar" style="width:100%;border-radius: 50%;overflow:hidden;">  
+          <img v-bind:src="comment.User.avatar" style="width:100%;border-radius: 50%;overflow:hidden;">  
         </div>
         <div class="col s8 m10" style="margin-bottom: 10px">
-          <strong><span style="color:#26a69a">{{message.type}}</span>：{{message.name}}</strong>
+          <strong><span style="color:#26a69a">{{comment.User.type}}</span>：{{comment.User.nickname}}</strong>
         </div>
         <div class="col s8 m10">
-            <p style="font-size:18px;text-indent: 36px;border:1px solid #cccccc;min-height: 100px;width:100%;border-radius: 8px;background-color: #fcfcfc;padding:10px">{{message.content}}</p>
+            <p style="font-size:18px;text-indent: 36px;border:1px solid #cccccc;min-height: 100px;width:100%;border-radius: 8px;background-color: #fcfcfc;padding:10px">{{comment.message}}</p>
         </div>
       </div>
       </div>

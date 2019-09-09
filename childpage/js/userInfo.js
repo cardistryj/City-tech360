@@ -9,7 +9,6 @@ var vm=new Vue({
     nickname_mod:'',
     password:'',
     password_copy:'',
-    password_ori:'',
     password_ver:'',
     tel:'',
     tel_ori:'',
@@ -29,10 +28,10 @@ var vm=new Vue({
   methods:{
     saveInfo:function(){
       axios
-            .get('http://localhost:8888/initProjectDetail.php', {params:{nickname:this.nickname,tel:this.tel,address:this.address}},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-            })
+            .post('/api/private/user/edit_person_info', {nickname:this.nickname_mod,tel:this.tel_mod,address:this.address_mod},{})
             .then(function(response){
+              console.log(response.data);
+              if(response.data.message==='success'){
                 showinfo('修改成功');
                 vm.ifModified=false;
                 vm.nickname=vm.nickname_mod===''?vm.nickname_ori:vm.nickname_mod;
@@ -47,6 +46,10 @@ var vm=new Vue({
                 $('#tellabel').removeClass('active'); 
                 $('#address').attr('disabled','disabled');   
                 $('#addresslabel').removeClass('active'); 
+              }
+              else{
+                alert('操作失败');
+              }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -79,13 +82,21 @@ var vm=new Vue({
       this.oldpassword=true;
     },
     shownewpassword:function(){
-      // TODO 使用 sha1(this.password_ver)
-      if((this.password_ver)===this.password_ori){
-         this.oldpassword=false;
-         this.newpassword=true;
-      }
-      else
-        alert('密码不正确');
+      axios
+            .post('/api/private/user/check_password', {password:sha1(this.password_ver)},{
+            })
+            .then(function(response){
+              if(response.data.message==='success'){
+                vm.oldpassword=false;
+                vm.newpassword=true;
+              }
+              else{
+                alert('密码不正确');
+              }
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
     },
     submit:function(){
       if(this.password!==this.password_copy){
@@ -93,12 +104,14 @@ var vm=new Vue({
         return;
       }
       axios
-            .post('http://localhost:8888/initUser.php', {new_password:sha1(this.password)},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-            })
+            .post('/api/private/user/edit_password', {password:sha1(this.password)},{})
             .then(function(response){
+              if(response.data.message==='success'){
                 showinfo('修改密码成功!');
-                $('.modal').modal('close');
+              }
+              else{
+                alert('操作失败');
+              }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -112,18 +125,22 @@ var vm=new Vue({
         }
         let formdata=new FormData();
         formdata.append("avatar",file[0]);
-        console.log(formdata.get('avatar'));
 
         axios
-            .post('http://localhost:8888/uploadAvatar.php', formdata,{
+            .post('/api/private/user/upload_avatar', formdata,{
             headers: {'Content-Type': 'multipart/form-data'} //加上这个
         })
             .then(function(response){  
-              console.log(response.data);
-              showinfo('上传成功');
-              vm.avatar=$('#preview').attr('src');
-              $('#avatar').css('height',$('#avatar').width());
-              $('#uploadmodal').modal('close');
+              if(response.data.message==='success'){
+                console.log(response.data);
+                showinfo('上传成功');
+                vm.avatar=$('#preview').attr('src');
+                $('#avatar').css('height',$('#avatar').width());
+                $('#uploadmodal').modal('close');
+              }
+              else{
+                alert('操作失败');
+              }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -131,17 +148,15 @@ var vm=new Vue({
     },
     init:function(){
       axios
-            .get('http://localhost:8888/initUser.php', {},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-            })
+            .get('/api/private/user/get_my_info', {},{})
             .then(function(response){
-                jsonData = response.data;
+                jsonData = response.data.data;
                 console.log(jsonData);
                 vm.avatar=jsonData['avatar'];
                 vm.type=jsonData['type'];
                 vm.nickname=jsonData['nickname'];
-                vm.password_ori=jsonData['password'];
                 vm.tel=jsonData['tel'];
+                vm.email=jsonData['email'];
                 vm.address=jsonData['address'];
                 vm.nickname_ori=vm.nickname;
                 vm.tel_ori=vm.tel;

@@ -395,11 +395,27 @@ $('.carousel.carousel-slider').carousel({full_width: true});
     });
 
   function showmodal(){
-    if(isLogin())
-            $("#uploadscreen").modal('open');
+    $.ajax({
+      url:'/api/public/user/check_login_status',
+      type: "get",
+      dataType:"text",
+      async: false,
+      data: {},
+      success: function(result){
+          jsonResult=JSON.parse(result);
+          if(jsonResult.message==="Already login"){
+            $("#uploadscreen").modal('open');       
+          }
           else
-            alert("请先登录");
-  }
+          alert("请先登录");
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown){
+          alert(XMLHttpRequest.status);
+          alert(XMLHttpRequest.readyState);
+          alert(textStatus);
+      }
+  });
+}
 
   $('.chips').material_chip();
   $(".chip").click(function(){

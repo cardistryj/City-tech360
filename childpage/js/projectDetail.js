@@ -1,3 +1,4 @@
+
 var vm=new Vue({
   el:'#project',
   data:{
@@ -40,16 +41,38 @@ var vm=new Vue({
     },
     updateProject:function(){
       axios
-            .get('http://localhost:8888/initProjectDetail.php', {params:{id:this.project_id,budget:this.budgetMod,state:this.state}},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+            .post('/api/private/project/set_project_status', {project_id:this.project_id,status:this.state},{
             })
             .then(function(response){
-                showinfo('保存成功');
+              var jsonData=response.data;
+              console.log(jsonData);
+              if(jsonData.message==='success'){
+                showinfo('修改成功')
+              }
+              else if(jsonData.message==='Need login'){
+                alert('请先登录');
+              }           
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+      axios
+            .post('/api/private/project/set_budget', {project_id:this.project_id,budget:this.budgetMod},{
+            })
+            .then(function(response){
+              var jsonData=response.data;
+              console.log(jsonData);
+              if(jsonData.message==='success'){
+                showinfo('修改成功');
                 vm.ifModified=false;
                 vm.budget=vm.budgetMod===''?vm.budgetOri:vm.budgetMod;
                 vm.budgetMod='';
                 $('#budget').attr('disabled','disabled');   
-                $('#budgetlabel').removeClass('active');             
+                $('#budgetlabel').removeClass('active');   
+              }
+              else if(jsonData.message==='Need login'){
+                alert('请先登录');
+              }             
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -58,15 +81,24 @@ var vm=new Vue({
     vote:function(event){
       var el = event.currentTarget;      
       axios
-            .get('http://localhost:8888/initProjectDetail.php', {params:{id:this.project_id,design_id:$(el).attr('id')}},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+            .post('/api/private/project/vote_for_scheme', {project_id:this.project_id,scheme_id:$(el).attr('id')},{
+                
             })
             .then(function(response){
-              for(design of vm.designs){
-                if(design.id===parseInt($(el).attr('id'))){
-                  design.voted++;
-                  break;
+              var jsonData=response.data;
+              if(jsonData.message==='success'){
+                for(design of vm.designs){
+                  if(design.id===parseInt($(el).attr('id'))){
+                    design.voted++;
+                    break;
+                  }
                 }
+              }
+              else if(jsonData.message==='Already vote'){
+                alert('已投过票！');
+              }
+              else if(jsonData.message==='Need login'){
+                alert('请先登录');
               }
             })
             .catch(function (error) { // 请求失败处理
@@ -74,19 +106,26 @@ var vm=new Vue({
             });
     },
     finalize:function(event){
-      var el = event.currentTarget;      
+      var el = event.currentTarget;    
+      console.log(parseInt($(el).attr('id')));  
       axios
-            .get('http://localhost:8888/initProjectDetail.php', {params:{id:this.project_id,final_scheme:$(el).attr('id')}},{
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+            .post('/api/private/project/set_final_scheme', {id:Number(this.project_id),final_scheme:parseInt($(el).attr('id'))},{
             })
             .then(function(response){
-              vm.final_scheme=$(el).attr('id');
-              var order=0;
-              for(design of vm.designs){
-                if(design.id===vm.final_scheme)
-                  order=vm.designs.indexOf(design);
+              var jsonData=response.data;
+              console.log(jsonData);
+              if(jsonData.message==='success'){
+                vm.final_scheme=$(el).attr('id');
+                var order=0;
+                for(design of vm.designs){
+                  if(design.id===vm.final_scheme)
+                    order=vm.designs.indexOf(design);
+                }
+                vm.designs.splice(0,1,...vm.designs.splice(order, 1 , vm.designs[0]));
               }
-              vm.designs.splice(0,1,...vm.designs.splice(order, 1 , vm.designs[0]));
+              else if(jsonData.message==='Need login'){
+                alert('请先登录');
+              }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
@@ -99,19 +138,22 @@ var vm=new Vue({
       if(this.comment==='')
         return;
       axios
-      .get('http://localhost:8888/initProjectDetail.php', {params:{id:this.project_id,message:this.comment}},{
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+      .post('/api/private/project/add_comment', {project_id:this.project_id,message:this.comment},{
       })
       .then(function(response){
-        jsonData = response.data;
-        showinfo('评论成功');
-        $('#commentdropdown').hide();
-        vm.messages.push({
-          'avatar':'../default.jpg',   //jsonData['avatar']
-          'type':'政府',                //jsonData['type']
-          'name':'山姆大叔',            //jsonData['name']
-          'content':vm.comment
-        })
+        var jsonData=response.data;
+        console.log(jsonData);
+        if(jsonData.message==='success'){
+          showinfo('评论成功');
+          $('#commentdropdown').hide();
+          vm.messages.push(jsonData.data);
+        }
+        else if(jsonData.message==='Already vote'){
+          alert('已投过票！');
+        }
+        else if(jsonData.message==='Need login'){
+          alert('请先登录');
+        }
       })
       .catch(function (error) { // 请求失败处理
       console.log(error);
