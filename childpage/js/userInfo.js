@@ -55,20 +55,6 @@ var vm=new Vue({
             console.log(error);
             });
     },
-    getType:function(){
-      switch(this.type){
-        case 1:
-          return '设计师';
-        case 2:
-          return '政府机构';
-        case 3:
-          return '居委会';
-        case 4:
-          return '居民';
-        case 5:
-          return '施工方';
-      }
-    },
     editInfo:function(){
       this.ifModified=true;
       $('#nickname').removeAttr('disabled');
@@ -153,7 +139,7 @@ var vm=new Vue({
                 jsonData = response.data.data;
                 console.log(jsonData);
                 vm.avatar=jsonData['avatar'];
-                vm.type=jsonData['type'];
+                vm.type=decodeRole(jsonData['type']);
                 vm.nickname=jsonData['nickname'];
                 vm.tel=jsonData['tel'];
                 vm.email=jsonData['email'];

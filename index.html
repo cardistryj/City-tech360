@@ -173,7 +173,6 @@
 
   <!-- 发布项目modal -->
   <div id="uploadscreen" class="modal">
-    <transition-group name="fade">
     <div class="modal-content" id="uploadModal" v-show="ifshowupload">
       <div class="row">
         <div class="col s12">
@@ -308,7 +307,6 @@
               <div class="chipf"  @click="F1==='1'?F1='0':F1='1'">水池</div>
               <div class="chipf"  @click="F2==='2'?F2='0':F2='2'">雕塑</div>
               <div class="chipf"  @click="F3==='3'?F3='0':F3='3'">凉亭</div>
-              <div class="chipf"  @click="F4==='4'?F4='0':F4='4'">十年以上</div>
           </div>
       </div>
       <div class="row">
@@ -462,7 +460,6 @@
         </div>
       </div>
     </div>
-  </transition-group>
   </div>
 
     <!-- 设计师添加设计方案modal -->
@@ -541,7 +538,6 @@
               <div class="chipf"  @click="F1==='1'?F1='0':F1='1'">水池</div>
               <div class="chipf"  @click="F2==='2'?F2='0':F2='2'">雕塑</div>
               <div class="chipf"  @click="F3==='3'?F3='0':F3='3'">凉亭</div>
-              <div class="chipf"  @click="F4==='4'?F4='0':F4='4'">十年以上</div>
           </div>
       </div>
       <div class="row">
@@ -1044,6 +1040,7 @@
   <script src="js/materialize.js"></script>  
   <script src="js/sha1.js"></script>
   <script src="js/tool.js"></script>
+  <script src="js/decodeDesign.js"></script>
   <script src="js/user.js"></script>
   <script src="js/init.js"></script>
   <script src="js/main.js"></script>

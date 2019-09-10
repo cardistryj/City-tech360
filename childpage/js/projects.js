@@ -1,8 +1,7 @@
 var vm = new Vue({
     el: '#project',
     data: {
-        projects: [
-        ]
+        projects: []
     },
     methods:{
         getDetail:function(event){
@@ -18,6 +17,7 @@ var vm = new Vue({
                 .then(function(response){
                     jsonData = response.data.data;
                     for(var project of jsonData){
+                        project.state=decodeStatus(project.state);
                         vm.projects.push(project);
                     }
                 })
@@ -33,6 +33,7 @@ var vm = new Vue({
                 .then(function(response){
                     jsonData = response.data.data;
                     for(var project of jsonData){
+                        project.state=decodeStatus(project.state);
                         vm.projects.push(project);
                     }
                 })

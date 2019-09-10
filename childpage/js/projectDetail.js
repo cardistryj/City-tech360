@@ -25,6 +25,9 @@ var vm=new Vue({
     messages:[],
   },
   methods:{
+    showStatus:function(){
+      return decodeStatus(this.state);
+    },
     switchDesign:function(event){
       var el = event.currentTarget;      
       for(var design of this.designs){
@@ -161,7 +164,7 @@ var vm=new Vue({
       console.log(error);
       });
     },
-    init:function(project){
+    init:function(){
       var project_id=GetRequest()['id'];
       axios
             .post('/api/public/project/query_by_id', {project_id:project_id})
@@ -184,6 +187,14 @@ var vm=new Vue({
                 for(var design of jsonData['Schemes']){
                   console.log(design);
                   design.ifchecked=false;
+                  design.size=decodeSize(design.size);
+                  design.surround=decodeSurround(design.surround);
+                  design.green_rate=decodeGreenRate(design.green_rate);
+                  design.func=decodeFunction(design.func);
+                  design.style=decodeStyle(design.style);
+                  design.view_factor=decodeViewFactor(design.view_factor);
+                  design.chair_num=decodeChairNum(design.chair_num);
+                  design.is_covered=decodeIfCovered(design.is_covered);
                   if(vm.final_scheme===design.id)
                     vm.designs.unshift(design);
                   else

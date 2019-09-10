@@ -77,7 +77,6 @@ var vm=new Vue({
       F1:'0',
       F2:'0',
       F3:'0',
-      F4:'0',
       G:'0',
       H:'0'
     },
@@ -98,7 +97,6 @@ var vm=new Vue({
           this.F1='0';
           this.F2='0';
           this.F3='0';
-          this.F4='0';
           this.G='0';
           this.H='0';
           this.ifshowupload=true;
@@ -113,7 +111,7 @@ var vm=new Vue({
           window.location.href="#designModal";
         },
         gencode:function(){
-          return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+(this.F4==='0'?'':this.F4)+'G'+this.G+'H'+this.H;
+          return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+'G'+this.G+'H'+this.H;
         },
         showupload:function(){
           this.ifshowupload=true;
@@ -152,7 +150,7 @@ var vm=new Vue({
             alert("请选择：风格");
             return;
           }
-          if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'&&this.F4==='0'){
+          if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'){
             alert("请选择：景观要素");
             return;
           }
@@ -170,7 +168,7 @@ var vm=new Vue({
           console.log(code);
         
           axios
-            .post('http://127.0.0.1:12450/api/public/scheme/query_scheme', {code:code})
+            .post('/api/public/scheme/query_scheme', {code:code})
             .then(function(response){
                 vm.ifshowloader=false;
                 vm.ifshowdesign=true;
@@ -180,14 +178,14 @@ var vm=new Vue({
                   vm.solutions[i].id = jsonData[i].id;
                     vm.solutions[i].designName = jsonData[i].name;
                     vm.solutions[i].pic = jsonData[i].pic;
-                    vm.solutions[i].surround = jsonData[i].surround;
-                    vm.solutions[i].size = jsonData[i].size;
-                    vm.solutions[i].greenRate = jsonData[i].green_rate;
-                    vm.solutions[i].function = jsonData[i].func;
-                    vm.solutions[i].style = jsonData[i].style;
-                    vm.solutions[i].viewFactor = jsonData[i].view_factor;
-                    vm.solutions[i].chairNum = jsonData[i].chair_num;
-                    vm.solutions[i].isCovered = jsonData[i].is_covered;
+                    vm.solutions[i].surround = decodeSurround(jsonData[i].surround);
+                    vm.solutions[i].size = decodeSize(jsonData[i].size);
+                    vm.solutions[i].greenRate = decodeGreenRate(jsonData[i].green_rate);
+                    vm.solutions[i].function = decodeFunction(jsonData[i].func);
+                    vm.solutions[i].style = decodeStyle(jsonData[i].style);
+                    vm.solutions[i].viewFactor = decodeViewFactor(jsonData[i].view_factor);
+                    vm.solutions[i].chairNum = decodeChairNum(jsonData[i].chair_num);
+                    vm.solutions[i].isCovered = decodeIfCovered(jsonData[i].is_covered);
                 }
             })
             .catch(function (error) { // 请求失败处理
@@ -252,7 +250,6 @@ var vm=new Vue({
       F1:'0',
       F2:'0',
       F3:'0',
-      F4:'0',
       G:'0',
       H:'0'
     },
@@ -266,12 +263,11 @@ var vm=new Vue({
         this.F1='0';
         this.F2='0';
         this.F3='0';
-        this.F4='0';
         this.G='0';
         this.H='0';
       },
       gencode:function(){
-        return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+(this.F4==='0'?'':this.F4)+'G'+this.G+'H'+this.H;
+        return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+'G'+this.G+'H'+this.H;
       },
       uploaddesign:function(){
         if(this.A==='0'){
@@ -294,7 +290,7 @@ var vm=new Vue({
           alert("请选择：风格");
           return;
         }
-        if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'&&this.F4==='0'){
+        if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'){
           alert("请选择：景观要素");
           return;
         }
@@ -317,7 +313,7 @@ var vm=new Vue({
         formdata.append("name",this.name);
         formdata.append("code",code);
         axios
-            .post('http://127.0.0.1:12450/api/private/scheme/add_scheme', formdata,{
+            .post('/api/private/scheme/add_scheme', formdata,{
               headers: {
                   'Content-Type': 'multipart/form-data'
               }

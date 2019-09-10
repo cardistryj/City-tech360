@@ -210,7 +210,7 @@
       <div class="input-field col s6 m4">
         <i class="material-icons prefix">work</i>
         <input id="job" type="text" disabled>
-        <label for="job" style="color:black">用户类型：{{getType()}}</label>
+        <label for="job" style="color:black">用户类型：{{type}}</label>
       </div>
       <div class="input-field col s6 m5" @mouseover="ifHover2=true" @mouseout="ifHover2=false">
           <i class="material-icons prefix">lock</i>
@@ -279,6 +279,7 @@
 <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
+<script src="js/decodeDesign.js"></script>
 <script src="../js/sha1.js"></script>
 <script src="js/userinfo.js"></script>
 <script>

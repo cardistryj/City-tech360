@@ -183,7 +183,7 @@
             <div class="input-field col s6" @mouseover="ifAuthor?ifHover=true:''" @mouseout="ifHover=false">
                 <i class="material-icons prefix">timeline</i>
                 <input id="state" type="text" disabled>              
-                <label for="state" style="color:black">状态：{{state}}</label>
+                <label for="state" style="color:black">状态：{{showStatus()}}</label>
               <a href="#!" class="dropdown-button right" style="transform: translate(-45px,0px);color:black" data-activates="statedropdown" v-show="ifHover" @click="ifModified=true"><i class="material-icons prefix">mode_edit</i></a>
             </div>
             <!-- Dropdown Structure -->
@@ -391,6 +391,7 @@
 <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
 <script src="js/materialize.js"></script>
 <script src="js/init.js"></script>
+<script src="js/decodeDesign.js"></script>
 <script src="js/projectDetail.js"></script>
 <script>
     (function ($) {
