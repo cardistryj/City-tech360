@@ -135,7 +135,7 @@ var vm=new Vue({
                 console.log(response.data);
                 showinfo('上传成功');
                 vm.avatar=$('#preview').attr('src');
-                $('#avatar').css('height',$('#avatar').width());
+                //$('#avatar').css('height',$('#avatar').width());
                 $('#uploadmodal').modal('close');
               }
               else{

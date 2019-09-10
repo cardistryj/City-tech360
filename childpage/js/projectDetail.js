@@ -93,8 +93,10 @@ var vm=new Vue({
                     break;
                   }
                 }
+                $("[name='vote']").addAttr('disabled');
               }
               else if(jsonData.message==='Already vote'){
+                $("[name='vote']").addAttr('disabled');
                 alert('已投过票！');
               }
               else if(jsonData.message==='Need login'){

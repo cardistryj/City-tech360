@@ -301,7 +301,7 @@
                     <br>
                   </div>
                   <div class="col s12 m12 center">
-                      <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="vote($event)" v-show="final_scheme===null&&!ifAuthor">投票</a>
+                      <a v-bind:id="design.id" name="vote" href="#!" class="btn purple lighten-4 centered" @click="vote($event)" v-show="final_scheme===null&&!ifAuthor">投票</a>
                   </div>
                   <div class="col s12 m12 center">
                       <a v-bind:id="design.id" href="#!" class="btn purple lighten-4 centered" @click="finalize($event)" v-show="final_scheme===null&&ifAuthor">确定为最终方案</a>
@@ -324,7 +324,7 @@
         <div class="z-depth-2 container" style="width:90%;margin-top: 30px;padding:20px" v-for="comment of messages">
           <div class="row">
         <div class="col s4 m2">
-          <img v-bind:src="comment.User.avatar" style="width:100%;border-radius: 50%;overflow:hidden;">  
+          <img v-bind:src="comment.User.avatar" style="width:100%;border-radius: 50%;overflow:hidden;" name="avatar">  
         </div>
         <div class="col s8 m10" style="margin-bottom: 10px">
           <strong><span style="color:#26a69a">{{comment.User.type}}</span>：{{comment.User.nickname}}</strong>
@@ -399,11 +399,15 @@
         vm.init();
         /*====================================
             preloader js
-          ======================================*/
+          ===================================*/
         $main_window.on('load', function () {
             $('#preloader').fadeOut('slow');
             var marker = new BMap.Marker({'lat': vm.lat,'lng': vm.lng});
             map.addOverlay(marker);
+            $('[name="avatar"]').css('height',$('#avatar').width());
+        });      
+        $main_window.on('resize',function(){  
+          $('[name="avatar"]').css('height',$('#avatar').width());    //监听窗口改变以自适应头像大小
         });
     })(jQuery);
 </script>

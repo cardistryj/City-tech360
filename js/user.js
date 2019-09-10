@@ -1,6 +1,6 @@
 //用户操作
-var userSigninURL = "http://127.0.0.1:12450/api/public/user/login";
-var userSignupURL = "http://127.0.0.1:12450/api/public/user/signup";
+var userSigninURL = "/api/public/user/login";
+var userSignupURL = "/api/public/user/signup";
 
 function newuser(){
     var username = $("#username")[0].value;

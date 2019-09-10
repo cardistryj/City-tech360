@@ -1071,6 +1071,10 @@
       $main_window.on('load', function () {
           $('#preloader').fadeOut('slow');
       });
+      $main_window.on('resize',function(){  
+          $('#imgAvatar').css('height',$('#avatar').width());    //监听窗口改变以自适应头像大小
+          $('#imgAvatarSide').css('height',$('#avatar').width());    //监听窗口改变以自适应头像大小
+        });
     })(jQuery);
   </script>
 </body>

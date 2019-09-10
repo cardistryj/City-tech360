@@ -292,6 +292,7 @@
           ======================================*/
         $main_window.on('load', function () {
             $('#preloader').fadeOut('slow');
+            $('#avatar').css('height',$('#avatar').width());
         });
         $main_window.on('resize',function(){  
           $('#avatar').css('height',$('#avatar').width());    //监听窗口改变以自适应头像大小

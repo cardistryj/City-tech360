@@ -16,6 +16,8 @@ function setUser(username,email,avatar,job,tel){
         $("#imgAvatar")[0].src = avatar;
         $("#imgAvatarSide")[0].src = avatar;
     } 
+    $('#imgAvatar').css('height',$('#avatar').width());
+    $('#imgAvatarSide').css('height',$('#avatar').width());
     $("#liAvatar").show();
     $("#pUsername")[0].innerHTML = username;
     $("#pUsername").show();
