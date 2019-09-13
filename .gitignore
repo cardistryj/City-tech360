@@ -1,0 +1,8 @@
+node_modules/*
+dblib/dbconf.json
+error.log
+resources/project/*
+resources/scheme/*
+.idea/*
+static/.idea/*
+static/.vscode/*

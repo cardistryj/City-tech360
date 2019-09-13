@@ -1,0 +1,15 @@
+{
+    "database": "city360",
+    "user": "",
+    "password": "",
+    "dbconf": {
+        "host": "localhost",
+        "pool": {
+            "max": 5,
+            "min": 0,
+            "idle": 10000
+        },
+        "port": 3306,
+        "dialect": "mysql"
+    }
+}
