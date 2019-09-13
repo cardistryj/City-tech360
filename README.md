@@ -1,52 +1,7 @@
-# city360-backend
+# **city360项目的最终版本**
 
-## API文档
+## ***注意事项**\*
 
-* 公共接口以/api/public/开头
-* 私有接口（用户登录后才可操作）以/api/private/开头
-* body参数类型为application/json
+由于git无法提交空文件夹，这里强行安排了文件去进行占位。
 
-### User API
-
-### 登录
-
-* public
-
-* method: post
-* url: user/login
-* body参数
-  * email
-  * password 
-
-### 注册
-
-* public
-
-* method: post
-* url: user/siginup
-* body参数
-  * nickname
-  * password
-  * email
-  * type
-  * tel
-
-### 编辑个人信息
-
-* private
-* method: post
-* url: user/edit_person_info
-* body
-  * nickname
-  * password
-  * birth
-  * tel
-
-### 查看个人信息
-
-* public
-* method: get
-* url: user/personal_info/:user_id
-
-
-
+pull下来后，建议手动清空文件夹：upload_tmp/，resources/project/ 和 resources/scheme/ 目录下的占位文件（不清理掉应该也问题不大）
