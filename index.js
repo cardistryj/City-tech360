@@ -13,7 +13,7 @@ const PRIVATE_API_PATH='/api/private/'
 app.use(session({
     secret: 'city360',
     cookie: {
-        maxAge: 60 * 1000 *5
+        maxAge: 60 * 1000 * 120
     },
     saveUninitialized: false,
     resave: false
