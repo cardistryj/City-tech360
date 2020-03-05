@@ -86,6 +86,7 @@ exports.voteForScheme=function(project_id,scheme_id,user_id){
             
             return sequelize.transaction(t=>{
                 return query_controller.updateData(model.AlternativeScheme, {
+                                        ///666,fn函数将第一个参数直接解析为js语句
                     vote_num: sequelize.fn('1 + abs', sequelize.col('vote_num'))
                 }, {
                         where: { ProjectId: project_id, SchemeId: scheme_id }

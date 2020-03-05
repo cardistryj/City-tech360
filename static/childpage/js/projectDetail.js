@@ -1,3 +1,141 @@
+var schemeComp = {
+  template:"#scheme",
+  data:function(){
+    return {
+      curDesign:'',
+      designs:[],
+      final_scheme:'',
+      ifvoted:false
+    }
+  },
+  props:[
+    'ifauthor','project_id'
+  ],
+  methods:{
+    init:function(designs, final){
+      this.final_scheme=final;
+      for(var design of designs){
+        design.ifchecked=false;
+        design.size=decodeSize(design.size);
+        design.surround=decodeSurround(design.surround);
+        design.green_rate=decodeGreenRate(design.green_rate);
+        design.func=decodeFunction(design.func);
+        design.style=decodeStyle(design.style);
+        design.view_factor=decodeViewFactor(design.view_factor);
+        design.chair_num=decodeChairNum(design.chair_num);
+        design.is_covered=decodeIfCovered(design.is_covered);
+        if(final===design.id)
+          this.designs.unshift(design);
+        else
+          this.designs.push(design);
+      }
+      this.curDesign=this.designs[0].id;
+    },
+    vote:function(id){
+      axios
+            .post('/api/private/project/vote_for_scheme', {project_id:Number(this.project_id),scheme_id:parseInt(id)},{})
+            .then(response=>{
+              var jsonData=response.data;
+              if(jsonData.message==='success'){
+                for(let i=0;i<this.designs.length;i++){
+                  if(this.designs[i].id===id){
+                    this.designs[i].AlternativeScheme.vote_num++;
+                    break;
+                  }
+                }
+                showinfo('投票成功！');
+                this.ifvoted=true;
+              }
+              else if(jsonData.message==='Already vote'){
+                this.ifvoted=true;
+                showinfo('已投过票！');
+              }
+              else if(jsonData.message==='Need login'){
+                showinfo('请先登录');
+              }
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+    },
+    finalize:function(id){
+      axios
+            .post('/api/private/project/set_final_scheme', {id:Number(this.project_id),final_scheme:parseInt(id)},{
+            })
+            .then(response=>{
+              var jsonData=response.data;
+              if(jsonData.message==='success'){
+                this.final_scheme=parseInt(id);
+                var order=0;
+                for(design of this.designs){
+                  if(design.id===this.final_scheme)
+                    order=this.designs.indexOf(design);
+                }
+                this.designs.splice(0,1,...this.designs.splice(order, 1 , this.designs[0]));
+                this.$emit('infoPar');
+                showinfo('操作成功');
+                window.location.href="#alternativeScheme";
+              }
+              else if(jsonData.message==='Need login'){
+                showinfo('请先登录');
+              }
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+    },
+  }
+}
+
+var commentComp = {
+  template:"#comment",
+  data:function(){
+    return {
+      ifHover:false,
+      comment:'',
+      messages:[],
+    }
+  },
+  props:[
+    'ifauthor','project_id'
+  ],
+  watch:{
+    'this.$refs.avatar.offsetWidth': function(val){
+      this.$refs.avatar.offsetHeight=val;
+    },
+  },
+  methods:{
+    addComment:function(){
+      if(this.comment==='')
+        return;
+      axios
+      .post('/api/private/project/add_comment', {project_id:this.project_id,message:this.comment},{
+      })
+      .then(response=>{
+        var jsonData=response.data;
+        if(jsonData.message==='success'){
+          showinfo('评论成功');
+          this.comment='';
+          this.$refs.dropdown.style.display="none";
+          jsonData.data.User.type=decodeRole(jsonData.data.User.type);
+          this.messages.push(jsonData.data);
+        }
+        else if(jsonData.message==='Need login'){
+          showinfo('请先登录');
+        }
+      })
+      .catch(function (error) { // 请求失败处理
+      console.log(error);
+      });
+    },
+    init:function(message){
+      this.messages.splice(0,0,...jsonData['Comments']);
+      for(message of this.messages){
+        message.User.type=decodeRole(message.User.type);
+      }
+    }
+  }
+}
 
 var vm=new Vue({
   el:'#project',
@@ -9,38 +147,30 @@ var vm=new Vue({
     tel:'',
     budget:'',
     budgetMod:'',
-    budgetOri:'',
     demand:'',
     address:'',
     lng:'',
     lat:'',
     state:'',
-    final_scheme:null,
     ifAuthor:false,
     ifHover:false,
     ifHover_:false,
-    ifHover__:false,
-    ifModified:false,
-    comment:'',
-    designs:[],
-    messages:[],
+    ifModified:false
   },
-  methods:{
+  computed:{
     showStatus:function(){
       return decodeStatus(this.state);
     },
-    switchDesign:function(event){
-      var el = event.currentTarget;      
-      for(var design of this.designs){
-        design.ifchecked=false;
-        if(design.id===parseInt($(el).attr('id'))){
-          design.ifchecked=true;
-        }
-      }
+  },
+  components:{
+    schemeComp,
+    commentComp
+  },
+  methods:{
+    finalize:function(){
+      this.state=5;
     },
     enableBudget:function(){
-      this.budget='';
-      $('#budget').removeAttr('disabled');
       this.ifModified=true;
     },
     updateProject:function(){
@@ -53,163 +183,66 @@ var vm=new Vue({
                 showinfo('修改成功')
               }
               else if(jsonData.message==='Need login'){
-                alert('请先登录');
+                showinfo('请先登录');
               }           
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
       axios
-            .post('/api/private/project/set_budget', {project_id:this.project_id,budget:this.budgetMod===''?this.budgetOri:this.budgetMod},{
+            .post('/api/private/project/set_budget', {project_id:this.project_id,budget:this.budgetMod===''?this.budget:this.budgetMod},{
             })
             .then(function(response){
               var jsonData=response.data;
               if(jsonData.message==='success'){
                 showinfo('修改成功');
-                vm.ifModified=false;
-                vm.budget=vm.budgetMod===''?vm.budgetOri:vm.budgetMod;
-                vm.budgetMod='';
-                $('#budget').attr('disabled','disabled');   
-                $('#budgetlabel').removeClass('active');   
+                setTimeout(()=>{
+                  window.location.reload();
+                },1000)
               }
               else if(jsonData.message==='Need login'){
-                alert('请先登录');
+                showinfo('请先登录');
               }             
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
     },
-    vote:function(event){
-      var el = event.currentTarget;      
-      axios
-            .post('/api/private/project/vote_for_scheme', {project_id:this.project_id,scheme_id:parseInt($(el).attr('id'))},{})
-            .then(function(response){
-              var jsonData=response.data;
-              if(jsonData.message==='success'){
-                for(design of vm.designs){
-                  if(design.id===parseInt($(el).attr('id'))){
-                    design.voted++;
-                    break;
-                  }
-                }
-                $("[name='vote']").attr('disabled','disabled');
-              }
-              else if(jsonData.message==='Already vote'){
-                $("[name='vote']").attr('disabled','disabled');
-                alert('已投过票！');
-              }
-              else if(jsonData.message==='Need login'){
-                alert('请先登录');
-              }
-            })
-            .catch(function (error) { // 请求失败处理
-            console.log(error);
-            });
-    },
-    finalize:function(event){
-      var el = event.currentTarget;    
-      axios
-            .post('/api/private/project/set_final_scheme', {id:Number(this.project_id),final_scheme:parseInt($(el).attr('id'))},{
-            })
-            .then(function(response){
-              var jsonData=response.data;
-              if(jsonData.message==='success'){
-                vm.final_scheme=parseInt($(el).attr('id'));
-                var order=0;
-                for(design of vm.designs){
-                  if(design.id===vm.final_scheme)
-                    order=vm.designs.indexOf(design);
-                }
-                vm.designs.splice(0,1,...vm.designs.splice(order, 1 , vm.designs[0]));
-                vm.state=5;
-                showinfo('操作成功');
-                window.location.href="#alternativeScheme";
-              }
-              else if(jsonData.message==='Need login'){
-                alert('请先登录');
-              }
-            })
-            .catch(function (error) { // 请求失败处理
-            console.log(error);
-            });
-    },
-    stop:function(event){
-      event.stopPropagation();
-    },
-    addComment:function(){
-      if(this.comment==='')
-        return;
-      axios
-      .post('/api/private/project/add_comment', {project_id:this.project_id,message:this.comment},{
-      })
-      .then(function(response){
-        var jsonData=response.data;
-        if(jsonData.message==='success'){
-          showinfo('评论成功');
-          $('#commentdropdown').hide();
-          jsonData.data.User.type=decodeRole(jsonData.data.User.type);
-          vm.messages.push(jsonData.data);
-        }
-        else if(jsonData.message==='Need login'){
-          alert('请先登录');
-        }
-      })
-      .catch(function (error) { // 请求失败处理
-      console.log(error);
-      });
-    },
-    init:function(){
-      var project_id=GetRequest()['id'];
+  },
+  mounted:function(){
+    var project_id=GetRequest()['id'];
       axios
             .post('/api/public/project/query_by_id', {project_id:project_id})
-            .then(function(response){
+            .then(response=>{
                 jsonData = response.data.data;
-                vm.project_id=project_id;
-                vm.pic_url=jsonData['pic_url'];
-                vm.name=jsonData['name'];
-                vm.author=jsonData['Author']['nickname']
-                vm.tel=jsonData['Author']['tel'];
-                vm.budget=jsonData['budget'];
-                vm.budgetOri=vm.budget;
-                vm.demand=jsonData['demand'];
-                vm.address=jsonData['project_address'];
-                vm.state=jsonData['state'];
-                vm.lng=jsonData['lng'];
-                vm.lat=jsonData['lat'];
-                vm.ifAuthor=jsonData['is_me'];
-                vm.final_scheme=jsonData['final_scheme'];
-                for(var design of jsonData['Schemes']){
-                  design.ifchecked=false;
-                  design.size=decodeSize(design.size);
-                  design.surround=decodeSurround(design.surround);
-                  design.green_rate=decodeGreenRate(design.green_rate);
-                  design.func=decodeFunction(design.func);
-                  design.style=decodeStyle(design.style);
-                  design.view_factor=decodeViewFactor(design.view_factor);
-                  design.chair_num=decodeChairNum(design.chair_num);
-                  design.is_covered=decodeIfCovered(design.is_covered);
-                  if(vm.final_scheme===design.id)
-                    vm.designs.unshift(design);
-                  else
-                    vm.designs.push(design);
-                }
-                vm.messages.splice(0,0,...jsonData['Comments']);
-                for(message of vm.messages){
-                  message.User.type=decodeRole(message.User.type);
-                }
-                vm.designs[0].ifchecked=true;
+                console.log(jsonData);
+                this.project_id=project_id;
+                this.pic_url=jsonData.pic_url;
+                this.name=jsonData.name;
+                this.author=jsonData.Author.nickname
+                this.tel=jsonData.Author.tel;
+                this.budget=jsonData.budget;
+                this.demand=jsonData.demand;
+                this.address=jsonData.project_address;
+                this.state=jsonData.state;
+                this.lng=jsonData.lng;
+                this.lat=jsonData.lat;
+                this.ifAuthor=jsonData.is_me;                
+                this.$refs.schemeComp.init(jsonData.Schemes, jsonData.final_scheme);
+                this.$refs.commentComp.init(jsonData.Comments);
+                window.initMap(this.lng,this.lat);
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
-    }
   }
 })
 
-var map = new BMap.Map("bdmap");
-map.centerAndZoom(new BMap.Point(121.443186, 31.225499),9);
-var mapType1 = new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]});
-var top_left_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_SMALL});
-map.addControl(mapType1);
-map.addControl(top_left_navigation);
+function initMap(lng,lat){
+  var map = new BMap.Map("bdmap");
+  map.centerAndZoom(new BMap.Point(lat, lng),9);
+  var mapType1 = new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]});
+  var top_left_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_SMALL});
+  map.addControl(mapType1);
+  map.addControl(top_left_navigation);
+}

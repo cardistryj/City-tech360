@@ -1,55 +1,46 @@
 var vm = new Vue({
     el: '#project',
     data: {
-        projects: []
+        projects: [],
     },
     methods:{
-        getDetail:function(event){
-            var el = event.currentTarget;
-            window.location.href='projectDetail.html?id='+$(el).attr('id');
-        },
-        init:function(){
-            if(GetRequest()['1']===undefined){
-                axios
-                .get('/api/public/project/query_all', {},{
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-                })
-                .then(function(response){
-                    jsonData = response.data.data;
-                    console.log(jsonData);
-                    for(var project of jsonData){
-                        project.state=decodeStatus(project.state);
-                        vm.projects.push(project);
-                    }
-                })
-                .catch(function (error) { // 请求失败处理
-                console.log(error);
-                });
-            }
-            else{
-                axios
-                .post('/api/private/project/query_by_me', {},{
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-                })
-                .then(function(response){
-                    jsonData = response.data.data;
-                    for(var project of jsonData){
-                        project.state=decodeStatus(project.state);
-                        vm.projects.push(project);
-                    }
-                })
-                .catch(function (error) { // 请求失败处理
-                console.log(error);
-                });
+        addProject:function(projects){
+            for(var project of projects){
+                project.state=decodeStatus(project.state);
+                project.visObj={visibility: 'hidden'}
+                this.projects.push(project);
             }
         },
-        display:function(event){
-            var el = event.currentTarget;
-            $(el).find('a').css('visibility','visible');
+        getDetail:function(id){
+            window.location.href='projectDetail.html?id='+id;
         },
-        hide:function(event){
-            var el = event.currentTarget;
-            $(el).find('a').css('visibility','hidden');            
+    },
+    created:function(){
+        if(GetRequest()['1']===undefined){
+            axios
+            .get('/api/public/project/query_all', {},{
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+            })
+            .then(response=>{
+                jsonData = response.data.data;
+                this.addProject(jsonData);
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
+        }
+        else{
+            axios
+            .post('/api/private/project/query_by_me', {},{
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+            })
+            .then(function(response){
+                jsonData = response.data.data;
+                this.addProject(jsonData);
+            })
+            .catch(function (error) { // 请求失败处理
+            console.log(error);
+            });
         }
     }
 })

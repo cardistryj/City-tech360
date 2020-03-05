@@ -5,48 +5,35 @@ var vm=new Vue({
     email:'',
     type:'',
     nickname:'',
-    nickname_ori:'',
     nickname_mod:'',
     password:'',
     password_copy:'',
     password_ver:'',
     tel:'',
-    tel_ori:'',
     tel_mod:'',
     address:'',
-    address_ori:'',
     address_mod:'',
-    ifHover0:false,
-    ifHover1:false,
-    ifHover2:false,
-    ifHover3:false,
-    ifHover4:false,
+    ifHover:0,
     ifModified:false,
-    oldpassword:false,
-    newpassword:false,
+    passwordStep:1,
+  },
+  watch:{
+    'this.$refs.avatar.offsetWidth': function(val){
+      this.$refs.avatar.offsetHeight=val;
+    },
   },
   methods:{
     saveInfo:function(){
       axios
-            .post('/api/private/user/edit_person_info', {nickname:(this.nickname_mod===''?this.nickname_ori:this.nickname_mod)
-                ,tel:(this.tel_mod===''?this.tel_ori:this.tel_mod),address:(this.address_mod===''?this.address_ori:this.address_mod)},{})
+            .post('/api/private/user/edit_person_info', {nickname:(this.nickname_mod===''?this.nickname:this.nickname_mod)
+                ,tel:(this.tel_mod===''?this.tel:this.tel_mod),address:(this.address_mod===''?this.address:this.address_mod)},{})
             .then(function(response){
               console.log(response.data);
               if(response.data.message==='success'){
                 showinfo('修改成功');
-                vm.ifModified=false;
-                vm.nickname=vm.nickname_mod===''?vm.nickname_ori:vm.nickname_mod;
-                vm.nickname_mod='';
-                vm.tel=vm.tel_mod===''?vm.tel_ori:vm.tel_mod;
-                vm.tel_mod='';
-                vm.address=vm.address_mod===''?vm.address_ori:vm.address_mod;
-                vm.address_mod='';
-                $('#nickname').attr('disabled','disabled');   
-                $('#nicknamelabel').removeClass('active'); 
-                $('#tel').attr('disabled','disabled');   
-                $('#tellabel').removeClass('active'); 
-                $('#address').attr('disabled','disabled');   
-                $('#addresslabel').removeClass('active'); 
+                setTimeout(()=>{
+                  window.location.reload();
+                },1000)
               }
               else{
                 alert('操作失败');
@@ -56,26 +43,13 @@ var vm=new Vue({
             console.log(error);
             });
     },
-    editInfo:function(){
-      this.ifModified=true;
-      $('#nickname').removeAttr('disabled');
-      $('#tel').removeAttr('disabled');
-      $('#address').removeAttr('disabled');
-      this.nickname='';
-      this.tel='';
-      this.address='';
-    },
-    resetPassword:function(){
-      this.oldpassword=true;
-    },
     shownewpassword:function(){
       axios
             .post('/api/private/user/check_password', {password:sha1(this.password_ver)},{
             })
-            .then(function(response){
+            .then(response=>{
               if(response.data.message==='success'){
-                vm.oldpassword=false;
-                vm.newpassword=true;
+                this.passwordStep=2;
               }
               else{
                 alert('密码不正确');
@@ -95,9 +69,12 @@ var vm=new Vue({
             .then(function(response){
               if(response.data.message==='success'){
                 showinfo('修改密码成功!');
+                setTimeout(()=>{
+                  window.location.reload();
+                },1000)
               }
               else{
-                alert('操作失败');
+                showinfo('操作失败');
               }
             })
             .catch(function (error) { // 请求失败处理
@@ -105,7 +82,7 @@ var vm=new Vue({
             });
     },
     uploadavatar:function(){
-      var file=document.getElementById("fileImage").files;
+      var file=this.$refs.file.files;
         if(file[0]===undefined){
           alert("请选择新的头像");
           return;
@@ -115,76 +92,71 @@ var vm=new Vue({
 
         axios
             .post('/api/private/user/upload_avatar', formdata,{
-            headers: {'Content-Type': 'multipart/form-data'} //加上这个
+            headers: {'Content-Type': 'multipart/form-data'}
         })
-            .then(function(response){  
+            .then(response=>{  
               if(response.data.message==='success'){
-                console.log(response.data);
                 showinfo('上传成功');
-                vm.avatar=$('#preview').attr('src');
-                //$('#avatar').css('height',$('#avatar').width());
-                $('#uploadmodal').modal('close');
+                setTimeout(()=>{
+                  window.location.reload();
+                },1000)
               }
               else{
-                alert('操作失败');
+                showinfo('操作失败');
               }
             })
             .catch(function (error) { // 请求失败处理
             console.log(error);
             });
     },
-    init:function(){
-      axios
-            .get('/api/private/user/get_my_info', {},{})
-            .then(function(response){
-                console.log(response);
-                jsonData = response.data.data;
-                vm.avatar=jsonData['avatar'];
-                vm.type=decodeRole(jsonData['type']);
-                vm.nickname=jsonData['nickname'];
-                vm.tel=jsonData['tel'];
-                vm.email=jsonData['email'];
-                vm.address=jsonData['address'];
-                vm.nickname_ori=vm.nickname;
-                vm.tel_ori=vm.tel;
-                vm.address_ori=vm.address;
-            })
-            .catch(function (error) { // 请求失败处理
-            console.log(error);
-            });
-    }
+  },
+  created:function(){
+    axios
+    .get('/api/private/user/get_my_info', {},{})
+    .then(response=>{
+        jsonData = response.data.data;
+        this.avatar=jsonData.avatar;
+        this.type=decodeRole(jsonData.type);
+        this.nickname=jsonData.nickname;
+        this.tel=jsonData.tel;
+        this.email=jsonData.email;
+        this.address=jsonData.address;
+    })
+    .catch(function (error) { // 请求失败处理
+      console.log(error);
+    });
+  },
+  mounted:function(){
+    initFile();
   }
 })
 
-$(document).ready(function(){
-  // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-  $('.modal').modal();
-});
-
-var fileInput = $('#fileImage');
-var preview = $('#preview');
-    //respond when the content of the 'file' item change
-    fileInput.change(function () {
-      //clear the old background
-      preview.attr("src","");
-      var file = fileInput.get(0).files[0];
-      
-      if (file===undefined){
-          preview.slideUp('slow');
-      }
-      else if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
-          fileInput.get(0).value='';
-          preview.hide();
-          alert('不是有效的图片文件!'); 
-      }
-      else{
-      var reader = new FileReader();
-      //respond once the filreader finish its uploading process
-      reader.onload = function(e) {
-          var data = e.target.result;
-          preview.attr("src",data);
-          preview.slideDown('slow');
-      };
-      reader.readAsDataURL(file);
-      }
-  });
+function initFile(){
+  var fileInput = $('#fileImage');
+  var preview = $('#preview');
+      //respond when the content of the 'file' item change
+      fileInput.change(function () {
+        //clear the old background
+        preview.attr("src","");
+        var file = fileInput.get(0).files[0];
+        
+        if (file===undefined){
+            preview.slideUp('slow');
+        }
+        else if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+            fileInput.get(0).value='';
+            preview.hide();
+            alert('不是有效的图片文件!'); 
+        }
+        else{
+        var reader = new FileReader();
+        //respond once the filreader finish its uploading process
+        reader.onload = function(e) {
+            var data = e.target.result;
+            preview.attr("src",data);
+            preview.slideDown('slow');
+        };
+        reader.readAsDataURL(file);
+        }
+    })
+}

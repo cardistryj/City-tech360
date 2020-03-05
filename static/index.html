@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- TODO 增加项目页面 -->
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
@@ -10,46 +8,55 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
   <!-- CSS  -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
-  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+  <link href="https://cdn.bootcss.com/materialize/0.97.8/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
   <link rel="stylesheet" href="css/main.css">
-  <!-- Custom.css -->
-  <link rel="stylesheet" href="css/style_example.css">
 </head>
 
 <body>
   <div id="preloader"></div>
-  <!-- Dropdown Structure -->
-  <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
-    <li>
-      <a href="childpage/defination.html" style="text-align: center;">定义</a>
-    </li>
-    <li>
-      <a href="childpage/whatis.html" style="text-align: center;">改造流程</a>
-    </li>
-    <li>
-      <a href="#321" style="text-align: center;">设计导则</a>
-    </li>
-    <li>
-      <a href="childpage/examples.html" style="text-align: center;">已完成案例</a>
-    </li>
-  </ul>
 
-  <!--  -->
-  <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
-      <label for="" id="role"></label>
-    <li class="divider"></li>
-    <li>
-      <a href="childpage/userinfo.html" style="text-align: center;">个人信息</a>
-    </li>
-    <li class="divider"></li>
-    <li>
-      <a href="#!" style="text-align: center;color:red;font-weight: bold;" onclick="signout()">登出</a>
-    </li>
-  </ul>
+  <img src="img/loader.gif" style="display:none">
+    
+  <div id="user">
 
-  <!-- 顶部导航栏 -->
+    <navigation child="childpage/" parent="" :role="role" :src="src" :name="name" @signout="signout"></navigation>
+    
+    <banner :role="role" @check="check_login_status"></banner>
+    
+    <login @set="setUser"></login>
+    
+    <signup></signup>
+
+  </div>
+
+  <!-- 导航栏 -->
+  <template id="nav">
+    <div>
+      <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
+        <label for="" id="role">角色：{{roleName}}</label>
+      <li class="divider"></li>
+      <li>
+        <a :href="child+'userinfo.html'" style="text-align: center;">个人信息</a>
+      </li>
+      <li class="divider"></li>
+      <li>
+        <a href="#!" style="text-align: center;color:red;font-weight: bold;" @click="logout">登出</a>
+      </li>
+    </ul>
+    <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
+      <li>
+        <a :href="child+'defination.html'" style="text-align: center;">定义</a>
+      </li>
+      <li>
+        <a :href="child+'whatis.html'" style="text-align: center;">改造流程</a>
+      </li>
+      <li>
+        <a :href="parent+'#321'" style="text-align: center;">设计导则</a>
+      </li>
+      <li>
+        <a :href="child+'examples.html'" style="text-align: center;">已完成案例</a>
+      </li>
+    </ul>
   <nav class="white" role="navigation">
     <div class="nav-wrapper container left-align">
       <ul class="center hide-on-med-and-down">
@@ -65,20 +72,20 @@
           <a href="#!" class="dropdown-button" data-activates="dropdown1">关于畸零空间</a>
         </li>
         <li class="right">
-          <a id="btnSignup" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
+          <a id="btnSignup" href="#signupscreen" class="btn purple lighten-4" v-show="role===''">注册</a>
         </li>
         <li class="right">
-          <a id="btnSignin" href="#loginscreen" class="btn btn-flat">登录</a>
+          <a id="btnSignin" href="#loginscreen" class="btn btn-flat" v-show="role===''">登录</a>
         </li>
         <li class="right" style="height: 64px;">
           <!-- TODO -->
-          <a id="btnMyproject" href="childpage/project.html?1" class="btn purple lighten-4" style="display: none;">我的项目</a>
-        </li>
+          <a id="btnMyproject" :href="child+'project.html?1'" class="btn purple lighten-4" v-show="role">我的项目</a>
+        </li> 
         <li class="right" style="height: 64px;">
-          <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;display: none;" data-activates="avataractivity"> 
-            <img id="imgAvatar" src="avatar/default.jpg" alt="" class="avatar"
+          <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;" data-activates="avataractivity" v-show="role"> 
+            <img ref="avatar" id="imgAvatar" :src="src" alt="" class="avatar"
               style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;width: 50px;">
-            <label id="pUsername" class="right" style="display: none;display:inline;text-align: center;font-weight: bold;color:black;"></label>
+            <label id="pUsername" class="right" style="display:inline;text-align: center;font-weight: bold;color:black;">{{name}}</label>
           </a>
         </li>
       </ul>
@@ -113,29 +120,29 @@
             <i class="material-icons">done_all</i>已完成案例</a>
         </li>
         <li class="divider"></li>
-        <a id="liAvatarSide" href="#!" class="dropdown-button" style="height: 64px;display: none;">
-          <img id="imgAvatarSide" src="avatar/default.jpg" alt="" class="avatar"
+        <a id="liAvatarSide" href="#!" class="dropdown-button" style="height: 64px" v-show="role">
+          <img ref="avatarSide" id="imgAvatarSide" :src="src" alt="" class="avatar"
             style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
-          <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)"></label>
-          <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)"></label>
+          <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)">{{name}}</label>
+          <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)">角色：{{roleName}}</label>
         </a>
         <li>
-          <a id="infoSide" href="childpage/userinfo.html" style="color:#26a69a;display:none">
+          <a id="infoSide" href="childpage/userinfo.html" style="color:#26a69a" v-show="role">
             <i class="material-icons">description</i>个人信息</a>
         </li>
           <li>
-            <a id="signoutSide" href="#!" style="color:red;display:none" onclick="signout()">
+            <a id="signoutSide" href="#!" style="color:red" @click="logout" v-show="role">
               <i class="material-icons">highlight_off</i>登出</a>
           </li>
         <li>
           <!-- TODO -->
-          <a id="btnMyprojectSide" href="childpage/project.html?1" class="btn purple lighten-4" style="display:none;">我的项目</a>
+          <a id="btnMyprojectSide" href="childpage/project.html?1" class="btn purple lighten-4" v-show="role">我的项目</a>
         </li>
           <li>
-              <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
+              <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat" v-show="role===''">登录</a>
             </li>
           <li>
-            <a id="btnSignupSide" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
+            <a id="btnSignupSide" href="#signupscreen" class="btn purple lighten-4" v-show="role===''">注册</a>
           </li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse">
@@ -143,7 +150,10 @@
       </a>
     </div>
   </nav>
+</div>
+</template>
 
+  <template id="banner">
   <div id="index-banner" class="parallax-container">
     <div class="section no-pad-bot">
       <div class="container">
@@ -156,10 +166,11 @@
         <div class="row center">
           <a href="childpage/project.html" id="showall"
             class="btn-large waves-effect waves-light purple lighten-4">查看已发布的项目</a>
-          <a href="#!" onclick="showmodal()" id="upload" class="btn-large waves-effect waves-light purple lighten-1"
+          <a href="#!" @click="showupload" id="upload" class="btn-large waves-effect waves-light purple lighten-1"
             style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid">发布新的项目</a>
-          <a href="#designscreen" id="uploaddesign" class="btn-large waves-effect waves-light purple lighten-1"
-            style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid;display:none">发布新的设计方案</a>
+          <a href="#!" @click="showdesign" id="uploaddesign" class="btn-large waves-effect waves-light purple lighten-1"
+            style="background-color: rgba( 0, 0, 0, .2 ) !important;border: white 3px solid" v-show="role===1">发布新的设计方案</a>
+            <!-- 更改 此处 逻辑 -->
         </div>
         <br>
         <br>
@@ -170,455 +181,11 @@
       <img src="img/background1.jpg" alt="Unsplashed background img 1">
     </div>
   </div>
+</template>
 
-  <!-- 发布项目modal -->
-  <div id="uploadscreen" class="modal">
-    <div class="modal-content" id="uploadModal" v-show="ifshowupload">
-      <div class="row">
-        <div class="col s12">
-          <h2 class="header main-color">发布项目</h2>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col s12">
-          <p>新的畸零空间改造项目</p>
-        </div>
-      </div>
-
-      <div class="z-depth-1">
-      <div class="row">
-        <div class="input-field col s12 m12">
-          <i class="material-icons prefix">title</i>
-          <input id="name" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.name">
-          <label for="name">项目名称*</label>
-        </div>
-        <div class="input-field col s12 m6">
-          <i class="material-icons prefix">phone</i>
-          <input id="tel" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.tel">
-          <label for="tel">联系方式*</label>
-        </div>
-        <div class="input-field col s12 m6">
-          <i class="material-icons prefix">monetization_on</i>
-          <input id="budget" type="text" class="validate" v-model="factors.budget">
-          <label for="budget">预算</label>
-        </div>
-
-        <div class="input-field col s12">
-          <i class="material-icons prefix">star</i>
-          <input id="demand" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.demand">
-          <label for="demand">改造意向*</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">place</i>
-          <input id="address" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.address">
-          <label for="address">畸零空间地址(文字)*</label>
-        </div>
-        <div class="col s12">
-          <label for="">在地图上选择畸零空间位置</label>
-
-          <div id="bdmap" style="width: inherit;height: 250px;"></div>
-        </div>
-        <div class="col s12">
-          <input disabled id="coords" type="text" class="validate">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <p>上传项目封面</p>
-        </div>
-      </div>
-      <div class="z-depth-1 center">
-        <div class="row">
-        <div class="col s12">
-          <form action="#">
-            <div class="file-field input-field">
-              <div class="btn purple lighten-4">
-                <span>上传图片</span>
-                <form id="uploadForm" enctype="multipart/form-data">
-                  <input id="file" accept="image/*" type="file" name="file" multiple>
-                </form>
-              </div>
-              <div class="file-path-wrapper">
-                <input class="file-path validate" type="text" placeholder="上传您的项目封面">
-              </div>
-            </div>
-          </form>
-          <br>
-          <img class="centered" id="previewfile" src="" style="display:none;max-width: 95%;"/>
-          <br>
-        </div>
-      </div>
-      </div>
-        <div class="row">
-          <div class="col s12">
-            <a href="#aidesignModal" class="btn purple lighten-4 right" @click="showaidesign">下一步</a>
-          </div>
-        </div>
-    </div>
-    <!-- 人工智能设计modal -->
-    <div class="modal-content" id="aidesignModal" v-show="ifshowaidesign">
-      <div class="row">
-        <div class="col s12 ">
-          <h2 class="header main-color">选择您想要的设计方案</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <p>使用人工智能设计您想要的畸零空间设计初稿</p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div id="aiSelectFull" class="centered center z-depth-1">
-        <br>
-        <div class="row">
-          <h5>尺寸</h5>
-          <div class="col s12" id="chips1">
-              <div class="chip size"  @click="A='1'">8M×8M</div>
-              <div class="chip size"  @click="A='2'" data-list="1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1">7M×7M</div>
-              <div class="chip size"  @click="A='3'"data-list="0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,1">6M×6M</div>
-              <div class="chip"  @click="A='4'">12M×6M</div>
-              <div class="chip"  @click="A='5'">9M×6M</div>
-              <div class="chip"  @click="A='6'">8M×4M</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>围合</h5>
-          <div class="col s12" id="chips8">
-              <div class="chip"  @click="B='1'">一面围合</div>
-              <div class="chip"  @click="B='2'">两面围合（对侧）</div>
-              <div class="chip"  @click="B='3'">两面围合斜侧</div>
-              <div class="chip"  @click="B='4'">三面围合</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>绿地比例</h5>
-          <div class="col s12" id="chips8">
-              <div class="chip form"  @click="C='1'" data-list='1,1,1,0,1,0,1,0,0,1,1,0,1,1,0,0'>低于30%</div>
-              <div class="chip form"  @click="C='2'" data-list="0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0">30%-70%</div>
-              <div class="chip form"  @click="C='3'" data-list="1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1">大于70%</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>功能</h5>
-          <div class="col s12" id="chips10">
-              <div class="chip"  @click="D='1'">休憩为主</div>
-              <div class="chip"  @click="D='2'">活动为主</div>
-              <div class="chip"  @click="D='3'">景观为主</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>风格</h5>
-          <div class="col s12" id="chips9">
-              <div class="chip"  @click="E='1'">古典</div>
-              <div class="chip"  @click="E='2'">现代</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips2">景观要素</h5>
-          <div class="col s12" id="chips2">
-              <div class="chipf"  @click="F1==='1'?F1='0':F1='1'">水池</div>
-              <div class="chipf"  @click="F2==='2'?F2='0':F2='2'">雕塑</div>
-              <div class="chipf"  @click="F3==='3'?F3='0':F3='3'">凉亭</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips3">座椅数量</h5>
-          <div class="col s12" id="chips3">
-              <div class="chip"  @click="G='1'">低于5个</div>
-              <div class="chip"  @click="G='2'">5-10个</div>
-              <div class="chip"  @click="G='3'">10个以上</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips4">是否需要顶棚</h5>
-          <div class="col s12 m8 push-m2" id="chips4">
-              <div class="chip"  @click="H='1'">需要</div>
-              <div class="chip"  @click="H='2'">不需要</div>
-          </div>
-      </div>
-        <br>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <a href="#designModal" class="btn purple lighten-4 right" style="margin-right: 15px;"
-            @click="showdesign">生成设计方案</a>
-          <a href="#uploadModal" class="btn purple lighten-4" @click="showupload">上一步</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-content" id="loader" v-show="ifshowloader">
-      <div class="center" style="background-color: #F9F9F9;height: 100px">
-        <h2 class="centered" style="color:#26a69a;">查找设计方案中...</h2>
-      </div>
-      <div class="center" style="background-color: #F9F9F9;height:400px">
-        <img src="img/ajaxloader.gif" class="centered">
-      </div>
-    </div>
-
-    <!-- 发布方案modal -->
-    <div class="modal-content" id="designModal" v-show="ifshowdesign">
-      <div class="row">
-        <div class="col s12 ">
-          <h2 style="color: gainsboro;">生成的设计方案</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12 ">
-          <h4 style="font-size: 22px;" id="ai_name">{{solutions[0].designName}}</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <p id="ai_detail">{{'功能：'+solutions[0].function}}</p>
-        </div>
-        <div class="col s12">
-          <img id="ai_img" v-bind:src="solutions[0].pic" alt="" style="width: 100%;">
-        </div>
-        <div class="col s12">
-          <label for="" id="ai_label">{{'围合：'+solutions[0].surround
-                  +'；大小：'+solutions[0].size
-                  +'；绿地比例：'+solutions[0].greenRate
-                  +'；风格：'+solutions[0].style
-                  +'；景观要素：'+solutions[0].viewFactor
-                  +'；座椅数量：'+solutions[0].chairNum
-                  +'；是否需要顶棚：'+solutions[0].isCovered}}</label>
-          <br>
-          <br>
-        </div>
-        <div class="col s12">
-          <a href="#designModal" class="btn purple lighten-4 right" style="margin-right: 15px;"
-            @click="publishproject">采用该方案并发布</a>
-          <a href="#uploadModal" class="btn purple lighten-4 rights" @click="showaidesign">上一步</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <h3 style="font-weight: 600;color: gray;font-size: 2rem;">其他的相似案例</h3>
-          <div class="row" style="display: flex;justify-content: center;">
-            <div class="card z-depth-0 col s12 m4">
-              <div class="card-image">
-                <img id="ai_img2" v-bind:src="solutions[1].pic">
-                <span class="card-title"></span>
-              </div>
-              <div class="card-content">
-                <h5 class="card-title" id="ai_name2"
-                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
-                  {{solutions[1].designName}}</h5>
-                <p id="ai_p2"
-                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
-                  {{solutions[1].function}}</p>
-              </div>
-              <div class="card-action">
-                <a href="#!" id="ai_btn2" @click="present($event)">详情</a>
-              </div>
-            </div>
-            <div class="card z-depth-0 col s12 m4">
-              <div class="card-image">
-                <img id="ai_img3" v-bind:src="solutions[2].pic">
-                <span class="card-title"></span>
-              </div>
-              <div class="card-content">
-                <h5 class="card-title" id="ai_name3"
-                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
-                  {{solutions[2].designName}}</h5>
-                <p id="ai_p3"
-                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
-                  {{solutions[2].function}}</p>
-              </div>
-              <div class="card-action">
-                <a href="#!" id="ai_btn3" @click="present($event)">详情</a>
-              </div>
-            </div>
-            <div class="card z-depth-0 col s12 m4">
-              <div class="card-image">
-                <img id="ai_img4" v-bind:src="solutions[3].pic">
-                <span class="card-title"></span>
-              </div>
-              <div class="card-content">
-                <h5 class="card-title" id="ai_name4"
-                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
-                  {{solutions[3].designName}}</h5>
-                <p id="ai_p4"
-                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
-                  {{solutions[3].function}}</p>
-              </div>
-              <div class="card-action">
-                <a href="#!" id="ai_btn4" @click="present($event)">详情</a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <!-- 设计师添加设计方案modal -->
-    <div id="designscreen" class="modal">
-    <div class="modal-content" id="aiadddesignModal">
-      <div class="row">
-        <div class="col s12">
-          <h2 class="header main-color">发布设计方案</h2>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col s12">
-              <p>输入设计方案名称</p>
-            </div>
-          <div class="input-field col s8 m6">
-            <i class="material-icons prefix">title</i>
-            <input id="designname" type="text" class="validate" v-model="name">
-            <label for="designname">名称</label>
-          </div>
-      </div>
-
-      <div class="row">
-        <div class="col s12">
-          <p>选择设计方案满足的要素</p>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div id="aiSelectFull" class="centered center z-depth-1">
-        <br>
-        <div class="row">
-          <h5>尺寸</h5>
-          <div class="col s12" id="chips1">              
-              <div class="chip size"  @click="A='1'">8M×8M</div>
-              <div class="chip size"  @click="A='2'" data-list="1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1">7M×7M</div>
-              <div class="chip size"  @click="A='3'"data-list="0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,1">6M×6M</div>
-              <div class="chip"  @click="A='4'">12M×6M</div>
-              <div class="chip"  @click="A='5'">9M×6M</div>
-              <div class="chip"  @click="A='6'">8M×4M</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>围合</h5>
-          <div class="col s12" id="chips8">
-              <div class="chip"  @click="B='1'">一面围合</div>
-              <div class="chip"  @click="B='2'">两面围合（对侧）</div>
-              <div class="chip"  @click="B='3'">两面围合斜侧</div>
-              <div class="chip"  @click="B='4'">三面围合</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>绿地比例</h5>
-          <div class="col s12" id="chips8">
-              <div class="chip form"  @click="C='1'" data-list='1,1,1,0,1,0,1,0,0,1,1,0,1,1,0,0'>低于30%</div>
-              <div class="chip form"  @click="C='2'" data-list="0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0">30%-70%</div>
-              <div class="chip form"  @click="C='3'" data-list="1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1">大于70%</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>功能</h5>
-          <div class="col s12" id="chips10">
-              <div class="chip"  @click="D='1'">休憩为主</div>
-              <div class="chip"  @click="D='2'">活动为主</div>
-              <div class="chip"  @click="D='3'">景观为主</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5>风格</h5>
-          <div class="col s12" id="chips9">
-              <div class="chip"  @click="E='1'">古典</div>
-              <div class="chip"  @click="E='2'">现代</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips2">景观要素</h5>
-          <div class="col s12" id="chips2">
-              <div class="chipf"  @click="F1==='1'?F1='0':F1='1'">水池</div>
-              <div class="chipf"  @click="F2==='2'?F2='0':F2='2'">雕塑</div>
-              <div class="chipf"  @click="F3==='3'?F3='0':F3='3'">凉亭</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips3">座椅数量</h5>
-          <div class="col s12" id="chips3">
-              <div class="chip"  @click="G='1'">低于5个</div>
-              <div class="chip"  @click="G='2'">5-10个</div>
-              <div class="chip"  @click="G='3'">10个以上</div>
-          </div>
-      </div>
-      <div class="row">
-          <h5 for="chips4">是否有顶棚</h5>
-          <div class="col s12 m8 push-m2" id="chips4">
-              <div class="chip"  @click="H='1'">需要</div>
-              <div class="chip"  @click="H='2'">不需要</div>
-          </div>
-      </div>
-        <br>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <p>上传设计图纸</p>
-        </div>
-      </div>
-      <div class="row center centered z-depth-2">
-          <br>
-          <div class="col s12">
-            <form action="#">
-              <div class="file-field input-field">
-                <div class="btn purple lighten-4">
-                  <span>上传图片</span>
-                  <form id="formImage" enctype="multipart/form-data">
-                    <input id="fileImage" accept="image/*" type="file" name="file" multiple>
-                  </form>
-                </div>
-                <div class="file-path-wrapper">
-                  <input class="file-path validate" type="text" placeholder="上传您创作的设计方案">
-                </div>
-              </div>
-            </form>
-          </div>
-          <br>
-          <br>
-          <img id="preview" src="" style="display:none;max-width: 95%;"/>
-          <br>
-      </div>
-    <div class="row">
-        <div class="col s12">
-            <a href="#" class="btn purple lighten-4 right" style="margin-right: 15px;"
-            @click="uploaddesign">提交</a>
-        </div>
-      </div>
-      </div>
-    </div>
-
+<template id="loginModal">
   <div class="modal" id="loginscreen" style="max-width: 400px;">
-    <div class="modal-content">
+    <div class="modal-content" v-if="refresh">
       <div class="row">
         <div class="col s12 center">
           <h3 style="font-weight: 200;">登录</h3>
@@ -627,24 +194,81 @@
       <div class="row">
         <div class="input-field col s12 ">
           <i class="material-icons prefix">person</i>
-          <input id="email_login" type="text" class="validate">
+          <input id="email_login" type="text" class="validate" v-model="email">
           <label for="email_login">邮箱</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12 ">
           <i class="material-icons prefix">lock</i>
-          <input id="password_login" type="password" class="validate">
+          <input id="password_login" type="password" class="validate" v-model="password">
           <label for="password_login">密码</label>
         </div>
       </div>
       <div class="row">
         <div class="col s12 center">
-          <a href="#!" class="btn btn-large btn-block purple lighten-4" onclick="signin()">登录</a>
+          <a href="#!" class="btn btn-large btn-block purple lighten-4" @click="signin">登录</a>
         </div>
       </div>
     </div>
   </div>
+</template>
+
+<template id="signupModal">
+  <div class="modal" id="signupscreen" style="max-width: 600px;">
+    <div class="modal-content" v-if="refresh">
+      <div class="row">
+        <div class="col s12 center ">
+          <h3 style="font-weight: 200;">注册新用户</h3>
+        </div>
+        <div class="input-field  col s12">
+          <i class="material-icons prefix">person</i>
+          <input id="username" type="text" :class="['validate', {'invalid': invalidth===1}]" v-model="name">
+          <label for="username">用户名</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">mail</i>
+          <input ref="mail" id="mailaddr" type="email" :class="['validate', {'invalid': invalidth===2}]" v-model="email">
+          <label for="mailaddr">邮箱</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">lock</i>
+          <input id="password" type="password" :class="['validate', {'invalid': invalidth===3||invalidth===5}]" v-model="password">
+          <label for="password">密码</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">repeat</i>
+          <input id="password-re" type="password" :class="['validate', {'invalid': invalidth===4||invalidth===5}]" v-model="passwordre">
+          <label for="password-re">重复密码</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">phone</i>
+          <input id="telnum" type="text" class="validate" v-model="tel">
+          <label for="telnum">您的联系方式</label>
+        </div>
+        <div class="col s12">
+          <label for="tabs">请选择您的身份</label>
+        </div>
+        <div class="col s12">
+          <ul class="tabs left-align" style="background: transparent;">
+            <li class="tab col s2"><a class="" href="#signupDesigner" @click="job=1">设计师</a></li>
+            <li class="tab col s2"><a class="" href="#signupGov" @click="job=2">政府机构</a></li>
+            <li class="tab col s2"><a class="" href="#signupCmt" @click="job=3">居委会</a></li>
+            <li class="tab col s2"><a class="" href="#signupCtz" @click="job=4">居民</a></li>
+            <li class="tab col s2"><a class="" href="#signupWrk" @click="job=5">施工方</a></li>
+          </ul>
+        </div>
+        <div class="col s12">&nbsp</div>
+        <div class="row">
+          <div class="col s12">
+            <a href="#!" class="btn btn-large btn-block purple lighten-4" @click="signup">注册</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 
   <div class="modal" id="infoscreen" style="width: 200px;">
     <div class="modal-content">
@@ -653,58 +277,11 @@
     </div>
   </div>
 
-  <div class="modal" id="signupscreen" style="max-width: 600px;">
-    <div class="modal-content">
-      <div class="row">
-        <div class="col s12 center ">
-          <h3 style="font-weight: 200;">注册新用户</h3>
-        </div>
-        <div class="input-field  col s12">
-          <i class="material-icons prefix">person</i>
-          <input id="username" type="text" class="validate">
-          <label for="username">用户名</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">mail</i>
-          <input id="mailaddr" type="email" class="validate">
-          <label for="mailaddr">邮箱</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">lock</i>
-          <input id="password" type="password" class="validate">
-          <label for="password">密码</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">repeat</i>
-          <input id="password-re" type="password" class="validate">
-          <label for="password-re">重复密码</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">phone</i>
-          <input id="telnum" type="text" class="validate">
-          <label for="telnum">您的联系方式</label>
-        </div>
-        <div class="col s12">
-          <label for="tabs">请选择您的身份</label>
-        </div>
-        <div class="col s12">
-          <ul class="tabs left-align" style="background: transparent;">
-            <li class="tab col s2"><a href="#signupDesigner" class="">设计师</a></li>
-            <li class="tab col s2"><a class="" href="#signupGov">政府机构</a></li>
-            <li class="tab col s2"><a class="" href="#signupCmt">居委会</a></li>
-            <li class="tab col s2"><a class="" href="#signupCtz">居民</a></li>
-            <li class="tab col s2"><a class="" href="#signupWrk">施工方</a></li>
-          </ul>
-        </div>
-        <div class="col s12">&nbsp</div>
-        <div class="row">
-          <div class="col s12">
-            <a href="#!" class="btn btn-large btn-block purple lighten-4" onclick="newuser()">注册</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="indexPage">
+
+  <upload-screen ref="upload"></upload-screen>
+
+  <design-screen></design-screen>
 
   <div class="container">
     <div class="section">
@@ -768,19 +345,10 @@
     </div>
   </div>
 
+  <paral-panel src="img/background2.jpg">
+    让畸零空间成为在城市公共空间之中，使人们交谈、娱乐、休憩的场所
+  </paral-panel>
 
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">让畸零空间成为在城市公共空间之中，使人们交谈、娱乐、休憩的场所</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax">
-      <img src="img/background2.jpg" alt="Unsplashed background img 2">
-    </div>
-  </div>
 
   <div class="container">
     <div class="section">
@@ -806,7 +374,7 @@
             <div class="col s12 m5"
               style="display: flex;flex-direction: column;align-items: center;justify-content: center;margin-left: 10px;">
               <div class="imgbox z-depth-3" style="max-width: 350px;height: 200px;overflow: hidden;">
-                <img src="img/创智农园before.png" alt="" class="z-depth-3" style="width: 350px;">
+                <img class="defer" src="" data-src="img/创智农园before.jpg" alt="" class="z-depth-3" style="width: 350px;">
               </div>
               <h5 style="margin-top: 10px;">改造前</h5>
               <p style="max-width: 250px;" class="center">城市开发中的典型隙地，因地下有重要市政管线通过，未得到充分利用，成为临时工棚和闲置地。</p>
@@ -814,7 +382,7 @@
             <div class="col s12 m5 push-m2  "
               style="display: flex;flex-direction: column;align-items: center;justify-content:center;margin-right: 10px;">
               <div class="imgbox z-depth-3" style="max-width: 350px;height: 200px;overflow: hidden;">
-                <img src="img/创智农园after.png" alt="" class="z-depth-3" style="width: 350px;">
+                <img class="defer" src="" data-src="img/创智农园after.jpg" alt="" class="z-depth-3" style="width: 350px;">
               </div>
               <h5 style="margin-top: 10px;">改造后</h5>
               <p style="max-width: 250px;" class="center">
@@ -838,19 +406,9 @@
 
   </div>
 
-
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">连接政府与设计师，提供畸零空间设计导则与装配式设计方案简化设计成本</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax">
-      <img src="img/background2.jpg" alt="Unsplashed background img 2">
-    </div>
-  </div>
+  <paral-panel src="img/background2.jpg">
+    连接政府与设计师，提供畸零空间设计导则与装配式设计方案简化设计成本
+  </paral-panel>
 
   <div class="container">
     <div class="section">
@@ -941,73 +499,15 @@
     </div>
   </div>
 
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">根据畸零空间不同的环境和形态设计不同的解决方案</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax">
-      <img src="img/background3.png" alt="Unsplashed background img 3">
-    </div>
-  </div>
+  <paral-panel src="img/background3.jpg">
+    根据畸零空间不同的环境和形态设计不同的解决方案
+  </paral-panel>
 
-  <div class="container" id="masonry">
-    <div class="section">
-      <div class="row">
-        <div class="col s12 center">
-          <h3>
-            <i class="mdi-content-send brown-text"></i>
-          </h3>
-          <h4>云端案例库</h4>
-          <p>提供已完成的畸零空间改造案例参考。</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
-          <div class="divider"></div>
-        </div>
-      </div>
-      <div class="row masonry-item">
-        <div class="col l4 m6 masonry" style="position:relative;" v-for="example of examples">
-          <div class="package-one">
-            <div class="img-wapper">
-              <img :src="example.img" alt="package-img" style="max-height: 250px;min-height: 250px;">
-            </div>
-            <div class="package-content" align="center">
-              <h3>{{example.name}}</h3>
-              <p>{{example.detail}}</p>
-              <ul class="ct-action">
-                <li><a id="" href="childpage/examples.html" class="booking-btn">详情</a></li>
-                <li></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+  <example-panel></example-panel>
 
-    </div>
-    <div class="row">
-      <div class="col s12 center">
-        <a href="childpage/examples.html" class="btn center purple lighten-4">查看云端案例库</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">借助人工智能，任何人都可以设计属于自己的畸零空间</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax">
-      <img src="img/ai.png" alt="Unsplashed background img 3">
-    </div>
-  </div>
+  <paral-panel src="img/ai.jpg">
+    借助人工智能，任何人都可以设计属于自己的畸零空间
+  </paral-panel>
 
   <div class="container">
     <div class="section center">
@@ -1022,6 +522,441 @@
       </div>
     </div>
   </div>
+</div>
+
+  <!-- 发布项目 screen -->
+  <template id="uploadTemplate">
+    <div id="uploadscreen" class="modal">
+      <div v-if="refresh">
+      <keep-alive>
+        <component :is="currentComp" id="newProject"
+        @switch="switchModal" @present="present" @publish="publish"
+        :solutions="solutions"></component>
+      </keep-alive>
+    </div>
+    </div>
+  </template>
+  
+    <!-- 选择 项目 基本 信息 -->
+    <template id="uploadModal">
+      <div class="modal-content">
+        <div class="row">
+          <div class="col s12">
+            <h2 class="header main-color">发布项目</h2>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col s12">
+            <p>新的畸零空间改造项目</p>
+          </div>
+        </div>
+  
+        <div class="z-depth-1">
+        <div class="row">
+          <div class="input-field col s12 m12">
+            <i class="material-icons prefix">title</i>
+            <input id="name" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.name">
+            <label for="name">项目名称*</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <i class="material-icons prefix">phone</i>
+            <input id="tel" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.tel">
+            <label for="tel">联系方式*</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <i class="material-icons prefix">monetization_on</i>
+            <input id="budget" type="text" class="validate" v-model="factors.budget">
+            <label for="budget">预算</label>
+          </div>
+  
+          <div class="input-field col s12">
+            <i class="material-icons prefix">star</i>
+            <input id="demand" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.demand">
+            <label for="demand">改造意向*</label>
+          </div>
+          <div class="input-field col s12">
+            <i class="material-icons prefix">place</i>
+            <input id="address" type="text" v-bind:class="['validate',{'invalid':ifinvalid}]" v-model="factors.address">
+            <label for="address">畸零空间地址(文字)*</label>
+          </div>
+          <div class="col s12">
+            <label for="">在地图上选择畸零空间位置</label>
+  
+            <div id="bdmap" style="width: inherit;height: 250px;"></div>
+          </div>
+          <div class="col s12">
+            <input disabled id="coords" type="text" class="validate">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col s12">
+            <div class="divider"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <p>上传项目封面</p>
+          </div>
+        </div>
+        <div class="z-depth-1 center">
+          <div class="row">
+          <div class="col s12">
+            <form action="#">
+              <div class="file-field input-field">
+                <div class="btn purple lighten-4">
+                  <span>上传图片</span>
+                  <form id="uploadForm" enctype="multipart/form-data">
+                    <input id="file" ref="cover" accept="image/*" type="file" name="file" multiple>
+                  </form>
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" placeholder="上传您的项目封面">
+                </div>
+              </div>
+            </form>
+            <br>
+            <img class="centered" id="previewfile" src="" style="display:none;max-width: 95%;"/>
+            <br>
+          </div>
+        </div>
+        </div>
+          <div class="row">
+            <div class="col s12">
+              <a href="#newProject" class="btn purple lighten-4 right" @click="showaidesign">下一步</a>
+            </div>
+          </div>
+      </div>
+      </template>
+  
+    <!-- 选择设计方案 要素 -->
+    <template id="aidesignModal">
+      <div class="modal-content">
+        <div class="row">
+          <div class="col s12 ">
+            <h2 class="header main-color">选择您想要的设计方案</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <p>使用人工智能设计您想要的畸零空间设计初稿</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <select-panel-comp ref="panel"></select-panel-comp>
+        <div class="row">
+          <div class="col s12">
+            <div class="divider"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <a href="#newProject" class="btn purple lighten-4 right" style="margin-right: 15px;"
+              @click="showdesign">生成设计方案</a>
+            <a href="#newProject" class="btn purple lighten-4" @click="showupload">上一步</a>
+          </div>
+        </div>
+      </div>
+      </template>
+  
+    <!-- 设计 要素 展示 面板 -->
+    <template id="aiSelectFull">
+      <div class="centered center z-depth-1">
+        <br>
+        <div class="row">
+          <h5>尺寸</h5>
+          <div class="col s12" id="chips1">
+              <div class="chip size"  @click="A='1'">8M×8M</div>
+              <div class="chip size"  @click="A='2'">7M×7M</div>
+              <div class="chip size"  @click="A='3'">6M×6M</div>
+              <div class="chip"  @click="A='4'">12M×6M</div>
+              <div class="chip"  @click="A='5'">9M×6M</div>
+              <div class="chip"  @click="A='6'">8M×4M</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5>围合</h5>
+          <div class="col s12" id="chips8">
+              <div class="chip"  @click="B='1'">一面围合</div>
+              <div class="chip"  @click="B='2'">两面围合（对侧）</div>
+              <div class="chip"  @click="B='3'">两面围合斜侧</div>
+              <div class="chip"  @click="B='4'">三面围合</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5>绿地比例</h5>
+          <div class="col s12" id="chips8">
+              <div class="chip form"  @click="C='1'">低于30%</div>
+              <div class="chip form"  @click="C='2'">30%-70%</div>
+              <div class="chip form"  @click="C='3'">大于70%</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5>功能</h5>
+          <div class="col s12" id="chips10">
+              <div class="chip"  @click="D='1'">休憩为主</div>
+              <div class="chip"  @click="D='2'">活动为主</div>
+              <div class="chip"  @click="D='3'">景观为主</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5>风格</h5>
+          <div class="col s12" id="chips9">
+              <div class="chip"  @click="E='1'">古典</div>
+              <div class="chip"  @click="E='2'">现代</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5 for="chips2">景观要素</h5>
+          <div class="col s12" id="chips2">
+              <div class="chipf"  @click="F1==='1'?F1='0':F1='1'">水池</div>
+              <div class="chipf"  @click="F2==='2'?F2='0':F2='2'">雕塑</div>
+              <div class="chipf"  @click="F3==='3'?F3='0':F3='3'">凉亭</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5 for="chips3">座椅数量</h5>
+          <div class="col s12" id="chips3">
+              <div class="chip"  @click="G='1'">低于5个</div>
+              <div class="chip"  @click="G='2'">5-10个</div>
+              <div class="chip"  @click="G='3'">10个以上</div>
+          </div>
+      </div>
+      <div class="row">
+          <h5 for="chips4">是否需要顶棚</h5>
+          <div class="col s12 m8 push-m2" id="chips4">
+              <div class="chip"  @click="H='1'">需要</div>
+              <div class="chip"  @click="H='2'">不需要</div>
+          </div>
+      </div>
+        <br>
+      </div>
+    </template>
+  
+    <!-- 过渡 的 modal -->
+    <template id="loader">
+      <div class="modal-content">
+        <div class="center" style="background-color: #F9F9F9;height: 100px">
+          <h2 class="centered" style="color:#26a69a;">查找设计方案中...</h2>
+        </div>
+        <div class="center" style="background-color: #F9F9F9;height:400px">
+          <img src="img/ajaxloader.gif" class="centered">
+        </div>
+      </div>
+      </template>
+  
+    <!-- 展示 设计方案 的 modal -->
+    <template id="designModal">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12 ">
+          <h2 style="color: gainsboro;">生成的设计方案</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 ">
+          <h4 style="font-size: 22px;" id="ai_name">{{firstSolution.designName}}</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <p id="ai_detail">{{'功能：'+firstSolution.function}}</p>
+        </div>
+        <div class="col s12">
+          <img id="ai_img" v-bind:src="firstSolution.pic" alt="" style="width: 100%;">
+        </div>
+        <div class="col s12">
+          <label for="" id="ai_label">{{'围合：'+firstSolution.surround
+                  +'；大小：'+firstSolution.size
+                  +'；绿地比例：'+firstSolution.greenRate
+                  +'；风格：'+firstSolution.style
+                  +'；景观要素：'+firstSolution.viewFactor
+                  +'；座椅数量：'+firstSolution.chairNum
+                  +'；是否需要顶棚：'+firstSolution.isCovered}}</label>
+          <br>
+          <br>
+        </div>
+        <div class="col s12">
+          <a href="#newProject" class="btn purple lighten-4 right" style="margin-right: 15px;"
+            @click="publishproject">采用该方案并发布</a>
+          <a href="#newProject" class="btn purple lighten-4 rights" @click="showaidesign">上一步</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <h3 style="font-weight: 600;color: gray;font-size: 2rem;">其他的相似案例</h3>
+          <div class="row" style="display: flex;justify-content: center;">
+            <div v-for="solution in getSecondary()" :key="solution.id" class="card z-depth-0 col s12 m4">
+              <div class="card-image">
+                <img v-bind:src="solution.pic">
+                <span class="card-title"></span>
+              </div>
+              <div class="card-content">
+                <h5 class="card-title" id="ai_name2"
+                  style="line-height: inherit !important;font-size: 18px !important;margin:0px;height: 40px;overflow: hidden;margin-top:10px;">
+                  {{solution.designName}}</h5>
+                <p id="ai_p2"
+                  style="font-size: 14px !important;line-height: 14px !important;color: gray !important;height: 24px;">
+                  {{solution.function}}</p>
+              </div>
+              <div class="card-action">
+                <a href="#newProject" @click="present(solutions.indexOf(solution))">详情</a>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div class="divider"></div>
+        </div>
+      </div>
+    </div>
+      </template>
+  
+      <!-- 设计师添加设计方案 modal -->
+      <template id="designTemplate">
+      <div id="designscreen" class="modal">
+        <design-comp id="newDesign" v-if="refresh" @submit="submit"></design-comp>
+      </div>
+    </template>
+  
+    <template id="aiadddesignModal">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12">
+          <h2 class="header main-color">发布设计方案</h2>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col s12">
+              <p>输入设计方案名称</p>
+            </div>
+          <div class="input-field col s8 m6">
+            <i class="material-icons prefix">title</i>
+            <input id="designname" type="text" class="validate" v-model="name">
+            <label for="designname">名称</label>
+          </div>
+      </div>
+  
+      <div class="row">
+        <div class="col s12">
+          <p>选择设计方案满足的要素</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <select-panel-comp ref="panel"></select-panel-comp>
+      <div class="row">
+        <div class="col s12">
+          <div class="divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <p>上传设计图纸</p>
+        </div>
+      </div>
+      <div class="row center centered z-depth-2">
+          <br>
+          <div class="col s12">
+            <form action="#">
+              <div class="file-field input-field">
+                <div class="btn purple lighten-4">
+                  <span>上传图片</span>
+                  <form id="formImage" enctype="multipart/form-data">
+                    <input id="fileImage" ref="file" accept="image/*" type="file" name="file" multiple>
+                  </form>
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" placeholder="上传您创作的设计方案">
+                </div>
+              </div>
+            </form>
+          </div>
+          <br>
+          <br>
+          <img id="preview" src="" style="display:none;max-width: 95%;"/>
+          <br>
+      </div>
+    <div class="row">
+        <div class="col s12">
+            <a href="#newDesign" class="btn purple lighten-4 right" style="margin-right: 15px;"
+            @click="uploaddesign">提交</a>
+        </div>
+      </div>
+      </div>
+    </template>
+
+    <template id="examplePanel">
+      <div class="container" id="masonry">
+        <div class="section">
+          <div class="row">
+            <div class="col s12 center">
+              <h3>
+                <i class="mdi-content-send brown-text"></i>
+              </h3>
+              <h4>云端案例库</h4>
+              <p>提供已完成的畸零空间改造案例参考。</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <div class="divider"></div>
+            </div>
+          </div>
+          <div class="row masonry-item">
+            <div class="col l4 m6 masonry" style="position:relative;" v-for="example of examples">
+              <div class="package-one">
+                <div class="img-wapper">
+                  <img class="defer" src="" :data-src="example.img" alt="package-img" style="max-height: 250px;min-height: 250px;">
+                </div>
+                <div class="package-content" align="center">
+                  <h3>{{example.name}}</h3>
+                  <p>{{example.detail}}</p>
+                  <ul class="ct-action">
+                    <li><a id="" href="childpage/examples.html" class="booking-btn">详情</a></li>
+                    <li></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+        <div class="row">
+          <div class="col s12 center">
+            <a href="childpage/examples.html" class="btn center purple lighten-4">查看云端案例库</a>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="paral">
+      <div class="parallax-container valign-wrapper">
+        <div class="section no-pad-bot">
+          <div class="container">
+            <div class="row center">
+              <h5 class="header col s12 light"><slot></slot></h5>
+            </div>
+          </div>
+        </div>
+        <div class="parallax">
+          <img class="defer" src="" :data-src="src" alt="Unsplashed background img">
+        </div>
+      </div>
+    </template>
 
   <footer class="page-footer purple lighten-4">
     <div class="container">
@@ -1052,15 +987,13 @@
 
 
   <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=33X0NsFGdzK75bVRULnf3zGt4Os450GW"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
   <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
-  <script src="js/materialize.js"></script>  
+  <script src="https://cdn.bootcss.com/materialize/0.97.8/js/materialize.min.js"></script>  
   <script src="js/sha1.js"></script>
-  <script src="js/tool.js"></script>
   <script src="js/decodeDesign.js"></script>
-  <script src="js/user.js"></script>
   <script src="js/init.js"></script>
   <script src="js/main.js"></script>
   <script src="js/isotope.pkgd.min.js"></script>
@@ -1080,17 +1013,20 @@
           }
         });
       });
+      $('.modal').modal();
+      $('.button-collapse').sideNav();
+      $('.parallax').parallax();
       var $main_window = $(window);
       /*====================================
           preloader js
         ======================================*/
       $main_window.on('load', function () {
           $('#preloader').fadeOut('slow');
+          $('.defer').each(function(){
+            var img = $(this);
+            img.attr('src', img.attr('data-src'));
+          })
       });
-      $main_window.on('resize',function(){  
-          $('#imgAvatar').css('height',$('#imgAvatar').width());    //监听窗口改变以自适应头像大小
-          $('#imgAvatarSide').css('height',$('#imgAvatarSide').width());    //监听窗口改变以自适应头像大小
-        });
     })(jQuery);
   </script>
 </body>

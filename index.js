@@ -31,16 +31,7 @@ app.use('/api/private',(req,res,next)=>{
     }
 })
 
-/*app.use('/private',(req,res,next)=>{
-    if(req.session.user_id){
-        next();
-    }else{
-        res.redirect('/public/index.html')
-    }
-})*/
-
 app.get('/',(req,res)=>{
-    //res.redirect('/public/index.html')
     res.redirect('/index.html')
 })
 

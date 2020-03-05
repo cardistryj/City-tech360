@@ -8,10 +8,8 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-    <!-- Custom.css -->
-    <link rel="stylesheet" href="css/style_example.css">
+    <link href="https://cdn.bootcss.com/materialize/0.97.8/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="css/main.css" type="text/css" rel="stylesheet" media="screen,projection"/>
     <style>
     th {
       font-size: 24px;
@@ -24,36 +22,47 @@
 </head>
 <body>
     <div id="preloader"></div>
-    <!-- Dropdown Structure -->
-    <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
+    
+    <img src="../img/loader.gif" style="display:none">
+    
+  <div id="user">
+
+    <navigation child="" parent="../index.html" :role="role" :src="src" :name="name" @signout="signout"></navigation>
+    
+    <login @set="setUser"></login>
+    
+    <signup></signup>
+
+  </div>
+
+  <!-- 导航栏 -->
+  <template id="nav">
+    <div>
+      <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
+        <label for="" id="role">角色：{{roleName}}</label>
+      <li class="divider"></li>
       <li>
-        <a href="defination.html" style="text-align: center;">定义</a>
+        <a :href="child+'userinfo.html'" style="text-align: center;">个人信息</a>
       </li>
+      <li class="divider"></li>
       <li>
-        <a href="whatis.html" style="text-align: center;">改造流程</a>
-      </li>
-      <li>
-          <a href="../index.html#321" style="text-align: center;">设计导则</a>
-        </li>
-      <li>
-        <a href="examples.html" style="text-align: center;">已完成案例</a>
+        <a href="#!" style="text-align: center;color:red;font-weight: bold;" @click="logout">登出</a>
       </li>
     </ul>
-
-    <!--  -->
-  <ul id="avataractivity" class="dropdown-content" style="transform:translate(0px,64px)">
-      <label for="" id="role"></label>
-    <li class="divider"></li>
-    <li>
-      <a href="userinfo.html" style="text-align: center;">个人信息</a>
-    </li>
-    <li class="divider"></li>
-    <li>
-      <a href="#!" style="text-align: center;color:red;font-weight: bold;" onclick="signout()">登出</a>
-    </li>
-  </ul>
-
-    <!-- 顶部导航栏 -->
+    <ul id="dropdown1" class="dropdown-content" style="transform:translate(0px,64px)">
+      <li>
+        <a :href="child+'defination.html'" style="text-align: center;">定义</a>
+      </li>
+      <li>
+        <a :href="child+'whatis.html'" style="text-align: center;">改造流程</a>
+      </li>
+      <li>
+        <a :href="parent+'#321'" style="text-align: center;">设计导则</a>
+      </li>
+      <li>
+        <a :href="child+'examples.html'" style="text-align: center;">已完成案例</a>
+      </li>
+    </ul>
   <nav class="white" role="navigation">
     <div class="nav-wrapper container left-align">
       <ul class="center hide-on-med-and-down">
@@ -69,22 +78,22 @@
           <a href="#!" class="dropdown-button" data-activates="dropdown1">关于畸零空间</a>
         </li>
         <li class="right">
-            <a id="btnSignup" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
-          </li>
-          <li class="right">
-            <a id="btnSignin" href="#loginscreen" class="btn btn-flat">登录</a>
-          </li>
-          <li class="right" style="height: 64px;">
-            <!-- TODO -->
-            <a id="btnMyproject" href="project.html?1" class="btn purple lighten-4" style="display: none;">我的项目</a>
-          </li>
-          <li class="right" style="height: 64px;">
-            <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;display: none;" data-activates="avataractivity"> 
-              <img id="imgAvatar" src="../avatar/default.jpg" alt="" class="avatar"
-                style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;width: 50px;">
-              <label id="pUsername" class="right" style="display: none;display:inline;text-align: center;font-weight: bold;color:black;"></label>
-            </a>
-          </li>
+          <a id="btnSignup" href="#signupscreen" class="btn purple lighten-4" v-show="role===''">注册</a>
+        </li>
+        <li class="right">
+          <a id="btnSignin" href="#loginscreen" class="btn btn-flat" v-show="role===''">登录</a>
+        </li>
+        <li class="right" style="height: 64px;">
+          <!-- TODO -->
+          <a id="btnMyproject" :href="child+'project.html?1'" class="btn purple lighten-4" v-show="role">我的项目</a>
+        </li> 
+        <li class="right" style="height: 64px;">
+          <a id="liAvatar" href="#!" class="dropdown-button" style="height: 64px;width:130px;" data-activates="avataractivity" v-show="role"> 
+            <img ref="avatar" id="imgAvatar" :src="src" alt="" class="avatar"
+              style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;width: 50px;">
+            <label id="pUsername" class="right" style="display:inline;text-align: center;font-weight: bold;color:black;">{{name}}</label>
+          </a>
+        </li>
       </ul>
 
 
@@ -101,141 +110,148 @@
             <i class="material-icons">home</i>首页</a>
         </li>
         <li>
-          <a href="defination.html" style="color:#26a69a">
+          <a href="childpage/defination.html" style="color:#26a69a">
             <i class="material-icons">create</i>畸零空间定义</a>
         </li>
         <li>
-          <a href="whatis.html" style="color:#26a69a">
+          <a href="childpage/whatis.html" style="color:#26a69a">
             <i class="material-icons">compare_arrows</i>畸零空间改造流程</a>
         </li>
         <li>
-            <a href="../index.html#321" style="color:#26a69a">
-              <i class="material-icons">highlight</i>畸零空间设计导则</a>
-          </li>
+          <a href="#321" style="color:#26a69a">
+            <i class="material-icons">highlight</i>畸零空间设计导则</a>
+        </li>
         <li>
-          <a href="examples.html" style="color:#26a69a">
+          <a href="childpage/examples.html" style="color:#26a69a">
             <i class="material-icons">done_all</i>已完成案例</a>
         </li>
         <li class="divider"></li>
-        <a id="liAvatarSide" href="#!" class="dropdown-button" style="height: 64px;display: none;">
-            <img id="imgAvatarSide" src="../avatar/default.jpg" alt="" class="avatar"
-              style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
-            <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)"></label>
-            <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)"></label>
-          </a>
+        <a id="liAvatarSide" href="#!" class="dropdown-button" style="height: 64px" v-show="role">
+          <img ref="avatarSide" id="imgAvatarSide" :src="src" alt="" class="avatar"
+            style="border-radius: 50%;margin-top: 7px;margin-bottom: 7px;height: 50px;">
+          <label id="pUsernameSide" style="font-weight: bold;color:black;position:absolute;transform: translate(18px,6px)">{{name}}</label>
+          <label id="roleSide" for="" style="position:absolute;right:16px;transform: translateY(8px)">角色：{{roleName}}</label>
+        </a>
+        <li>
+          <a id="infoSide" href="childpage/userinfo.html" style="color:#26a69a" v-show="role">
+            <i class="material-icons">description</i>个人信息</a>
+        </li>
           <li>
-            <a id="infoSide" href="userinfo.html" style="color:#26a69a;display:none">
-              <i class="material-icons">description</i>个人信息</a>
+            <a id="signoutSide" href="#!" style="color:red" @click="logout" v-show="role">
+              <i class="material-icons">highlight_off</i>登出</a>
           </li>
-            <li>
-              <a id="signoutSide" href="#!" style="color:red;display:none" onclick="signout()">
-                <i class="material-icons">highlight_off</i>登出</a>
+        <li>
+          <!-- TODO -->
+          <a id="btnMyprojectSide" href="childpage/project.html?1" class="btn purple lighten-4" v-show="role">我的项目</a>
+        </li>
+          <li>
+              <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat" v-show="role===''">登录</a>
             </li>
           <li>
-            <!-- TODO -->
-            <a id="btnMyprojectSide" href="project.html?1" class="btn purple lighten-4" style="display:none;">我的项目</a>
+            <a id="btnSignupSide" href="#signupscreen" class="btn purple lighten-4" v-show="role===''">注册</a>
           </li>
-            <li>
-                <a id="btnSigninSide" href="#loginscreen" class="btn btn-flat">登录</a>
-              </li>
-            <li>
-              <a id="btnSignupSide" href="#!" class="btn purple lighten-4" onclick="openSignupscreen()">注册</a>
-            </li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse">
         <i class="material-icons">menu</i>
       </a>
     </div>
   </nav>
+</div>
+</template>
 
+<template id="loginModal">
   <div class="modal" id="loginscreen" style="max-width: 400px;">
-      <div class="modal-content">
-        <div class="row">
-          <div class="col s12 center">
-            <h3 style="font-weight: 200;">登录</h3>
-          </div>
+    <div class="modal-content" v-if="refresh">
+      <div class="row">
+        <div class="col s12 center">
+          <h3 style="font-weight: 200;">登录</h3>
         </div>
-        <div class="row">
-          <div class="input-field col s12 ">
-            <i class="material-icons prefix">person</i>
-            <input id="email_login" type="text" class="validate">
-            <label for="email_login">邮箱</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 ">
+          <i class="material-icons prefix">person</i>
+          <input id="email_login" type="text" class="validate" v-model="email">
+          <label for="email_login">邮箱</label>
         </div>
-        <div class="row">
-          <div class="input-field col s12 ">
-            <i class="material-icons prefix">lock</i>
-            <input id="password_login" type="password" class="validate">
-            <label for="password_login">密码</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12 ">
+          <i class="material-icons prefix">lock</i>
+          <input id="password_login" type="password" class="validate" v-model="password">
+          <label for="password_login">密码</label>
         </div>
-        <div class="row">
-          <div class="col s12 center">
-            <a href="#!" class="btn btn-large btn-block purple lighten-4" onclick="signin()">登录</a>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col s12 center">
+          <a href="#!" class="btn btn-large btn-block purple lighten-4" @click="signin">登录</a>
         </div>
       </div>
     </div>
-    
-    <div class="modal" id="infoscreen" style="width: 200px;">
-      <div class="modal-content">
-        <p id="infotext">上传成功!</p>
-        <a href="#!" class="btn purple lighten-4 right" style="margin-bottom: 20px;" onclick="closeAllModal()">确定</a>
-      </div>
-    </div>
-    
-    <div class="modal" id="signupscreen" style="max-width: 600px;">
-      <div class="modal-content">
+  </div>
+</template>
+
+<template id="signupModal">
+  <div class="modal" id="signupscreen" style="max-width: 600px;">
+    <div class="modal-content" v-if="refresh">
+      <div class="row">
+        <div class="col s12 center ">
+          <h3 style="font-weight: 200;">注册新用户</h3>
+        </div>
+        <div class="input-field  col s12">
+          <i class="material-icons prefix">person</i>
+          <input id="username" type="text" :class="['validate', {'invalid': invalidth===1}]" v-model="name">
+          <label for="username">用户名</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">mail</i>
+          <input ref="mail" id="mailaddr" type="email" :class="['validate', {'invalid': invalidth===2}]" v-model="email">
+          <label for="mailaddr">邮箱</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">lock</i>
+          <input id="password" type="password" :class="['validate', {'invalid': invalidth===3||invalidth===5}]" v-model="password">
+          <label for="password">密码</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">repeat</i>
+          <input id="password-re" type="password" :class="['validate', {'invalid': invalidth===4||invalidth===5}]" v-model="passwordre">
+          <label for="password-re">重复密码</label>
+        </div>
+        <div class="input-field col s12">
+          <i class="material-icons prefix">phone</i>
+          <input id="telnum" type="text" class="validate" v-model="tel">
+          <label for="telnum">您的联系方式</label>
+        </div>
+        <div class="col s12">
+          <label for="tabs">请选择您的身份</label>
+        </div>
+        <div class="col s12">
+          <ul class="tabs left-align" style="background: transparent;">
+            <li class="tab col s2"><a class="" href="#signupDesigner" @click="job=1">设计师</a></li>
+            <li class="tab col s2"><a class="" href="#signupGov" @click="job=2">政府机构</a></li>
+            <li class="tab col s2"><a class="" href="#signupCmt" @click="job=3">居委会</a></li>
+            <li class="tab col s2"><a class="" href="#signupCtz" @click="job=4">居民</a></li>
+            <li class="tab col s2"><a class="" href="#signupWrk" @click="job=5">施工方</a></li>
+          </ul>
+        </div>
+        <div class="col s12">&nbsp</div>
         <div class="row">
-          <div class="col s12 center ">
-            <h3 style="font-weight: 200;">注册新用户</h3>
-          </div>
-          <div class="input-field  col s12">
-            <i class="material-icons prefix">person</i>
-            <input id="username" type="text" class="validate">
-            <label for="username">用户名</label>
-          </div>
-          <div class="input-field col s12">
-            <i class="material-icons prefix">mail</i>
-            <input id="mailaddr" type="email" class="validate">
-            <label for="mailaddr">邮箱</label>
-          </div>
-          <div class="input-field col s12">
-            <i class="material-icons prefix">lock</i>
-            <input id="password" type="password" class="validate">
-            <label for="password">密码</label>
-          </div>
-          <div class="input-field col s12">
-            <i class="material-icons prefix">repeat</i>
-            <input id="password-re" type="password" class="validate">
-            <label for="password-re">重复密码</label>
-          </div>
-          <div class="input-field col s12">
-            <i class="material-icons prefix">phone</i>
-            <input id="telnum" type="text" class="validate">
-            <label for="telnum">您的联系方式</label>
-          </div>
           <div class="col s12">
-            <label for="tabs">请选择您的身份</label>
-          </div>
-          <div class="col s12">
-            <ul class="tabs left-align" style="background: transparent;">
-              <li class="tab col s2"><a href="#signupDesigner" class="">设计师</a></li>
-              <li class="tab col s2"><a class="" href="#signupGov">政府机构</a></li>
-              <li class="tab col s2"><a class="" href="#signupCmt">居委会</a></li>
-              <li class="tab col s2"><a class="" href="#signupCtz">居民</a></li>
-              <li class="tab col s2"><a class="" href="#signupWrk">施工方</a></li>
-            </ul>
-          </div>
-          <div class="col s12">&nbsp</div>
-          <div class="row">
-            <div class="col s12">
-              <a href="#!" class="btn btn-large btn-block purple lighten-4" onclick="newuser()">注册</a>
-            </div>
+            <a href="#!" class="btn btn-large btn-block purple lighten-4" @click="signup">注册</a>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</template>
+
+
+  <div class="modal" id="infoscreen" style="width: 200px;">
+    <div class="modal-content">
+      <p id="infotext">上传成功!</p>
+      <a href="#!" class="btn purple lighten-4 right" style="margin-bottom: 20px;" onclick="closeAllModal()">确定</a>
+    </div>
+  </div>
     
   <div class="section purple lighten-4" id="index-banner2">
     <div class="container">
@@ -250,8 +266,8 @@
 <section class="ws-section-spacing bg-gray" id="project">
     <div class="container center" v-show="projects.length===0">
         <img src="../img/nodata.gif" class="centered">
-        <h2 class="header" style="font-family: 'Microsoft YaHei'">您还没有发布过项目哦...</h2>
-        <h3 class="header">前往<a href="/" style="color:#26a69a;font-weight: bold;">首页</a>以发布您的第一个项目</h3>
+        <h2 class="header" style="font-family: 'Microsoft YaHei'">这里什么都没有哦...</h2>
+        <h3 class="header">前往<a href="/" style="color:#26a69a;font-weight: bold;">首页</a>以发布一个新项目</h3>
       </div>
     <div class="container z-depth-2" v-show="projects.length!==0">
       <table class="striped bordered">
@@ -259,13 +275,13 @@
            <tr><th></th><th>封面</th><th>名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th>改造需求&nbsp;&nbsp;&nbsp;&nbsp;</th><th>状态</th><th></th></tr>
         </thead>
         <tbody>
-           <tr v-for="project of projects" @mouseover="display($event)" @mouseout="hide($event)">
+           <tr v-for="project of projects" @mouseover="project.visObj.visibility='visible'" @mouseout="project.visObj.visibility='hidden'">
              <td></td>
-             <td><img v-bind:src="project.pic_url" style="height:150px;width:150px"></td>
+             <td><img v-bind:src="project.pic_url" style="height:150px;width:200px"></td>
              <td>{{project.name}}</td>
              <td>{{project.demand}}</td>
              <td>{{project.state}}</td>
-             <td><a href="#!" v-bind:id="project.id" style="color:#26a69a;visibility:hidden" @click="getDetail($event)">
+             <td><a href="#!" :style="[{'color':'#26a69a'},project.visObj]" @click="getDetail(project.id)">
               <i class="material-icons">subject</i></a></td>
             </tr>
         </tbody>
@@ -313,24 +329,22 @@
 
 
 <!--  Scripts-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="js/materialize.js"></script>
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/materialize/0.97.8/js/materialize.min.js"></script>  
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
 <script src="js/sha1.js"></script>
-<script src="js/tool.js"></script>
-<script src="js/user.js"></script>
 <script src="js/init.js"></script>
 <script src="js/isotope.pkgd.min.js"></script>
 <script src="js/imagesloaded.js"></script>
 <script src="js/decodeDesign.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
 <script src="js/projects.js"></script>
 <script>
     (function ($) {
         "use strict";
+      $('.button-collapse').sideNav();
+        $('.modal').modal();
         var $main_window = $(window);
-        init();
-        vm.init();
         /*====================================
             preloader js
           ======================================*/

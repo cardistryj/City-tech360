@@ -1,74 +1,61 @@
-var vm=new Vue({
-    el: '#uploadscreen',
-    data : {
+// 修复 经纬度 的 问题
+
+var UploadComp = {
+  template: '#uploadModal',
+  data:function(){
+    return {
       factors:{
         name:'',
         tel:'',
         budget:'',
         demand:'',
         address:'',
-        lng:'',
-        lat:'',
       },
-      ifshowupload:true,
-      ifshowaidesign:false,
-      ifshowdesign:false,
       ifinvalid:false,
-      ifshowloader:false,
-      solutions:[
-            {
-              id:'',
-              designName:'',
-              pic:'',
-              surround:'',
-              size:'',
-              greenRate:'',
-              function:'',
-              style:'',
-              viewFactor:'',
-              chairNum:'',
-              isCovered:'',
-            },
-            {
-              id:'',
-              designName:'',
-              pic:'',
-              surround:'',
-              size:'',
-              greenRate:'',
-              function:'',
-              style:'',
-              viewFactor:'',
-              chairNum:'',
-              isCovered:'',
-            },
-            {
-              id:'',
-              designName:'',
-              pic:'',
-              surround:'',
-              size:'',
-              greenRate:'',
-              function:'',
-              style:'',
-              viewFactor:'',
-              chairNum:'',
-              isCovered:'',
-            },
-            {
-              id:'',
-              designName:'',
-              pic:'',
-              surround:'',
-              size:'',
-              greenRate:'',
-              function:'',
-              style:'',
-              viewFactor:'',
-              chairNum:'',
-              isCovered:'',
-            }
-      ],
+    }
+  },
+  methods:{
+    check:function(){
+      if (!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
+      {
+          alert("请填写必要信息");
+          this.ifinvalid=true;
+          return false;
+      } 
+      if(this.$refs.cover.files[0]===undefined){
+        alert("请上传项目封面");
+        return false;
+      }
+      return true;
+    },
+    getFormData:function(){
+      if(!this.check())
+        return null;
+      var formdata=new FormData();
+      formdata.append("pic",this.$refs.cover.files[0]);
+      formdata.append("name",this.factors.name);
+      formdata.append("tel",this.factors.tel);
+      formdata.append("budget",this.factors.budget);
+      formdata.append("demand",this.factors.demand);
+      formdata.append("project_address",this.factors.address);
+      return formdata;
+    },
+    showaidesign:function(){  // 父组件
+      if(!this.check())
+        return
+      this.$emit('switch','choose-elem-comp');
+    },
+  },
+  mounted:function(){
+    initMap();
+    addPreview('#file','#previewfile');
+  }
+}
+
+var SelectPanelComp = {
+  template:"#aiSelectFull",
+  data:function(){
+    return {
       A:'0',
       B:'0',
       C:'0',
@@ -79,140 +66,163 @@ var vm=new Vue({
       F3:'0',
       G:'0',
       H:'0'
+    }
+  },
+  methods:{
+    gencode:function(){
+      return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+'G'+this.G+'H'+this.H;
+    },
+    check:function(){
+      if(this.A==='0'){
+        alert("请选择：尺寸");
+        return false;
+      }
+      if(this.B==='0'){
+        alert("请选择：围合");
+        return false;
+      }
+      if(this.C==='0'){
+        alert("请选择：绿地比例");
+        return false;
+      }
+      if(this.D==='0'){
+        alert("请选择：功能");
+        return false;
+      }
+      if(this.E==='0'){
+        alert("请选择：风格");
+        return false;
+      }
+      if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'){
+        alert("请选择：景观要素");
+        return false;
+      }
+      if(this.G==='0'){
+        alert("请选择：座椅数量");
+        return false;
+      }
+      if(this.H==='0'){
+        alert("请选择：是否需要顶棚");
+        return false;
+      }
+      return true;
+    },
+  },
+  mounted:function(){
+    initChip();
+  }
+}
+
+var ChooseElemComp = {
+  template:"#aidesignModal",
+  components:{
+    SelectPanelComp
+  },
+  methods:{
+    showupload:function(){  //return to uploadModal
+      this.$emit('switch','upload-comp');
+    },
+    showdesign:function(){  //父组件
+      if(!this.$refs.panel.check())
+        return;
+      var code=this.$refs.panel.gencode();
+      this.$emit('switch','transition-comp',code);
+    },
+  },
+}
+
+// 可以 考虑 异步 加载 图片 优化性能
+var TransitionComp = {
+  template:'#loader',
+}
+
+var PresentComp = {
+  template:'#designModal',
+  props:['solutions'],
+  methods:{
+    getSecondary:function(){
+      return this.solutions.slice(1);
+    },
+    showaidesign:function(){
+      this.$emit('switch','choose-elem-comp');
+    },
+    present: function (order) {
+      this.$emit('present',order);
+    },
+    publishproject:function(){
+      this.$emit('publish');
+    },
+  },
+  computed:{
+    firstSolution:function(){
+      if(this.solutions.length===0)
+        return {};
+      else
+        return this.solutions[0];
+    }
+  }
+}
+
+var uploadScreen={
+    template: '#uploadTemplate',
+    data : function(){
+      return {
+      currentComp:'upload-comp',
+      lng:0,
+      lat:0,
+      solutions:[],
+      refresh:true
+    }},
+    components:{
+      UploadComp,
+      ChooseElemComp,
+      TransitionComp,
+      PresentComp
     },
     methods: {
-        reset:function(){
-          this.factors.name = "";
-          this.factors.tel = "";
-          this.factors.budget = "";
-          this.factors.demand = "";
-          this.factors.address = "";
-          this.factors.lng = "";
-          this.factors.lat = "";
-          this.A='0';
-          this.B='0';
-          this.C='0';
-          this.D='0';
-          this.E='0';
-          this.F1='0';
-          this.F2='0';
-          this.F3='0';
-          this.G='0';
-          this.H='0';
-          this.ifshowupload=true;
-          this.ifshowaidesign=false;
-          this.ifshowdesign=false;
-          this.ifshowloader=false;
-        },
-        present: function (event) {
-          var order=event.currentTarget.getAttributeNode('id');
-          order=parseInt(order.value.substring(order.value.length-1))-1;
-          this.solutions.splice(0,1,...this.solutions.splice(order, 1 , this.solutions[0]));
-          window.location.href="#designModal";
-        },
-        gencode:function(){
-          return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+'G'+this.G+'H'+this.H;
-        },
-        showupload:function(){
-          this.ifshowupload=true;
-          this.ifshowaidesign=false;
-        },
-        showaidesign:function(){
-          if (!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
-          {
-              alert("请填写必要信息");
-              this.ifinvalid=true;
-              return;
-          }
-          this.ifinvalid=false;
-          this.ifshowupload=false;
-          this.ifshowaidesign=true;
-          this.ifshowdesign=false;
-        },
-        showdesign:function(){
-          if(this.A==='0'){
-            alert("请选择：尺寸");
-            return;
-          }
-          if(this.B==='0'){
-            alert("请选择：围合");
-            return;
-          }
-          if(this.C==='0'){
-            alert("请选择：绿地比例");
-            return;
-          }
-          if(this.D==='0'){
-            alert("请选择：功能");
-            return;
-          }
-          if(this.E==='0'){
-            alert("请选择：风格");
-            return;
-          }
-          if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'){
-            alert("请选择：景观要素");
-            return;
-          }
-          if(this.G==='0'){
-            alert("请选择：座椅数量");
-            return;
-          }
-          if(this.H==='0'){
-            alert("请选择：是否需要顶棚");
-            return;
-          }
-          var code=this.gencode();
-          this.ifshowaidesign=false;
-          this.ifshowloader=true;
-          console.log(code);
-        
-          axios
-            .post('/api/public/scheme/query_scheme', {code:code})
-            .then(function(response){
-                vm.ifshowloader=false;
-                vm.ifshowdesign=true;
-                console.log(response);
-                jsonData = response.data.data;
-                for(var i=0;i<4;i++){
-                  vm.solutions[i].id = jsonData[i].id;
-                    vm.solutions[i].designName = jsonData[i].name;
-                    vm.solutions[i].pic = jsonData[i].pic;
-                    vm.solutions[i].surround = decodeSurround(jsonData[i].surround);
-                    vm.solutions[i].size = decodeSize(jsonData[i].size);
-                    vm.solutions[i].greenRate = decodeGreenRate(jsonData[i].green_rate);
-                    vm.solutions[i].function = decodeFunction(jsonData[i].func);
-                    vm.solutions[i].style = decodeStyle(jsonData[i].style);
-                    vm.solutions[i].viewFactor = decodeViewFactor(jsonData[i].view_factor);
-                    vm.solutions[i].chairNum = decodeChairNum(jsonData[i].chair_num);
-                    vm.solutions[i].isCovered = decodeIfCovered(jsonData[i].is_covered);
-                }
+      setCoor:function(lng,lat){
+        this.lng=lng;
+        this.lat=lat;
+      },
+        switchModal:function(modal, code=''){
+          this.currentComp=modal;
+          if(modal==='transition-comp'){
+            axios
+            .post('/api/public/scheme/query_scheme', {code})
+            .then(response => {
+              this.currentComp='present-comp';
+              this.solutions.splice(0);
+              console.log(response)
+              jsonData = response.data.data;
+              for(var i=0;i<4;i++){
+                  jsonData[i].designName = jsonData[i].name;
+                  jsonData[i].surround = decodeSurround(jsonData[i].surround);
+                  jsonData[i].size = decodeSize(jsonData[i].size);
+                  jsonData[i].greenRate = decodeGreenRate(jsonData[i].green_rate);
+                  jsonData[i].function = decodeFunction(jsonData[i].func);
+                  jsonData[i].style = decodeStyle(jsonData[i].style);
+                  jsonData[i].viewFactor = decodeViewFactor(jsonData[i].view_factor);
+                  jsonData[i].chairNum = decodeChairNum(jsonData[i].chair_num);
+                  jsonData[i].isCovered = decodeIfCovered(jsonData[i].is_covered);
+                  this.solutions.push(jsonData[i]);
+              }
             })
             .catch(function (error) { // 请求失败处理
-            console.log(error);
+              console.log(error);
             });
-        },
-        publishproject:function(){
-          if (!this.factors.address||!this.factors.tel||!this.factors.demand||!this.factors.name)
-          {
-              alert("请填写必要信息");
-              this.ifinvalid=true;
-              return;
-          } 
-          var file=document.getElementById("file").files;
-          if(file[0]===undefined){
-            alert("请上传项目封面");
-            return;
           }
-          var formdata=new FormData();
-          formdata.append("pic",file[0]);
-          formdata.append("name",this.factors.name);
-          formdata.append("tel",this.factors.tel);
-          formdata.append("budget",this.factors.budget);
-          formdata.append("demand",this.factors.demand);
-          formdata.append("project_address",this.factors.address);
-          formdata.append("lng",this.factors.lng);
-          formdata.append("lat",this.factors.lat);
+        },
+        present: function (order) {
+          this.solutions.splice(0,1,...this.solutions.splice(order, 1 , this.solutions[0]));
+        },
+        setCoor:function(lng,lat){
+          this.lng=lng;
+          this.lat=lat;
+        },
+        publish:function(){
+          var formdata=this.$children[0].getFormData();
+          formdata.append("lng",this.lng);
+          formdata.append("lat",this.lat);
           for(var i=0;i<4;++i){
             formdata.append("designs",Number(this.solutions[i].id));
           }
@@ -222,149 +232,136 @@ var vm=new Vue({
             {headers:{
                   'Content-Type': 'multipart/form-data'
           }})
-            .then(function(response){
+            .then(response =>{
               console.log(response)
               $("#uploadscreen").modal("close");
               showinfo('发布成功');
-              resetProject();
-              resetMap();
-              resetFile();
-              vm.reset();
+              this.refresh=false;
+              this.$nextTick(()=>{  
+                this.refresh = true;
+                this.currentComp='upload-comp';
+                this.lng=0;
+                this.lat=0;
+              });
             })
             .catch(function (error) { // 请求失败处理
-            console.log(error);
+              console.log(error);
             });
         }
       }
-  })
+  }
 
-  var vm_design=new Vue({
-    el:'#designscreen',
-    data:{
+var DesignComp = {
+  template:"#aiadddesignModal",
+  components:{
+    SelectPanelComp
+  },
+  data:function(){
+    return {
       name:'',
-      A:'0',
-      B:'0',
-      C:'0',
-      D:'0',
-      E:'0',
-      F1:'0',
-      F2:'0',
-      F3:'0',
-      G:'0',
-      H:'0'
-    },
-    methods:{
-      reset:function(){
-        this.name='';
-        this.A='0';
-        this.B='0';
-        this.C='0';
-        this.D='0';
-        this.E='0';
-        this.F1='0';
-        this.F2='0';
-        this.F3='0';
-        this.G='0';
-        this.H='0';
-      },
-      gencode:function(){
-        return 'A'+this.A+'B'+this.B+'C'+this.C+'D'+this.D+'E'+this.E+'F'+(this.F1==='0'?'':this.F1)+(this.F2==='0'?'':this.F2)+(this.F3==='0'?'':this.F3)+'G'+this.G+'H'+this.H;
-      },
-      uploaddesign:function(){
-        if(this.A==='0'){
-          alert("请选择：尺寸");
-          return;
-        }
-        if(this.B==='0'){
-          alert("请选择：围合");
-          return;
-        }
-        if(this.C==='0'){
-          alert("请选择：绿地比例");
-          return;
-        }
-        if(this.D==='0'){
-          alert("请选择：功能");
-          return;
-        }
-        if(this.E==='0'){
-          alert("请选择：风格");
-          return;
-        }
-        if(this.F1==='0'&&this.F2==='0'&&this.F3==='0'){
-          alert("请选择：景观要素");
-          return;
-        }
-        if(this.G==='0'){
-          alert("请选择：座椅数量");
-          return;
-        }
-        if(this.H==='0'){
-          alert("请选择：是否需要顶棚");
-          return;
-        }
-        var file=document.getElementById("fileImage").files;
-        if(file[0]===undefined){
-          alert("请上传设计图纸");
-          return;
-        }
-        var code=this.gencode();
-        var formdata=new FormData();
-        formdata.append("scheme",file[0]);
-        formdata.append("name",this.name);
-        formdata.append("code",code);
-        axios
-            .post('/api/private/scheme/add_scheme', formdata,{
-              headers: {
-                  'Content-Type': 'multipart/form-data'
-              }
-          })
-            .then(function(response){  
-              console.log(response);
-              vm_design.reset();
-              showinfo('上传成功');
-              $("#aiadddesignModal").modal("close");              
-              resetDesign();
-              resetDesignFile();
-            })
-            .catch(function (error) { // 请求失败处理
-            console.log(error);
-            });
+    }
+  },
+  methods:{
+    uploaddesign:function(){
+      if(!this.$refs.panel.check())
+        return;
+      var code=this.$refs.panel.gencode();
+      var file=this.$refs.file.files;
+      if(file[0]===undefined){
+        alert("请上传设计图纸");
+        return;
       }
+      var formdata=new FormData();
+      formdata.append("scheme",file[0]);
+      formdata.append("name",this.name);
+      formdata.append("code",code);
+      this.$emit('submit',formdata);
     }
-  })
+  },
+  mounted:function(){
+    addPreview('#fileImage','#preview');
+  }
+}
 
-  var vm_=new Vue({
-    el:'#masonry',
-    data:{
-      examples:[
-        {
-          img:'img/20-400x293.jpg',
-          name:'同济新村院落空间',
-          detail:'学生实践平台'
-        },
-        {
-          img:'img/19.jpg',
-          name:'四平体育弄',
-          detail:'激发社区活力'
-        },
-        {
-          img:'img/13.jpg',
-          name:'创智农园',
-          detail:'增强邻里互动社交'
-        }
-      ]
+var designScreen = {
+  template:'#designTemplate',
+  data:function(){
+    return {
+    refresh:true,
+  }},
+  components:{
+    DesignComp
+  },
+  methods:{
+    submit:function(formdata){
+      axios
+        .post('/api/private/scheme/add_scheme', formdata,{
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
+        .then(response=>{  
+          console.log(response);
+          showinfo('上传成功');
+          $("#designscreen").modal("close");              
+          this.refresh=false;
+          this.$nextTick(()=>{  
+            this.refresh = true;
+          });
+        })
+        .catch(function (error) { // 请求失败处理
+        console.log(error);
+        });
     }
-  })
+  },
+}
 
-$('.carousel.carousel-slider').carousel({full_width: true});
- $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal').modal();
-  });
+var examplePanel = {
+  template:'#examplePanel',
+  data:function(){
+    return{examples:[
+      {
+        img:'img/20-400x293.jpg',
+        name:'同济新村院落空间',
+        detail:'学生实践平台'
+      },
+      {
+        img:'img/19.jpg',
+        name:'四平体育弄',
+        detail:'激发社区活力'
+      },
+      {
+        img:'img/13.jpg',
+        name:'创智农园',
+        detail:'增强邻里互动社交'
+      }
+    ]
+  }}
+}
 
-  var fileInput = $('#fileImage');
-  var preview = $('#preview');
+var paralPanel={
+  template:"#paral",
+  props:['src']
+}
+
+var vm = new Vue({
+  el:"#indexPage",
+  components:{
+    uploadScreen,
+    designScreen,
+    examplePanel,
+    paralPanel
+  },
+  methods:{
+    setCoor:function(lng,lat){
+      this.$refs.upload.setCoor(lng,lat);
+    }
+  }
+})
+
+function addPreview(fileId, previewId){
+  var fileInput = $(fileId);
+  var preview = $(previewId);
       //respond when the content of the 'file' item change
       fileInput.change(function () {
         //clear the old background
@@ -390,58 +387,9 @@ $('.carousel.carousel-slider').carousel({full_width: true});
         reader.readAsDataURL(file);
         }
     });
-
-    var fileInput_ = $('#file');
-    var preview_ = $('#previewfile');
-        //respond when the content of the 'file' item change
-        fileInput_.change(function () {
-          //clear the old background
-          preview_.attr("src","");
-          var file = fileInput_.get(0).files[0];
-          
-          if (file===undefined){
-            preview_.slideUp('slow');
-          }
-          else if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
-            fileInput_.get(0).value='';
-              preview_.hide();
-              alert('不是有效的图片文件!'); 
-          }
-          else{
-          var reader = new FileReader();
-          //respond once the filreader finish its uploading process
-          reader.onload = function(e) {
-              var data = e.target.result;
-              preview_.attr("src",data);
-              preview_.slideDown('slow');
-          };
-          reader.readAsDataURL(file);
-          }
-      });
-
-  function showmodal(){
-    $.ajax({
-      url:'/api/public/user/check_login_status',
-      type: "get",
-      dataType:"text",
-      async: false,
-      data: {},
-      success: function(result){
-          jsonResult=JSON.parse(result);
-          if(jsonResult.message==="Already login"){
-            $("#uploadscreen").modal('open');       
-          }
-          else
-          alert("请先登录");
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown){
-          alert(XMLHttpRequest.status);
-          alert(XMLHttpRequest.readyState);
-          alert(textStatus);
-      }
-  });
 }
 
+function initChip(){
   $('.chips').material_chip();
   $(".chip").click(function(){
     for(item=0;item < this.parentNode.children.length;item++){
@@ -472,7 +420,9 @@ $('.carousel.carousel-slider').carousel({full_width: true});
           this.style.color = "rgba(0, 0, 0, 0.6)";
       }
   });
+}
 
+function initMap(){
   var map = new BMap.Map("bdmap");
   map.centerAndZoom(new BMap.Point(121.443186-0.95206, 31.225499+0.52422),9);
   var mapType1 = new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]});
@@ -480,82 +430,12 @@ $('.carousel.carousel-slider').carousel({full_width: true});
   map.addControl(mapType1);
   map.addControl(top_left_navigation);
 
-  init();
-
-  function showInfoMap(e){
-      $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
-      vm.factors.lng=e.point.lng;
-      vm.factors.lat=e.point.lat;
-      map.clearOverlays();
-      var marker = new BMap.Marker(e.point);
-      map.addOverlay(marker);
-      console.log(e.point);
-    };
-
-  function resetMap(){
-    $("#coords")[0].value = "";
-      map.clearOverlays();
-  }
-
-  function resetFile(){
-    $('#uploadModal > div.z-depth-1.center > div > div > form > div').empty();
-    $('#uploadModal > div.z-depth-1.center > div > div > form > div').append('<div class="btn purple lighten-4"><span>上传图片</span><form id="uploadForm" enctype="multipart/form-data">'+
-      '<input id="file" accept="image/*" type="file" name="file" multiple></form></div><div class="file-path-wrapper">'+
-      '<input class="file-path validate" type="text" placeholder="上传您的项目封面"></div>');
-    $('#previewfile').hide();
-  }
-
-  function resetDesignFile(){
-    $('#aiadddesignModal > div.row.center.centered.z-depth-2 > div').empty();
-    $('#aiadddesignModal > div.row.center.centered.z-depth-2 > div').append('<form action="#"><div class="file-field input-field"><div class="btn purple lighten-4">'+
-        '<span>上传图片</span><form id="formImage" enctype="multipart/form-data"><input id="fileImage" accept="image/*" type="file" name="file" multiple>'+
-        '</form></div><div class="file-path-wrapper"><input class="file-path validate" type="text" placeholder="上传您创作的设计方案"></div></div></form>');
-    $('#preview').hide();
-  }
-  
-  map.addEventListener("click", showInfoMap);
-
-  function resetProject(){
-    $('#uploadModal > div:nth-child(3) > div > div > input').removeClass('active');
-    $('#uploadModal > div:nth-child(3) > div > div > input').removeClass('valid');
-    $('#aidesignModal div.chip').css('color','rgba(0, 0, 0, 0.6)');
-    $('#aidesignModal div.chip').css('background-color','#e4e4e4');
-    $('#aidesignModal div.chipf').css('color','rgba(0, 0, 0, 0.6)');
-    $('#aidesignModal div.chipf').css('background-color','#e4e4e4');
-}
-
-function resetDesign(){
-    $('#designname').removeClass('active');
-    $('#designname').removeClass('valid');
-    $('#aiadddesignModal div.chip').css('color','rgba(0, 0, 0, 0.6)');
-    $('#aiadddesignModal div.chip').css('background-color','#e4e4e4');
-    $('#aiadddesignModal div.chipf').css('color','rgba(0, 0, 0, 0.6)');
-    $('#aiadddesignModal div.chipf').css('background-color','#e4e4e4');
-}
-
-  function GetQueryString(param) { //param为要获取的参数名 注:获取不到是为null  
-    var currentUrl = window.location.href; //获取当前链接  
-    var arr = currentUrl.split("?");//分割域名和参数界限  
-    if (arr.length > 1) {  
-        arr = arr[1].split("&");//分割参数  
-        for (var i = 0; i < arr.length; i++) {  
-            var tem = arr[i].split("="); //分割参数名和参数内容  
-            if (tem[0] == param) {  
-                return tem[1];  
-            }  
-        }  
-        return null;  
-    }  
-    else {  
-        return null;  
-    }  
-}  
-
-function openSignupscreen(){
-  $("#signupscreen").modal('open');
-  $('ul.tabs').tabs('select_tab', 'signupDesigner');
-}
-
-function closeAllModal(){
-    $(".modal").modal("close");
+  map.addEventListener("click", e=>{
+    $("#coords")[0].value = "lng: " + e.point.lng + ", lat: " + e.point.lat;
+    vm.setCoor(e.point.lng,e.point.lat);
+    map.clearOverlays();
+    var marker = new BMap.Marker(e.point);
+    map.addOverlay(marker);
+    console.log(e.point);
+  });
 }
