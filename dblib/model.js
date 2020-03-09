@@ -250,24 +250,6 @@ Comment.belongsTo(Project);
 
 class AlternativeScheme extends Model { };
 AlternativeScheme.init({
-  /*project_id:{
-    type:Sequelize.INTEGER,
-    allowNull:false,
-    references:{
-      model:Project,
-      key:'id'
-    },
-    primaryKey:true
-  },
-  scheme_id:{
-    type:Sequelize.INTEGER,
-    allowNull:false,
-    references:{
-      model:Scheme,
-      key:'id'
-    },
-    primaryKey:true
-  },*/
   vote_num: {
     type: Sequelize.INTEGER,
     allowNull: false,
